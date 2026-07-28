@@ -25,10 +25,12 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.Activity
 import compose.icons.feathericons.AlertTriangle
 import compose.icons.feathericons.BarChart2
+import compose.icons.feathericons.ChevronRight
 import compose.icons.feathericons.Heart
 import compose.icons.feathericons.HelpCircle
 import compose.icons.feathericons.MapPin
 import compose.icons.feathericons.MessageCircle
+import compose.icons.feathericons.MessageSquare
 import compose.icons.feathericons.PhoneCall
 import compose.icons.feathericons.Play
 import compose.icons.feathericons.Radio
@@ -98,6 +100,7 @@ fun NongorHomeScreen(
     onEmergency: () -> Unit = {},
     onCommunity: () -> Unit = {},
     onFamily: () -> Unit = {},
+    onTranslate: () -> Unit = {},
     onSeedDemo: () -> Unit = {},
     modelReady: Boolean = true,
     showCoach: Boolean = false,
@@ -155,6 +158,11 @@ fun NongorHomeScreen(
         // ---- Emergency call: always the most prominent action ----
         Spacer(Modifier.height(14.dp))
         EmergencyCard(onEmergency = onEmergency)
+
+        // ---- Emergency translation: kept alongside the call button because a rescuer who
+        // cannot understand the person in front of them is stuck before any other tool helps.
+        Spacer(Modifier.height(10.dp))
+        TranslateCard(onTranslate = onTranslate)
 
         // ---- Flood drill launcher ----
         Spacer(Modifier.height(14.dp))
@@ -304,6 +312,39 @@ private fun EmergencyCard(onEmergency: () -> Unit) {
             Text(tr("Call 999", "৯৯৯"), color = red, fontWeight = FontWeight.ExtraBold,
                 style = MaterialTheme.typography.titleSmall)
         }
+    }
+}
+
+/**
+ * Entry point to the phrasebook.
+ *
+ * Deliberately not buried in the feature grid: in the hill tracts and the Cox's Bazar camps
+ * the language gap is the first thing a responder hits, before triage or routing matter.
+ */
+@Composable
+private fun TranslateCard(onTranslate: () -> Unit) {
+    val teal = Color(0xFF0E7C86)
+    Row(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
+            .background(teal.copy(alpha = 0.12f))
+            .clickable(onClick = onTranslate).padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(Modifier.size(44.dp).clip(CircleShape).background(teal),
+            contentAlignment = Alignment.Center) {
+            Icon(FeatherIcons.MessageSquare, null, tint = Color.White, modifier = Modifier.size(22.dp))
+        }
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Text(tr("Emergency translation", "জরুরি অনুবাদ"), color = TextPrimary,
+                fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleSmall)
+            Text(
+                tr("Chakma · Marma · Rohingya · sign — pictures when there are no words",
+                    "চাকমা · মারমা · রোহিঙ্গা · ইশারা — শব্দ না থাকলে ছবি"),
+                color = TextSecondary, style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        Icon(FeatherIcons.ChevronRight, null, tint = TextSecondary)
     }
 }
 

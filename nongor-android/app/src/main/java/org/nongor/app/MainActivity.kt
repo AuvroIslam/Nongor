@@ -42,6 +42,8 @@ import org.nongor.app.ui.splash.BrandSplashScreen
 import org.nongor.app.ui.summary.SummaryScreen
 import org.nongor.app.ui.summary.SummaryViewModel
 import org.nongor.app.ui.theme.NongorTheme
+import org.nongor.app.ui.translate.TranslateScreen
+import org.nongor.app.ui.translate.TranslateViewModel
 import org.nongor.app.ui.triage.TriageScreen
 import org.nongor.app.ui.triage.TriageViewModel
 
@@ -60,6 +62,7 @@ private object Routes {
     const val EMERGENCY = "emergency"
     const val COMMUNITY = "community"
     const val FAMILY = "family"
+    const val TRANSLATE = "translate"
 }
 
 class MainActivity : ComponentActivity() {
@@ -133,6 +136,7 @@ private fun NongorNavHost() {
                 onEmergency = { navController.navigate(Routes.EMERGENCY) },
                 onCommunity = { navController.navigate(Routes.COMMUNITY) },
                 onFamily = { navController.navigate(Routes.FAMILY) },
+                onTranslate = { navController.navigate(Routes.TRANSLATE) },
                 onSeedDemo = {
                     if (app.sosRepository.entries.value.none { it.source == "drill" }) {
                         RegionAssets.loadScenarios(context).forEach {
@@ -160,7 +164,26 @@ private fun NongorNavHost() {
         }
         composable(Routes.MESH) {
             val vm: MeshViewModel = viewModel(factory = appFactory())
-            MeshScreen(viewModel = vm, onBack = { navController.popBackStack() })
+            // A note composed on the translation screen arrives here prefilled, so the
+            // volunteer never has to retype what the person just told them.
+            val draft = app.pendingSosDraft
+            app.pendingSosDraft = null
+            MeshScreen(
+                viewModel = vm,
+                onBack = { navController.popBackStack() },
+                prefill = draft.orEmpty(),
+            )
+        }
+        composable(Routes.TRANSLATE) {
+            val vm: TranslateViewModel = viewModel(factory = appFactory())
+            TranslateScreen(
+                viewModel = vm,
+                onBack = { navController.popBackStack() },
+                onSendAsSos = { note ->
+                    app.pendingSosDraft = note
+                    navController.navigate(Routes.MESH)
+                },
+            )
         }
         composable(Routes.GUIDE) {
             GuideScreen(onBack = { navController.popBackStack() })

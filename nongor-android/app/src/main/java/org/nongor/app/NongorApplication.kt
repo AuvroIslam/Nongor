@@ -33,6 +33,15 @@ class NongorApplication : Application() {
     lateinit var meshHub: MeshHub
         private set
 
+    /**
+     * A handover note composed on the translation screen, waiting to be sent as an SOS.
+     *
+     * Held in memory rather than passed as a navigation argument because the note is
+     * multi-line free text and round-tripping it through a route string would mangle it.
+     * Consumed exactly once by the mesh screen, then cleared.
+     */
+    var pendingSosDraft: String? = null
+
     override fun onCreate() {
         super.onCreate()
         chatRepository = ChatRepository(this)

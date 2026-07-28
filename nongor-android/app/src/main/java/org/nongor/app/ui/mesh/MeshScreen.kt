@@ -48,9 +48,9 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
-fun MeshScreen(viewModel: MeshViewModel, onBack: () -> Unit) {
+fun MeshScreen(viewModel: MeshViewModel, onBack: () -> Unit, prefill: String = "") {
     val ui by viewModel.ui.collectAsState()
-    var text by remember { mutableStateOf("") }
+    var text by remember { mutableStateOf(prefill) }
 
     val permissions = remember {
         buildList {
