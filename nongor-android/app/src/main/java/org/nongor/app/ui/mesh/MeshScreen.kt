@@ -134,6 +134,13 @@ fun MeshScreen(viewModel: MeshViewModel, onBack: () -> Unit, prefill: String = "
             }
 
             Spacer(Modifier.height(12.dp))
+            SmsBridgeSection(
+                viewModel = viewModel,
+                sosText = text,
+                reporterName = viewModel.reporterName,
+            )
+
+            Spacer(Modifier.height(12.dp))
             Text("${tr("Messages", "বার্তা")} (${ui.messages.size})",
                 style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(6.dp))
