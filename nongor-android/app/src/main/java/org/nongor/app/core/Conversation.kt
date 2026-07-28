@@ -171,7 +171,7 @@ object ConversationTriage {
             sb.append("• ").append(q).append(' ').append("→ ").append(a).append('\n')
         }
         // Anything answered outside the guided flow still belongs in the note.
-        val extra = replies.keys - book.triageFlow.toSet()
+        val extra = replies.keys - book.flow.toSet()
         for (id in extra) {
             val phrase = book.phrase(id) ?: continue
             val reply = replies[id] ?: continue

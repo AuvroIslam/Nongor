@@ -23,7 +23,7 @@ object Rag {
             if (q.isEmpty()) return emptyList()
             return chunks.filter { hazard == null || it.hazard == hazard }
                 .map { c ->
-                    val tagTokens = c.symptomTags.flatMap { contentTokens(it) }
+                    val tagTokens = c.tags.flatMap { contentTokens(it) }
                     val hay = contentTokens(c.textMd) + tagTokens + tagTokens + tagTokens  // weight tags
                     hay.count { it in q } to c
                 }
@@ -39,7 +39,7 @@ object Rag {
     fun redFlag(query: String, chunks: List<KbChunk>): Boolean {
         val t = query.lowercase()
         if (lifeThreat.any { it in t }) return true
-        return chunks.any { c -> c.redFlags.any { it.lowercase() in t } }
+        return chunks.any { c -> c.flags.any { it.lowercase() in t } }
     }
 
     private fun buildContext(chunks: List<KbChunk>): String =

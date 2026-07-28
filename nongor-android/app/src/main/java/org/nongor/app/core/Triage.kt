@@ -58,10 +58,10 @@ object Triage {
     }
 
     fun fallbackTriage(sos: SosReport): TriageResult {
-        val signals = detectSignals(sos.text, sos.flags)
+        val signals = detectSignals(sos.text, sos.riskFlags)
         val (priority, score) = priorityFromSignals(signals)
         return TriageResult(
-            msgId = sos.msgId, priority = priority, urgencyScore = score,
+            msgId = sos.id, priority = priority, urgencyScore = score,
             riskSignals = signals, needsHumanReview = priority == "critical" || priority == "high",
             rationale = if (signals.isNotEmpty()) "Signals: " + signals.joinToString(", ")
             else "No strong signals detected.",
@@ -111,7 +111,7 @@ object Triage {
         if (!ok || obj == null) return fallbackTriage(sos)
         val priority = obj.get("priority").asString
         return TriageResult(
-            msgId = sos.msgId,
+            msgId = sos.id,
             priority = priority,
             urgencyScore = obj.get("urgency_score").asDouble,
             riskSignals = obj.getAsJsonArray("risk_signals").map { it.asString },

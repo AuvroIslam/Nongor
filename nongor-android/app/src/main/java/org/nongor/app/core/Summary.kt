@@ -19,7 +19,7 @@ object Summary {
         shelters: List<Shelter> = emptyList(), blockedRoads: List<String> = emptyList(),
         newSince: Int = 0,
     ): Stats {
-        val sosById = sos.associateBy { it.msgId }
+        val sosById = sos.associateBy { it.id }
         val ordered = triage.sortedWith(compareBy({ rank[it.priority] }, { -it.urgencyScore })).take(5)
         val top5 = ordered.map { t ->
             val s = sosById[t.msgId]

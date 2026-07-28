@@ -44,7 +44,7 @@ fun replyOptions(book: PhrasebookData, phrase: Phrase): List<ReplyOption> =
             ReplyOption("scale:5", "Unbearable", "অসহ্য"),
         )
 
-        ReplyKind.BODY_PART -> book.bodyParts.map {
+        ReplyKind.BODY_PART -> book.allBodyParts.map {
             ReplyOption("body:${it.id}", it.en, it.bn, "person_pin")
         }
 

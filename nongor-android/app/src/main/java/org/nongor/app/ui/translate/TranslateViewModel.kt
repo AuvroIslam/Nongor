@@ -35,7 +35,7 @@ class TranslateViewModel(app: Application) : AndroidViewModel(app) {
     fun setQuery(q: String) {
         _state.value = _state.value.copy(
             query = q,
-            results = if (q.isBlank()) emptyList() else PhraseSearch.search(book.phrases, q),
+            results = if (q.isBlank()) emptyList() else PhraseSearch.search(book.allPhrases, q),
         )
     }
 
@@ -73,7 +73,7 @@ class TranslateViewModel(app: Application) : AndroidViewModel(app) {
         val step = _state.value.guidedStep ?: return
         val next = step + 1
         _state.value = _state.value.copy(
-            guidedStep = if (next >= book.triageFlow.size) null else next,
+            guidedStep = if (next >= book.flow.size) null else next,
         )
     }
 

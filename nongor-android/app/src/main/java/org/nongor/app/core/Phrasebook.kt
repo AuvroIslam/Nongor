@@ -30,9 +30,14 @@ data class Translation(
     val beng: String? = null,
     /** Roman transliteration. */
     val latn: String? = null,
-    /** verified · community · unverified */
-    val v: String = "unverified",
+    /** verified · community · unverified. Nullable: see the note on [Phrase]. */
+    val v: String? = null,
 ) {
+    /**
+     * Anything that is not explicitly `verified` is treated as unverified — including a
+     * missing value. The safe default has to be the pessimistic one: this flag decides
+     * whether the app shows a life-critical line as trustworthy.
+     */
     val isVerified: Boolean get() = v == "verified"
 }
 
@@ -40,6 +45,18 @@ data class Category(val id: String, val en: String, val bn: String, val icon: St
 
 data class BodyPart(val id: String, val en: String, val bn: String)
 
+/**
+ * One phrase.
+ *
+ * **Every collection here is nullable, and that is deliberate.** Gson populates fields by
+ * reflection and does not run the Kotlin constructor, so a Kotlin default value is *not*
+ * applied when the JSON simply omits the key — the field is left null and the non-null type
+ * is a lie the compiler cannot catch. Most phrases have no `t` block at all, so declaring it
+ * `Map<String, Translation> = emptyMap()` crashed the moment the screen read it.
+ *
+ * The fix is to admit the nullability at the boundary and normalise it in one place, via
+ * [tagList] and [translations], which the rest of the app uses instead.
+ */
 data class Phrase(
     val id: String,
     val cat: String,
@@ -47,11 +64,21 @@ data class Phrase(
     val reply: String,
     val en: String,
     val bn: String,
-    val tags: List<String> = emptyList(),
+    val tags: List<String>? = null,
     @SerializedName("sign_bn") val signBn: String? = null,
-    val t: Map<String, Translation> = emptyMap(),
+    val t: Map<String, Translation>? = null,
 ) {
     val replyKind: ReplyKind get() = ReplyKind.of(reply)
+
+    /** Search terms, never null. */
+    val tagList: List<String> get() = tags ?: emptyList()
+
+    /** Minority-language lines, never null. */
+    val translations: Map<String, Translation> get() = t ?: emptyMap()
+
+    /** The line for [langCode], or null when this language has no entry for this phrase. */
+    fun translation(langCode: String?): Translation? =
+        langCode?.let { translations[it] }
 }
 
 /** How the other person answers. Chosen so the answer is machine-readable, not free text. */
@@ -87,29 +114,44 @@ enum class ReplyKind {
     }
 }
 
+/**
+ * The whole phrasebook.
+ *
+ * Same rule as [Phrase]: every list is nullable because Gson fills these by reflection and a
+ * truncated or hand-edited asset would otherwise hand the UI a null typed as non-null. A
+ * phrasebook missing a section should degrade to an empty section, not take the screen down —
+ * this file is meant to be edited by contributors who do not run the app.
+ */
 data class PhrasebookData(
-    val version: String,
-    val languages: List<LangInfo>,
-    val categories: List<Category>,
-    val phrases: List<Phrase>,
-    @SerializedName("body_parts") val bodyParts: List<BodyPart>,
-    @SerializedName("triage_flow") val triageFlow: List<String>,
+    val version: String? = null,
+    private val languages: List<LangInfo>? = null,
+    private val categories: List<Category>? = null,
+    private val phrases: List<Phrase>? = null,
+    @SerializedName("body_parts") private val bodyParts: List<BodyPart>? = null,
+    @SerializedName("triage_flow") private val triageFlow: List<String>? = null,
 ) {
-    private val byId: Map<String, Phrase> by lazy { phrases.associateBy { it.id } }
+    val allLanguages: List<LangInfo> get() = languages ?: emptyList()
+    val allCategories: List<Category> get() = categories ?: emptyList()
+    val allPhrases: List<Phrase> get() = phrases ?: emptyList()
+    val allBodyParts: List<BodyPart> get() = bodyParts ?: emptyList()
+    val flow: List<String> get() = triageFlow ?: emptyList()
+
+    private val byId: Map<String, Phrase> by lazy { allPhrases.associateBy { it.id } }
 
     fun phrase(id: String): Phrase? = byId[id]
 
-    fun inCategory(catId: String): List<Phrase> = phrases.filter { it.cat == catId }
+    fun inCategory(catId: String): List<Phrase> = allPhrases.filter { it.cat == catId }
 
-    fun language(code: String): LangInfo? = languages.firstOrNull { it.code == code }
+    fun language(code: String): LangInfo? = allLanguages.firstOrNull { it.code == code }
 
     /** Languages a volunteer can actually pick, i.e. everything except the two authored ones. */
-    fun targetLanguages(): List<LangInfo> = languages.filter { !it.isAuthored }
+    fun targetLanguages(): List<LangInfo> = allLanguages.filter { !it.isAuthored }
 
-    /** How many phrases carry a line in [code]. Shown honestly in the picker. */
-    fun coverage(code: String): Int = phrases.count { it.t[code]?.beng?.isNotBlank() == true }
+    /** How many phrases carry a written line in [code]. Shown honestly in the picker. */
+    fun coverage(code: String): Int =
+        allPhrases.count { it.translations[code]?.beng?.isNotBlank() == true }
 
-    fun triagePhrases(): List<Phrase> = triageFlow.mapNotNull { byId[it] }
+    fun triagePhrases(): List<Phrase> = flow.mapNotNull { byId[it] }
 }
 
 /**
@@ -128,7 +170,7 @@ object PhraseSearch {
 
     fun score(phrase: Phrase, queryTokens: List<String>): Int {
         if (queryTokens.isEmpty()) return 0
-        val tagTokens = phrase.tags.flatMap { tokens(it) }.toSet()
+        val tagTokens = phrase.tagList.flatMap { tokens(it) }.toSet()
         val textTokens = (tokens(phrase.en) + tokens(phrase.bn)).toSet()
         var total = 0
         for (q in queryTokens) {

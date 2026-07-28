@@ -199,7 +199,7 @@ class PhrasebookDataTest {
 
     @Test
     fun `an unverified line is never reported as verified`() {
-        val line = book.phrase("w_water")!!.t["ccp"]!!
+        val line = book.phrase("w_water")!!.translation("ccp")!!
         assertTrue(line.beng!!.isNotBlank())
         assertEquals(false, line.isVerified)
     }
@@ -208,7 +208,8 @@ class PhrasebookDataTest {
     fun `a phrase with no translation still resolves`() {
         val phrase = book.phrase("w_food")
         assertNotNull(phrase)
-        assertNull(phrase!!.t["ccp"])
+        assertNull(phrase!!.translation("ccp"))
+        assertTrue(phrase.translations.isEmpty())
     }
 
     /** A typo in the flow list must drop that step, not crash the guided questions. */

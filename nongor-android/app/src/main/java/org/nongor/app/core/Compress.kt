@@ -12,7 +12,7 @@ object Compress {
     private data class Rec(val i: String, val p: String, val l: String)
 
     private fun records(sos: List<SosReport>, triage: List<TriageResult>): List<Rec> {
-        val byId = sos.associateBy { it.msgId }
+        val byId = sos.associateBy { it.id }
         return triage.sortedWith(compareBy({ rank[it.priority] }, { -it.urgencyScore })).map { t ->
             val s = byId[t.msgId]
             val loc = if (s?.lat != null) "%.2f,%.2f".format(s.lat, s.lon) else ""

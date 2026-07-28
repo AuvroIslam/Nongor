@@ -81,7 +81,7 @@ fun PhraseCard(
     onPrevious: (() -> Unit)? = null,
 ) {
     val bangla = LocalBangla.current
-    val translation = target?.let { phrase.t[it.code] }
+    val translation = target?.let { phrase.translations[it.code] }
     val options = remember(phrase.id) { replyOptions(book, phrase) }
     var typed by remember(phrase.id) { mutableStateOf(recorded?.en.orEmpty()) }
     var showGesture by remember(phrase.id) { mutableStateOf(target?.isGesture == true) }

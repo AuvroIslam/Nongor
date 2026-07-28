@@ -74,7 +74,7 @@ class MeshViewModel(application: Application) : AndroidViewModel(application) {
                     priority = triage.priority,
                     lat = report.lat,
                     lon = report.lon,
-                    peopleCount = report.peopleCount,
+                    peopleCount = report.people,
                     signals = triage.riskSignals,
                     name = reporterName,
                 ),

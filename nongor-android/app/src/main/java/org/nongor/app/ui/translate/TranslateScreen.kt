@@ -148,7 +148,7 @@ fun TranslateScreen(
                 GuidedCard(
                     active = guided != null,
                     answered = state.replies.size,
-                    total = book.triageFlow.size,
+                    total = book.flow.size,
                     bangla = bangla,
                     onStart = {
                         viewModel.startGuided()
@@ -200,7 +200,7 @@ fun TranslateScreen(
                     }
                 }
             } else {
-                book.categories.forEach { category ->
+                book.allCategories.forEach { category ->
                     val phrases = book.inCategory(category.id)
                     if (phrases.isEmpty()) return@forEach
                     item(key = "cat_${category.id}") {
@@ -236,7 +236,7 @@ fun TranslateScreen(
                 speaker = viewModel.speaker,
                 onReply = { viewModel.record(it) },
                 onClose = { open = null; viewModel.stopGuided() },
-                guidedProgress = step?.let { it + 1 to book.triageFlow.size },
+                guidedProgress = step?.let { it + 1 to book.flow.size },
                 onNext = if (step != null) {
                     {
                         viewModel.advanceGuided()

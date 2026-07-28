@@ -67,6 +67,8 @@ import org.nongor.app.ui.theme.TextSecondary
 import org.nongor.app.ui.theme.ShapeMd
 import org.nongor.app.ui.theme.ShapePill
 import org.nongor.app.ui.theme.ShapeSm
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun OnboardingScreen(
@@ -197,7 +199,11 @@ fun OnboardingScreen(
                         ),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text("G", color = Color.White, fontSize = 42.sp, fontWeight = FontWeight.Bold)
+                    Image(
+                        painterResource(R.drawable.nongor_mark),
+                        contentDescription = null,
+                        modifier = Modifier.size(56.dp),
+                    )
                 }
             }
 
