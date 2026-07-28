@@ -1,0 +1,46 @@
+{
+  "type": "FeatureCollection",
+  "name": "sylhet_shelters",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_01", "name": "Sylhet Govt College Shelter",
+        "capacity": 450, "occupancy": 110,
+        "has_pwd_access": true, "allows_pets": false, "has_medical": true,
+        "on_high_ground": true
+      },
+      "geometry": { "type": "Point", "coordinates": [91.867, 24.905] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_02", "name": "Kanishail Govt Primary School",
+        "capacity": 300, "occupancy": 270,
+        "has_pwd_access": false, "allows_pets": false, "has_medical": false,
+        "on_high_ground": false
+      },
+      "geometry": { "type": "Point", "coordinates": [91.878, 24.892] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_03", "name": "Tilagor Community Center",
+        "capacity": 220, "occupancy": 60,
+        "has_pwd_access": true, "allows_pets": true, "has_medical": false,
+        "on_high_ground": true
+      },
+      "geometry": { "type": "Point", "coordinates": [91.852, 24.905] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_04", "name": "Zindabazar Relief Shelter",
+        "capacity": 400, "occupancy": 140,
+        "has_pwd_access": true, "allows_pets": false, "has_medical": true,
+        "on_high_ground": false
+      },
+      "geometry": { "type": "Point", "coordinates": [91.880, 24.905] }
+    }
+  ]
+}

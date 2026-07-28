@@ -1,0 +1,46 @@
+{
+  "type": "FeatureCollection",
+  "name": "chattogram_shelters",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_01", "name": "Chattogram College Shelter",
+        "capacity": 500, "occupancy": 120,
+        "has_pwd_access": true, "allows_pets": false, "has_medical": true,
+        "on_high_ground": true
+      },
+      "geometry": { "type": "Point", "coordinates": [91.820, 22.360] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_02", "name": "Halishahar Govt Primary School",
+        "capacity": 300, "occupancy": 285,
+        "has_pwd_access": false, "allows_pets": false, "has_medical": false,
+        "on_high_ground": false
+      },
+      "geometry": { "type": "Point", "coordinates": [91.805, 22.330] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_03", "name": "GEC Community Center",
+        "capacity": 200, "occupancy": 40,
+        "has_pwd_access": true, "allows_pets": true, "has_medical": false,
+        "on_high_ground": true
+      },
+      "geometry": { "type": "Point", "coordinates": [91.790, 22.360] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_04", "name": "Agrabad Relief Shelter",
+        "capacity": 400, "occupancy": 150,
+        "has_pwd_access": true, "allows_pets": false, "has_medical": true,
+        "on_high_ground": false
+      },
+      "geometry": { "type": "Point", "coordinates": [91.805, 22.345] }
+    }
+  ]
+}

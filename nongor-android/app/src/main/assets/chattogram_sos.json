@@ -1,0 +1,35 @@
+[
+  {
+    "text": "Pregnant woman trapped on the rooftop, water is still rising fast, no food since morning.",
+    "lat": 22.330, "lon": 91.820, "reporter_role": "affected", "people_count": 1,
+    "flags": []
+  },
+  {
+    "text": "My father is not breathing after we pulled him out of the floodwater. Please help!",
+    "lat": 22.332, "lon": 91.808, "reporter_role": "affected", "people_count": 2
+  },
+  {
+    "text": "Elderly man has heavy bleeding from a deep leg cut by a tin sheet, blood is soaking the cloth.",
+    "lat": 22.345, "lon": 91.835, "reporter_role": "volunteer", "people_count": 1
+  },
+  {
+    "text": "We are four people safe on the second floor but we have run out of drinking water.",
+    "lat": 22.360, "lon": 91.790, "reporter_role": "affected", "people_count": 4
+  },
+  {
+    "text": "My child has a high fever and we ran out of her medicine, roads are underwater.",
+    "lat": 22.330, "lon": 91.790, "reporter_role": "affected", "people_count": 3
+  },
+  {
+    "text": "Which road can I take to reach the nearest shelter? The road to Agrabad looks flooded.",
+    "lat": 22.330, "lon": 91.820, "reporter_role": "volunteer", "people_count": 1
+  },
+  {
+    "text": "A snake bit my brother's foot near the water, his foot is swelling.",
+    "lat": 22.345, "lon": 91.805, "reporter_role": "affected", "people_count": 2
+  },
+  {
+    "text": "Diabetic patient is out of insulin and stuck at home, feeling very weak.",
+    "lat": 22.360, "lon": 91.835, "reporter_role": "volunteer", "people_count": 1
+  }
+]

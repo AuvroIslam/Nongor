@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "name": "chattogram_facilities",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_01", "name": "Chattogram Medical College Hospital", "type": "hospital" },
+      "geometry": { "type": "Point", "coordinates": [91.805, 22.360] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_02", "name": "Agrabad General Hospital", "type": "hospital" },
+      "geometry": { "type": "Point", "coordinates": [91.835, 22.345] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_03", "name": "Muradpur Relief Distribution Point", "type": "relief" },
+      "geometry": { "type": "Point", "coordinates": [91.835, 22.360] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_04", "name": "Halishahar Community Clinic", "type": "clinic" },
+      "geometry": { "type": "Point", "coordinates": [91.790, 22.330] }
+    }
+  ]
+}

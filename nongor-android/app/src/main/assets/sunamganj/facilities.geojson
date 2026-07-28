@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "name": "sunamganj_facilities",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_01", "name": "Sunamganj Sadar Hospital", "type": "hospital" },
+      "geometry": { "type": "Point", "coordinates": [91.398, 25.078] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_02", "name": "Sunamganj 250-Bed Hospital", "type": "hospital" },
+      "geometry": { "type": "Point", "coordinates": [91.402, 25.070] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_03", "name": "Old Bus Stand Relief Point", "type": "relief" },
+      "geometry": { "type": "Point", "coordinates": [91.395, 25.063] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_04", "name": "Ustar Gaon Community Clinic", "type": "clinic" },
+      "geometry": { "type": "Point", "coordinates": [91.380, 25.070] }
+    }
+  ]
+}

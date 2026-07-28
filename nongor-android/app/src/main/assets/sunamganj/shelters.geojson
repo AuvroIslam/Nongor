@@ -1,0 +1,46 @@
+{
+  "type": "FeatureCollection",
+  "name": "sunamganj_shelters",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_01", "name": "Sunamganj Govt College Shelter",
+        "capacity": 350, "occupancy": 90,
+        "has_pwd_access": true, "allows_pets": false, "has_medical": true,
+        "on_high_ground": true
+      },
+      "geometry": { "type": "Point", "coordinates": [91.398, 25.075] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_02", "name": "Jubilee High School",
+        "capacity": 250, "occupancy": 230,
+        "has_pwd_access": false, "allows_pets": false, "has_medical": false,
+        "on_high_ground": false
+      },
+      "geometry": { "type": "Point", "coordinates": [91.392, 25.060] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_03", "name": "Hasan Nagar Community Center",
+        "capacity": 180, "occupancy": 40,
+        "has_pwd_access": true, "allows_pets": true, "has_medical": false,
+        "on_high_ground": true
+      },
+      "geometry": { "type": "Point", "coordinates": [91.378, 25.072] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sh_04", "name": "Wezkhali Relief Shelter",
+        "capacity": 300, "occupancy": 120,
+        "has_pwd_access": true, "allows_pets": false, "has_medical": true,
+        "on_high_ground": false
+      },
+      "geometry": { "type": "Point", "coordinates": [91.410, 25.072] }
+    }
+  ]
+}

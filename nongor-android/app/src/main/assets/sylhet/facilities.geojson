@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "name": "sylhet_facilities",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_01", "name": "MAG Osmani Medical College Hospital", "type": "hospital" },
+      "geometry": { "type": "Point", "coordinates": [91.867, 24.907] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_02", "name": "Sylhet Sadar Hospital", "type": "hospital" },
+      "geometry": { "type": "Point", "coordinates": [91.870, 24.900] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_03", "name": "Bandar Bazar Relief Point", "type": "relief" },
+      "geometry": { "type": "Point", "coordinates": [91.875, 24.897] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "fac_04", "name": "Subid Bazar Community Clinic", "type": "clinic" },
+      "geometry": { "type": "Point", "coordinates": [91.860, 24.905] }
+    }
+  ]
+}

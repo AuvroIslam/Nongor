@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "name": "sunamganj_flood_zones",
+  "properties": { "as_of": "2026-07-14", "source": "illustrative scenario (haor), not live flood data" },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "flood_01", "name": "Central haor inundation", "depth_m": 1.8 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [91.388, 25.055],
+          [91.410, 25.055],
+          [91.410, 25.075],
+          [91.388, 25.075],
+          [91.388, 25.055]
+        ]]
+      }
+    }
+  ]
+}

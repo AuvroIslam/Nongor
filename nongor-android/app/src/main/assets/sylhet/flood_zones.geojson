@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "name": "sylhet_flood_zones",
+  "properties": { "as_of": "2026-07-14", "source": "illustrative scenario (Surma river), not live flood data" },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "flood_01", "name": "Surma riverside inundation", "depth_m": 1.5 },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [91.865, 24.888],
+          [91.885, 24.888],
+          [91.885, 24.900],
+          [91.865, 24.900],
+          [91.865, 24.888]
+        ]]
+      }
+    }
+  ]
+}

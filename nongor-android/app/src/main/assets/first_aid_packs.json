@@ -1,0 +1,72 @@
+[
+  {
+    "id": "bleeding_01", "pack": "severe_bleeding", "hazard": "bleeding", "lang": "en",
+    "symptom_tags": ["bleeding", "cut", "wound", "blood", "laceration"],
+    "red_flags": ["spurting blood", "blood soaking through", "pale", "faint"],
+    "text_md": "For severe bleeding: apply firm, direct pressure on the wound with a clean cloth and keep pressing without lifting to check. Raise the injured part above heart level if you can. Keep the person warm and lying down.",
+    "source": "IFRC First Aid Guidelines"
+  },
+  {
+    "id": "bleeding_02", "pack": "severe_bleeding", "hazard": "bleeding", "lang": "en",
+    "symptom_tags": ["bleeding", "does not stop", "tourniquet"],
+    "red_flags": ["bleeding not stopping"],
+    "text_md": "If bleeding does not stop with pressure and it is a limb, apply a tight band (tourniquet) 5-7 cm above the wound, note the time, and get medical help urgently. Do not remove soaked cloths; add more on top.",
+    "source": "WHO Emergency Care"
+  },
+  {
+    "id": "breathing_01", "pack": "not_breathing", "hazard": "cardiac", "lang": "en",
+    "symptom_tags": ["not breathing", "no breath", "unresponsive", "cpr", "chest"],
+    "red_flags": ["not breathing", "no pulse", "unresponsive"],
+    "text_md": "If a person is unresponsive and not breathing normally, start CPR: push hard and fast in the center of the chest about 100-120 times per minute, allowing the chest to rise between pushes. Continue until they respond or help arrives.",
+    "source": "Red Cross CPR Guidelines"
+  },
+  {
+    "id": "drowning_01", "pack": "floodwater_drowning", "hazard": "drowning", "lang": "en",
+    "symptom_tags": ["drowning", "pulled from water", "swallowed water", "flood water"],
+    "red_flags": ["not breathing", "unconscious", "coughing up water"],
+    "text_md": "After rescuing someone from water: check breathing. If not breathing, start CPR. If breathing, place them on their side (recovery position) to let water drain, keep them warm, and watch closely, as breathing problems can return.",
+    "source": "IFRC Water Safety"
+  },
+  {
+    "id": "child_water_01", "pack": "floodwater_drowning", "hazard": "drowning", "lang": "en",
+    "symptom_tags": ["child", "swallowed floodwater", "vomiting", "diarrhea"],
+    "red_flags": ["difficulty breathing", "very sleepy", "not waking"],
+    "text_md": "A child who swallowed floodwater may get stomach upset or diarrhea. Give clean water or oral rehydration solution in small sips. Seek help if the child has trouble breathing, is very sleepy, or cannot keep fluids down.",
+    "source": "WHO Child Health in Emergencies"
+  },
+  {
+    "id": "unconscious_01", "pack": "unconscious", "hazard": "unconscious", "lang": "en",
+    "symptom_tags": ["unconscious", "fainted", "passed out", "not responding but breathing"],
+    "red_flags": ["not breathing", "no pulse"],
+    "text_md": "If someone is unconscious but breathing, gently place them on their side in the recovery position, tilt the head back slightly to keep the airway open, and check breathing regularly until help arrives.",
+    "source": "Red Cross First Aid"
+  },
+  {
+    "id": "snakebite_01", "pack": "snakebite", "hazard": "snakebite", "lang": "en",
+    "symptom_tags": ["snake", "snakebite", "bitten", "fang"],
+    "red_flags": ["swelling spreading", "difficulty breathing", "drooping eyelids"],
+    "text_md": "For a snakebite: keep the person calm and still, keep the bitten limb below heart level and immobilized, remove tight items like rings, and get to a hospital fast. Do NOT cut the wound, suck the venom, or apply ice.",
+    "source": "WHO Snakebite Management"
+  },
+  {
+    "id": "fracture_01", "pack": "fracture", "hazard": "injury", "lang": "en",
+    "symptom_tags": ["broken", "fracture", "bone", "cannot move", "deformed"],
+    "red_flags": ["bone through skin", "no pulse below injury"],
+    "text_md": "For a suspected broken bone: keep the limb still, support it with a splint or padding, and do not try to straighten it. Apply a cold pack wrapped in cloth to reduce swelling and seek medical care.",
+    "source": "IFRC First Aid"
+  },
+  {
+    "id": "dehydration_01", "pack": "dehydration", "hazard": "dehydration", "lang": "en",
+    "symptom_tags": ["thirsty", "no water", "dehydration", "dizzy", "dry mouth"],
+    "red_flags": ["confusion", "no urine", "sunken eyes"],
+    "text_md": "For dehydration: sip clean water or oral rehydration solution (a pinch of salt and six spoons of sugar in one liter of clean water) slowly. Rest in shade. Seek help if there is confusion, no urine, or the person cannot drink.",
+    "source": "WHO Rehydration"
+  },
+  {
+    "id": "hypothermia_01", "pack": "hypothermia", "hazard": "cold", "lang": "en",
+    "symptom_tags": ["cold", "shivering", "wet", "hypothermia", "shaking"],
+    "red_flags": ["stops shivering", "confusion", "very drowsy"],
+    "text_md": "If someone is cold and wet from floodwater: remove wet clothes, wrap them in dry blankets, cover the head, and give warm (not hot) sweet drinks if fully awake. Warm the body gradually. Seek help if shivering stops or they become confused.",
+    "source": "Red Cross Cold Emergencies"
+  }
+]
