@@ -2,32 +2,28 @@ package org.nongor.app.ui.i18n
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.compositionLocalOf
 
-/**
- * Nongor is bilingual everywhere, not just on a settings page: the people worst hit by a
- * flood read Bangla, and the volunteers coordinating them often read English.
- *
- * Rather than maintaining a key/value resource table (which drifts the moment one language
- * gets a new string), both languages sit side by side at the call site:
- *
- *     Text(t("Safe shelter", "নিরাপদ আশ্রয়"))
- *
- * A missing translation is then impossible to ship — it would not compile.
- */
-val LocalBangla = staticCompositionLocalOf { false }
+/** True when the app language is Bangla. Provided at the root from persisted app prefs. */
+val LocalBangla = compositionLocalOf { false }
 
+/** Pick the Bangla or English string for the current language. */
 @Composable
 @ReadOnlyComposable
-fun t(en: String, bn: String): String = if (LocalBangla.current) bn else en
+fun tr(en: String, bn: String): String = if (LocalBangla.current) bn else en
 
-/** Non-composable variant for view models and engines. */
-fun tr(bangla: Boolean, en: String, bn: String): String = if (bangla) bn else en
+/** Short alias for [tr]. Reads better inline in dense screens. */
+@Composable
+@ReadOnlyComposable
+fun t(en: String, bn: String): String = tr(en, bn)
+
+/** Non-composable variant, for view models and engines that already know the language. */
+fun pick(bangla: Boolean, en: String, bn: String): String = if (bangla) bn else en
 
 /**
- * Bangla-Indic digits. Numbers matter in a crisis (doses, capacities, distances) and a
- * Bangla reader should not have to parse Latin digits, but the *value* must never change —
- * this is a pure glyph substitution, never a rounding or formatting step.
+ * Bangla-Indic digits. Numbers matter in a crisis — doses, capacities, distances, people
+ * counts — and a Bangla reader should not have to parse Latin digits. This is a pure glyph
+ * substitution: it never rounds, reformats or otherwise changes the value.
  */
 private val BN_DIGITS = charArrayOf('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯')
 
