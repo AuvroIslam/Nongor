@@ -2,7 +2,7 @@
 
 # নোঙর · Nongor
 
-**An offline crisis companion for Bangladesh.**
+**An offline crisis companion for Bangladesh**
 No internet. No account. No server. No signal required.
 
 *July Hackathon 2026 — Crisis Tech (Track A)*
