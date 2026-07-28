@@ -55,6 +55,8 @@ import org.nongor.app.core.Translation
 import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.t
 import org.nongor.app.ui.theme.NongorColors
+import org.nongor.app.ui.theme.ShapeMd
+import org.nongor.app.ui.theme.ShapePill
 
 /**
  * The hand-over card.
@@ -207,7 +209,7 @@ fun PhraseCard(
 
             if (recorded != null) {
                 Surface(
-                    shape = RoundedCornerShape(14.dp),
+                    shape = ShapeMd,
                     color = NongorColors.Safe.copy(alpha = 0.14f),
                     modifier = Modifier.fillMaxWidth(),
                 ) {
@@ -248,7 +250,7 @@ fun PhraseCard(
 
             if (phrase.signBn != null) {
                 Surface(
-                    shape = RoundedCornerShape(14.dp),
+                    shape = ShapeMd,
                     color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -352,7 +354,7 @@ private fun TheirLine(phrase: Phrase, translation: Translation?, target: LangInf
 
 @Composable
 private fun UnverifiedBand() {
-    Surface(shape = RoundedCornerShape(999.dp), color = NongorColors.Caution.copy(alpha = 0.20f)) {
+    Surface(shape = ShapePill, color = NongorColors.Caution.copy(alpha = 0.20f)) {
         Row(
             Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -378,7 +380,7 @@ private fun UnverifiedBand() {
 private fun ReplyButton(label: String, selected: Boolean, onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(14.dp),
+        shape = ShapeMd,
         colors = ButtonDefaults.buttonColors(
             containerColor = if (selected) NongorColors.Safe else MaterialTheme.colorScheme.surface,
             contentColor = if (selected) Color.White else MaterialTheme.colorScheme.onSurface,
@@ -386,7 +388,7 @@ private fun ReplyButton(label: String, selected: Boolean, onClick: () -> Unit) {
         modifier = Modifier.border(
             width = 1.5.dp,
             color = if (selected) NongorColors.Safe else MaterialTheme.colorScheme.outline,
-            shape = RoundedCornerShape(14.dp),
+            shape = ShapeMd,
         ),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(
             horizontal = 18.dp,

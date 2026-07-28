@@ -145,6 +145,13 @@ import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
+import org.nongor.app.ui.theme.ShapeLg
+import org.nongor.app.ui.theme.ShapeBubble
+import org.nongor.app.ui.theme.ShapeMd
+import org.nongor.app.ui.theme.ShapePill
+import org.nongor.app.ui.theme.ShapeSm
+import org.nongor.app.ui.theme.BrandTealLite
+import org.nongor.app.ui.theme.BrandTealSoft
 
 private data class Suggestion(
     val icon: ImageVector,
@@ -486,7 +493,7 @@ fun ChatScreen(
                                     stringResource(R.string.chip_plan_title),
                                     stringResource(R.string.chip_plan_hint),
                                     stringResource(R.string.chip_plan_fill),
-                                    listOf(Color(0xFF3B82F6), Color(0xFF22D3EE)),
+                                    listOf(BrandTealLite, BrandTealSoft),
                                 ),
                                 Suggestion(
                                     Icons.Default.Image,
@@ -507,7 +514,7 @@ fun ChatScreen(
                                     stringResource(R.string.chip_write_title),
                                     stringResource(R.string.chip_write_hint),
                                     stringResource(R.string.chip_write_fill),
-                                    listOf(Color(0xFF8A7CFF), Color(0xFF3B82F6)),
+                                    listOf(BrandTeal, BrandTealLite),
                                 ),
                             )
                             LazyVerticalGrid(
@@ -700,8 +707,8 @@ private fun SideDrawer(
         Row(
             Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .border(1.dp, GlassBorder, RoundedCornerShape(12.dp))
+                .clip(ShapeSm)
+                .border(1.dp, GlassBorder, ShapeSm)
                 .background(GlassBg)
                 .clickable { onNewChat() }
                 .padding(14.dp),
@@ -721,7 +728,7 @@ private fun SideDrawer(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(ShapeSm)
                         .clickable { onSelect(c.id) }
                         .padding(vertical = 10.dp, horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -743,7 +750,7 @@ private fun SideDrawer(
         Row(
             Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
+                .clip(ShapeSm)
                 .clickable { onSettings() }
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -967,7 +974,7 @@ private fun GlassSuggestionCard(s: Suggestion, onPick: (String) -> Unit) {
                 scaleY = scale
                 shadowElevation = if (pressed) 16.dp.toPx() else 4.dp.toPx()
             }
-            .clip(RoundedCornerShape(14.dp))
+            .clip(ShapeMd)
             .border(
                 1.1.dp,
                 Brush.linearGradient(
@@ -977,7 +984,7 @@ private fun GlassSuggestionCard(s: Suggestion, onPick: (String) -> Unit) {
                         s.accentColors.last().copy(alpha = borderAlpha * 0.9f),
                     ),
                 ),
-                RoundedCornerShape(14.dp),
+                ShapeMd,
             )
             .background(if (pressed) GlassBg.copy(alpha = 0.96f) else GlassBg)
             .clickable(
@@ -991,7 +998,7 @@ private fun GlassSuggestionCard(s: Suggestion, onPick: (String) -> Unit) {
                 .size(38.dp)
                 .background(
                     Brush.linearGradient(s.accentColors),
-                    RoundedCornerShape(12.dp),
+                    ShapeSm,
                 ),
             contentAlignment = Alignment.Center,
         ) {
@@ -1008,7 +1015,7 @@ private fun GlassSuggestionCard(s: Suggestion, onPick: (String) -> Unit) {
 private fun GlassButton(label: String, onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(12.dp),
+        shape = ShapeSm,
         colors = ButtonDefaults.buttonColors(
             containerColor = BrandBlue,
             contentColor = Color.White,
@@ -1020,9 +1027,9 @@ private fun GlassButton(label: String, onClick: () -> Unit) {
 private fun ImagePresetChip(label: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(999.dp))
+            .clip(ShapePill)
             .background(BgCard)
-            .border(1.dp, Divider, RoundedCornerShape(999.dp))
+            .border(1.dp, Divider, ShapePill)
             .clickable { onClick() }
             .padding(horizontal = 12.dp, vertical = 7.dp),
     ) {
@@ -1043,9 +1050,9 @@ private fun SmallToggleChip(
 ) {
     Row(
         modifier = Modifier
-            .clip(RoundedCornerShape(999.dp))
+            .clip(ShapePill)
             .background(if (active) BgCard else BgDark.copy(alpha = 0.42f))
-            .border(1.dp, if (active) BrandTeal.copy(alpha = 0.4f) else Divider, RoundedCornerShape(999.dp))
+            .border(1.dp, if (active) BrandTeal.copy(alpha = 0.4f) else Divider, ShapePill)
             .clickable { onClick() }
             .padding(horizontal = 10.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -1076,8 +1083,8 @@ private fun UserMessage(text: String, imagePath: String? = null) {
                 contentDescription = "Attached image",
                 modifier = Modifier
                     .widthIn(max = 180.dp)
-                    .clip(RoundedCornerShape(14.dp))
-                    .border(1.dp, GlassBorder, RoundedCornerShape(14.dp)),
+                    .clip(ShapeMd)
+                    .border(1.dp, GlassBorder, ShapeMd),
                 contentScale = ContentScale.Crop,
             )
             Spacer(Modifier.height(4.dp))
@@ -1085,13 +1092,13 @@ private fun UserMessage(text: String, imagePath: String? = null) {
         Box(
             Modifier
                 .widthIn(max = 300.dp)
-                .clip(RoundedCornerShape(18.dp, 18.dp, 4.dp, 18.dp))
+                .clip(ShapeBubble)
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(UserBubble, BrandBlue.copy(alpha = 0.3f)),
                     ),
                 )
-                .border(1.dp, GlassBorder, RoundedCornerShape(18.dp, 18.dp, 4.dp, 18.dp))
+                .border(1.dp, GlassBorder, ShapeBubble)
                 .padding(horizontal = 16.dp, vertical = 10.dp),
         ) {
             Text(text, color = TextPrimary, style = MaterialTheme.typography.bodyLarge)
@@ -1234,9 +1241,9 @@ private fun CodeBlock(code: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(ShapeSm)
             .background(BgDark.copy(alpha = 0.9f))
-            .border(1.dp, Divider, RoundedCornerShape(12.dp))
+            .border(1.dp, Divider, ShapeSm)
             .padding(12.dp),
     ) {
         Text(
@@ -1382,9 +1389,9 @@ private fun Composer(
                 Box(
                     modifier = Modifier
                         .padding(bottom = 8.dp, start = 4.dp)
-                        .clip(RoundedCornerShape(999.dp))
+                        .clip(ShapePill)
                         .background(BgCard)
-                        .border(1.dp, Divider, RoundedCornerShape(999.dp))
+                        .border(1.dp, Divider, ShapePill)
                         .padding(horizontal = 10.dp, vertical = 6.dp),
                 ) {
                     Text(
@@ -1409,8 +1416,8 @@ private fun Composer(
                             contentDescription = "Preview",
                             modifier = Modifier
                                 .size(64.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .border(1.dp, GlassBorder, RoundedCornerShape(10.dp)),
+                                .clip(ShapeSm)
+                                .border(1.dp, GlassBorder, ShapeSm),
                             contentScale = ContentScale.Crop,
                         )
                         // Remove button
@@ -1456,7 +1463,7 @@ private fun Composer(
                     translationY = composerLift
                     shadowElevation = if (isFocused) 24.dp.toPx() else 12.dp.toPx()
                 }
-                .clip(RoundedCornerShape(24.dp))
+                .clip(ShapeLg)
                 .border(
                     1.25.dp,
                     Brush.linearGradient(
@@ -1468,7 +1475,7 @@ private fun Composer(
                         start = Offset.Zero,
                         end = Offset(520f, 140f),
                     ),
-                    RoundedCornerShape(24.dp),
+                    ShapeLg,
                 )
                 .background(GlassBg)
                 .padding(horizontal = 8.dp, vertical = 6.dp),
@@ -1546,7 +1553,7 @@ private fun Composer(
                             start = Offset(shimmerShift - 180f, 0f),
                             end = Offset(shimmerShift, 0f),
                         ),
-                        RoundedCornerShape(999.dp),
+                        ShapePill,
                     ),
             )
         }

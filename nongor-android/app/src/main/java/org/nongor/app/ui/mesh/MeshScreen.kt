@@ -45,6 +45,7 @@ import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.tr
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import org.nongor.app.ui.theme.TileMeshFg
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -97,7 +98,7 @@ fun MeshScreen(viewModel: MeshViewModel, onBack: () -> Unit, prefill: String = "
             LaunchedEffect(Unit) { viewModel.start() }
             DisposableEffect(Unit) { onDispose { viewModel.stop() } }
 
-            HeroBanner(R.drawable.hero_mesh,
+            HeroBanner(FeatherIcons.Radio, tint = TileMeshFg,
                 title = tr("Mesh SOS", "মেশ এসওএস"),
                 subtitle = tr("Send SOS, no internet", "ইন্টারনেট ছাড়াই এসওএস পাঠান"))
             Spacer(Modifier.height(12.dp))

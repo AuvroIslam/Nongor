@@ -46,6 +46,8 @@ import org.nongor.app.R
 import org.nongor.app.ui.components.HeroBanner
 import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.tr
+import compose.icons.feathericons.Activity
+import org.nongor.app.ui.theme.TileAidFg
 
 private val EXAMPLES_EN = listOf(
     "Someone is bleeding heavily from a deep cut on the leg.",
@@ -86,7 +88,7 @@ fun FirstAidScreen(viewModel: FirstAidViewModel, onBack: () -> Unit) {
         Column(
             Modifier.padding(pad).padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState()),
         ) {
-            HeroBanner(R.drawable.hero_firstaid,
+            HeroBanner(FeatherIcons.Activity, tint = TileAidFg,
                 title = tr("First Aid", "প্রাথমিক চিকিৎসা"),
                 subtitle = tr("Trusted, cited guidance", "নির্ভরযোগ্য, উৎসসহ পরামর্শ"))
             Spacer(Modifier.height(12.dp))

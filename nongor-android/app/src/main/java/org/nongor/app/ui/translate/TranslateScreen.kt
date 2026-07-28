@@ -62,6 +62,9 @@ import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.TextPrimary
 import org.nongor.app.ui.theme.TextSecondary
 import org.nongor.app.ui.theme.NongorColors
+import org.nongor.app.ui.theme.ShapeMd
+import org.nongor.app.ui.theme.ShapePill
+import org.nongor.app.ui.theme.ShapeSm
 
 /**
  * Emergency translation.
@@ -274,7 +277,7 @@ private fun LanguageRow(
                 colors = CardDefaults.cardColors(
                     containerColor = if (isSelected) BrandBlue else BgCard,
                 ),
-                shape = RoundedCornerShape(14.dp),
+                shape = ShapeMd,
                 modifier = Modifier.clickable { onSelect(if (isSelected) null else lang.code) },
             ) {
                 Column(Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
@@ -314,7 +317,7 @@ private fun GuidedCard(
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
+            .clip(ShapeMd)
             .background(BrandBlue.copy(alpha = 0.10f))
             .clickable { if (active) onResume() else onStart() }
             .padding(14.dp),
@@ -376,14 +379,14 @@ private fun HandoverCard(
     }
     Card(
         colors = CardDefaults.cardColors(containerColor = BgCard),
-        shape = RoundedCornerShape(16.dp),
+        shape = ShapeMd,
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column(Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     Modifier
-                        .clip(RoundedCornerShape(999.dp))
+                        .clip(ShapePill)
                         .background(tint.copy(alpha = 0.15f))
                         .padding(horizontal = 10.dp, vertical = 4.dp),
                 ) {
@@ -397,7 +400,7 @@ private fun HandoverCard(
                 Spacer(Modifier.weight(1f))
                 Row(
                     Modifier
-                        .clip(RoundedCornerShape(999.dp))
+                        .clip(ShapePill)
                         .background(BrandBlue)
                         .clickable(onClick = onSend)
                         .padding(horizontal = 12.dp, vertical = 7.dp),
@@ -430,7 +433,7 @@ private fun PhraseRow(phrase: Phrase, bangla: Boolean, answered: Boolean, onClic
         Modifier
             .fillMaxWidth()
             .padding(vertical = 3.dp)
-            .clip(RoundedCornerShape(12.dp))
+            .clip(ShapeSm)
             .background(BgCard)
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 11.dp),
@@ -439,7 +442,7 @@ private fun PhraseRow(phrase: Phrase, bangla: Boolean, answered: Boolean, onClic
         Box(
             Modifier
                 .size(34.dp)
-                .clip(RoundedCornerShape(10.dp))
+                .clip(ShapeSm)
                 .background(
                     if (answered) {
                         NongorColors.Safe.copy(alpha = 0.16f)

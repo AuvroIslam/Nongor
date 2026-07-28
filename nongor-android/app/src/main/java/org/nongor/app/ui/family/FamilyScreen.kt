@@ -44,6 +44,9 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.Users
 import org.nongor.app.ui.i18n.tr
+import org.nongor.app.ui.theme.BrandTeal
+import org.nongor.app.ui.theme.CautionAmber
+import org.nongor.app.ui.theme.SafeGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +78,7 @@ fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
             // ---- status ----
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(10.dp).clip(CircleShape)
-                    .background(if (ui.started) Color(0xFF22A565) else Color(0xFFF5822B)))
+                    .background(if (ui.started) SafeGreen else CautionAmber))
                 Spacer(Modifier.width(8.dp))
                 Text(
                     if (ui.started) tr("Listening for family · ${ui.peers} phone(s) in range",
@@ -144,7 +147,7 @@ private fun SetupCard(onSave: (String, String) -> Unit) {
     var name by remember { mutableStateOf("") }
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(44.dp).clip(CircleShape).background(Color(0xFF7B5CF0)),
+            Box(Modifier.size(44.dp).clip(CircleShape).background(BrandTeal),
                 contentAlignment = Alignment.Center) {
                 Icon(FeatherIcons.Users, null, tint = Color.White, modifier = Modifier.size(24.dp))
             }

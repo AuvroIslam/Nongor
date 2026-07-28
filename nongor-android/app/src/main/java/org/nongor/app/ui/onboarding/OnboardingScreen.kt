@@ -64,6 +64,9 @@ import org.nongor.app.ui.theme.GlassBorder
 import org.nongor.app.ui.theme.TextMuted
 import org.nongor.app.ui.theme.TextPrimary
 import org.nongor.app.ui.theme.TextSecondary
+import org.nongor.app.ui.theme.ShapeMd
+import org.nongor.app.ui.theme.ShapePill
+import org.nongor.app.ui.theme.ShapeSm
 
 @Composable
 fun OnboardingScreen(
@@ -228,8 +231,8 @@ fun OnboardingScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(18.dp))
-                    .border(1.dp, GlassBorder, RoundedCornerShape(18.dp))
+                    .clip(ShapeMd)
+                    .border(1.dp, GlassBorder, ShapeMd)
                     .background(GlassBg)
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -247,7 +250,7 @@ fun OnboardingScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(ShapeSm)
                         .clickable(enabled = !ui.downloading) { consentAccepted = !consentAccepted }
                         .padding(top = 4.dp),
                     verticalAlignment = Alignment.Top,
@@ -271,9 +274,9 @@ fun OnboardingScreen(
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(ShapeSm)
                         .background(ErrorRed.copy(alpha = 0.12f))
-                        .border(1.dp, ErrorRed.copy(alpha = 0.3f), RoundedCornerShape(10.dp))
+                        .border(1.dp, ErrorRed.copy(alpha = 0.3f), ShapeSm)
                         .padding(12.dp),
                 ) {
                     Text(
@@ -289,9 +292,9 @@ fun OnboardingScreen(
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(ShapeSm)
                         .background(ErrorRed.copy(alpha = 0.12f))
-                        .border(1.dp, ErrorRed.copy(alpha = 0.3f), RoundedCornerShape(10.dp))
+                        .border(1.dp, ErrorRed.copy(alpha = 0.3f), ShapeSm)
                         .padding(12.dp),
                 ) {
                     Text(err, color = ErrorRed, style = MaterialTheme.typography.bodyMedium)
@@ -308,7 +311,7 @@ fun OnboardingScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)
-                        .clip(RoundedCornerShape(3.dp)),
+                        .clip(ShapePill),
                     color = BrandTeal,
                     trackColor = Divider,
                 )
@@ -329,7 +332,7 @@ fun OnboardingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp),
-                shape = RoundedCornerShape(16.dp),
+                shape = ShapeMd,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = BrandBlue,
                     contentColor = Color.White,
@@ -377,7 +380,7 @@ fun OnboardingScreen(
                 onClick = onSkip,
                 enabled = !ui.downloading,
                 modifier = Modifier.fillMaxWidth().height(52.dp),
-                shape = RoundedCornerShape(14.dp),
+                shape = ShapeMd,
             ) {
                 Text(
                     tr("Skip — start using Nongor now", "বাদ দিন — এখনই নোঙর ব্যবহার করুন"),
@@ -420,8 +423,8 @@ private fun LegalLinkRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .border(1.dp, GlassBorder.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
+            .clip(ShapeSm)
+            .border(1.dp, GlassBorder.copy(alpha = 0.8f), ShapeSm)
             .background(BgDark.copy(alpha = 0.32f))
             .clickable { onClick() }
             .padding(12.dp),

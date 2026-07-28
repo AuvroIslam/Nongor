@@ -66,6 +66,14 @@ import org.nongor.app.ui.theme.TileSummaryBg
 import org.nongor.app.ui.theme.TileSummaryFg
 import org.nongor.app.ui.theme.TileTriageBg
 import org.nongor.app.ui.theme.TileTriageFg
+import org.nongor.app.ui.theme.ShapeMd
+import androidx.compose.foundation.BorderStroke
+import org.nongor.app.ui.theme.GlassBorder
+import org.nongor.app.ui.theme.Stroke
+import compose.icons.feathericons.Compass
+import compose.icons.feathericons.Info
+import org.nongor.app.ui.components.AnchorBadge
+import org.nongor.app.ui.theme.BrandTeal
 
 private data class Feature(
     val icon: ImageVector, val bg: Color, val fg: Color,
@@ -132,10 +140,8 @@ fun GuideScreen(onBack: () -> Unit) {
                 .verticalScroll(rememberScrollState())
                 .padding(18.dp),
         ) {
-            // Intro with mascot
-            Image(painterResource(R.drawable.mascot_1), null,
-                modifier = Modifier.size(150.dp).align(Alignment.CenterHorizontally),
-                contentScale = ContentScale.Fit)
+            // Intro
+            AnchorBadge(126.dp, Modifier.align(Alignment.CenterHorizontally))
             Text(tr("Hi, I am Nongor ⚓", "আমি নোঙর ⚓"), color = TextPrimary,
                 fontWeight = FontWeight.ExtraBold,
                 style = MaterialTheme.typography.headlineSmall,
@@ -157,7 +163,7 @@ fun GuideScreen(onBack: () -> Unit) {
             // How to navigate
             Spacer(Modifier.height(12.dp))
             MascotNote(
-                mascot = R.drawable.mascot_2,
+                icon = FeatherIcons.Compass,
                 title = tr("How to get around", "কীভাবে চলাচল করবেন"),
                 lines = listOf(
                     tr("1.  Tap any card on the Home screen to open a tool.",
@@ -171,7 +177,7 @@ fun GuideScreen(onBack: () -> Unit) {
 
             Spacer(Modifier.height(16.dp))
             MascotNote(
-                mascot = R.drawable.mascot_3,
+                icon = FeatherIcons.Info,
                 title = tr("Good to know", "জেনে রাখা ভালো"),
                 lines = listOf(
                     tr("• Everything works fully offline, even in airplane mode.",
@@ -201,8 +207,9 @@ private fun FeatureExplainer(f: Feature) {
     Card(
         Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = BgCard),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(Stroke.hairline, GlassBorder),
+        shape = ShapeMd,
     ) {
         Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(Modifier.size(46.dp).clip(CircleShape).background(f.bg),
@@ -222,16 +229,21 @@ private fun FeatureExplainer(f: Feature) {
 }
 
 @Composable
-private fun MascotNote(@DrawableRes mascot: Int, title: String, lines: List<String>) {
+private fun MascotNote(icon: ImageVector, title: String, lines: List<String>) {
     Card(
         Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = BrandBlue.copy(alpha = 0.08f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        shape = RoundedCornerShape(18.dp),
+        border = BorderStroke(Stroke.hairline, GlassBorder),
+        shape = ShapeMd,
     ) {
         Row(Modifier.padding(14.dp), verticalAlignment = Alignment.Top) {
-            Image(painterResource(mascot), null, modifier = Modifier.size(74.dp),
-                contentScale = ContentScale.Fit)
+            Box(
+                Modifier.size(44.dp).clip(CircleShape).background(BrandTeal.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(icon, null, tint = BrandTeal, modifier = Modifier.size(22.dp))
+            }
             Spacer(Modifier.width(12.dp))
             Column(Modifier.padding(top = 6.dp)) {
                 Text(title, color = BrandBlue, fontWeight = FontWeight.Bold,

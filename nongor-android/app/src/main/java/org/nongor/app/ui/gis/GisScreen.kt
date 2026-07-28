@@ -70,10 +70,14 @@ import org.nongor.app.ui.i18n.tr
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import org.nongor.app.ui.theme.ShapeSm
+import org.nongor.app.ui.theme.TileShelterFg
+import org.nongor.app.ui.theme.ErrorRed
+import org.nongor.app.ui.theme.GlassBorder
 
 private val FLOOD = Color(0xFF2196F3)
 private val ROAD = Color(0xFF9E9E9E)
-private val FLOODED_ROAD = Color(0xFFE53935)
+private val FLOODED_ROAD = ErrorRed
 private val ROUTE = Color(0xFFFF9800)
 private val SHELTER = Color(0xFF43A047)
 private val USER = Color(0xFF1B1030)
@@ -117,7 +121,7 @@ fun GisScreen(viewModel: GisViewModel, onBack: () -> Unit) {
         Column(
             Modifier.padding(pad).padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState()),
         ) {
-            HeroBanner(R.drawable.hero_shelter,
+            HeroBanner(FeatherIcons.MapPin, tint = TileShelterFg,
                 title = tr("Safe Shelter", "নিরাপদ আশ্রয়"),
                 subtitle = tr("Nearest shelter, safest way there", "নিকটতম আশ্রয়, নিরাপদতম পথ"))
             Spacer(Modifier.height(12.dp))
@@ -145,8 +149,8 @@ fun GisScreen(viewModel: GisViewModel, onBack: () -> Unit) {
                         checkedThumbColor = Color.White,
                         checkedTrackColor = MaterialTheme.colorScheme.primary,
                         uncheckedThumbColor = Color.White,
-                        uncheckedTrackColor = Color(0xFFC9C2E8),
-                        uncheckedBorderColor = Color(0xFFC9C2E8),
+                        uncheckedTrackColor = GlassBorder,
+                        uncheckedBorderColor = GlassBorder,
                     ),
                 )
                 Spacer(Modifier.width(8.dp))
@@ -218,7 +222,7 @@ fun GisScreen(viewModel: GisViewModel, onBack: () -> Unit) {
                     if (!ui.hasLocation) {
                         Row(
                             Modifier.align(Alignment.BottomCenter).padding(8.dp)
-                                .clip(RoundedCornerShape(8.dp)).background(Color(0xCC1B1030))
+                                .clip(ShapeSm).background(Color(0xCC1B1030))
                                 .padding(horizontal = 10.dp, vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
@@ -378,7 +382,7 @@ private fun MapAssistantCard(ui: GisUiState, onAsk: (String) -> Unit) {
 private fun AssistExample(label: String, onClick: (String) -> Unit) {
     Text(label, style = MaterialTheme.typography.labelMedium,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.clip(RoundedCornerShape(8.dp))
+        modifier = Modifier.clip(ShapeSm)
             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.10f))
             .clickable { onClick(label) }.padding(horizontal = 10.dp, vertical = 6.dp))
 }
@@ -399,7 +403,7 @@ private fun AreaPicker(
         Spacer(Modifier.width(8.dp))
         Box {
             Row(
-                Modifier.clip(RoundedCornerShape(10.dp))
+                Modifier.clip(ShapeSm)
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.10f))
                     .clickable { open = true }.padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -428,7 +432,7 @@ private fun ShelterRow(s: Gis.RankedShelter, selected: Boolean, onClick: () -> U
     Card(
         Modifier.fillMaxWidth().padding(vertical = 4.dp).clickable(onClick = onClick)
             .let {
-                if (selected) it.border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
+                if (selected) it.border(2.dp, MaterialTheme.colorScheme.primary, ShapeSm)
                 else it
             },
     ) {
@@ -456,7 +460,7 @@ private fun HighGroundBadge() {
         style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.primary, maxLines = 1, softWrap = false,
         modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
+            .clip(ShapeSm)
             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f))
             .padding(horizontal = 6.dp, vertical = 2.dp),
     )
@@ -476,7 +480,7 @@ private fun PublicShelterRow(
     Card(
         Modifier.fillMaxWidth().padding(vertical = 4.dp).clickable(onClick = onClick)
             .let {
-                if (selected) it.border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
+                if (selected) it.border(2.dp, MaterialTheme.colorScheme.primary, ShapeSm)
                 else it
             },
     ) {
@@ -489,7 +493,7 @@ private fun PublicShelterRow(
                     Spacer(Modifier.width(8.dp))
                     Text(tr("AI PICK", "এআই পছন্দ"), style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.clip(RoundedCornerShape(6.dp))
+                        modifier = Modifier.clip(ShapeSm)
                             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f))
                             .padding(horizontal = 6.dp, vertical = 2.dp))
                 }

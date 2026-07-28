@@ -2,6 +2,7 @@ package org.nongor.app.ui.theme
 
 import android.app.Activity
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -11,21 +12,41 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColors = lightColorScheme(
-    primary = BrandBlue,
+    primary = BrandTeal,
     onPrimary = Color.White,
-    primaryContainer = BrandBlue.copy(alpha = 0.12f),
-    onPrimaryContainer = BrandBlue,
-    secondary = BrandTeal,
+    primaryContainer = Color(0xFFDCEDE8),
+    onPrimaryContainer = BrandTealDeep,
+    secondary = BrandTealLite,
     onSecondary = Color.White,
+    secondaryContainer = Color(0xFFE1F0EC),
+    onSecondaryContainer = BrandTealDeep,
+    tertiary = BrandSand,
+    onTertiary = Color.White,
     background = BgDark,
     onBackground = TextPrimary,
     surface = BgCard,
     onSurface = TextPrimary,
     surfaceVariant = BgMid,
     onSurfaceVariant = TextSecondary,
-    outline = Divider,
+    outline = GlassBorder,
+    outlineVariant = GlassBorder,
     error = ErrorRed,
     onError = Color.White,
+    errorContainer = Color(0xFFFBEAE7),
+    onErrorContainer = Color(0xFF7A1A1A),
+    scrim = Color(0x99101410),
+)
+
+/**
+ * Material's shape slots wired to our three radii, so any component we do not style by hand
+ * — dialogs, menus, snackbars, date pickers — still lands on the same system.
+ */
+private val NongorShapes = Shapes(
+    extraSmall = ShapeSm,
+    small = ShapeSm,
+    medium = ShapeMd,
+    large = ShapeLg,
+    extraLarge = ShapeLg,
 )
 
 @Composable
@@ -45,6 +66,7 @@ fun NongorTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = LightColors,
         typography = Typography,
+        shapes = NongorShapes,
         content = content,
     )
 }

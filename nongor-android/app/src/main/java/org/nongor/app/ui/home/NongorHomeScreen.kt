@@ -86,6 +86,17 @@ import org.nongor.app.ui.theme.TileSummaryBg
 import org.nongor.app.ui.theme.TileSummaryFg
 import org.nongor.app.ui.theme.TileTriageBg
 import org.nongor.app.ui.theme.TileTriageFg
+import org.nongor.app.ui.theme.ShapeLg
+import org.nongor.app.ui.theme.ShapeMd
+import org.nongor.app.ui.theme.ShapeSm
+import androidx.compose.foundation.BorderStroke
+import org.nongor.app.ui.theme.GlassBorder
+import org.nongor.app.ui.theme.Stroke
+import compose.icons.feathericons.Anchor
+import org.nongor.app.ui.theme.BrandTeal
+import org.nongor.app.ui.theme.CautionAmber
+import org.nongor.app.ui.theme.ErrorRed
+import org.nongor.app.ui.theme.SafeGreen
 
 @Composable
 fun NongorHomeScreen(
@@ -167,7 +178,7 @@ fun NongorHomeScreen(
         // ---- Flood drill launcher ----
         Spacer(Modifier.height(14.dp))
         Row(
-            Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
+            Modifier.fillMaxWidth().clip(ShapeMd)
                 .background(BrandBlue.copy(alpha = 0.10f))
                 .clickable { showDemo = true }
                 .padding(14.dp),
@@ -192,9 +203,9 @@ fun NongorHomeScreen(
         // ---- Hero illustration ----
         Spacer(Modifier.height(16.dp))
         HeroBanner(
-            R.drawable.hero_home,
+            FeatherIcons.Anchor, tint = BrandTeal,
             title = tr("We're here to help", "আমরা পাশে আছি"),
-            subtitle = tr("Offline AI, right on your device", "অফলাইন এআই, আপনার ডিভাইসেই"),
+            subtitle = tr("Signed SOS, shelters and translation — all offline", "স্বাক্ষরিত এসওএস, আশ্রয় ও অনুবাদ — সবই অফলাইনে"),
         )
 
         // ---- Offline mode status card ----
@@ -202,12 +213,13 @@ fun NongorHomeScreen(
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = BgCard),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-            shape = RoundedCornerShape(18.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            border = BorderStroke(Stroke.hairline, GlassBorder),
+            shape = ShapeMd,
         ) {
             // Status reflects whether Gemma is actually on the device — never claim "AI ready"
             // when the model was skipped and only the deterministic core tools are available.
-            val dotColor = if (modelReady) Color(0xFF22A565) else Color(0xFFF5822B)
+            val dotColor = if (modelReady) SafeGreen else CautionAmber
             Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(44.dp).clip(CircleShape).background(BrandBlue.copy(alpha = 0.14f)),
                     contentAlignment = Alignment.Center) {
@@ -285,9 +297,9 @@ fun NongorHomeScreen(
 @Composable
 private fun EmergencyCard(onEmergency: () -> Unit) {
     val context = LocalContext.current
-    val red = Color(0xFFD92D20)
+    val red = ErrorRed
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(red)
+        Modifier.fillMaxWidth().clip(ShapeMd).background(red)
             .clickable(onClick = onEmergency).padding(14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -304,7 +316,7 @@ private fun EmergencyCard(onEmergency: () -> Unit) {
         }
         Spacer(Modifier.width(10.dp))
         Box(
-            Modifier.clip(RoundedCornerShape(12.dp)).background(Color.White)
+            Modifier.clip(ShapeSm).background(Color.White)
                 .clickable { dialNumber(context, "999") }
                 .padding(horizontal = 16.dp, vertical = 10.dp),
             contentAlignment = Alignment.Center,
@@ -325,7 +337,7 @@ private fun EmergencyCard(onEmergency: () -> Unit) {
 private fun TranslateCard(onTranslate: () -> Unit) {
     val teal = Color(0xFF0E7C86)
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
+        Modifier.fillMaxWidth().clip(ShapeMd)
             .background(teal.copy(alpha = 0.12f))
             .clickable(onClick = onTranslate).padding(14.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -361,7 +373,7 @@ private fun CoachBalloon(onDismiss: () -> Unit) {
             drawPath(p, BrandBlue)
         }
         Row(
-            Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(BrandBlue)
+            Modifier.fillMaxWidth().clip(ShapeMd).background(BrandBlue)
                 .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -378,7 +390,7 @@ private fun CoachBalloon(onDismiss: () -> Unit) {
             }
             Spacer(Modifier.width(10.dp))
             Box(
-                Modifier.clip(RoundedCornerShape(10.dp)).background(Color.White.copy(alpha = 0.18f))
+                Modifier.clip(ShapeSm).background(Color.White.copy(alpha = 0.18f))
                     .clickable(onClick = onDismiss).padding(horizontal = 12.dp, vertical = 6.dp),
             ) {
                 Text(tr("Got it", "বুঝেছি"), color = Color.White, fontWeight = FontWeight.Bold,
@@ -406,10 +418,11 @@ private fun FeatureCard(
     onClick: () -> Unit, modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier.height(196.dp).clip(RoundedCornerShape(22.dp)).clickable(onClick = onClick),
+        modifier = modifier.height(196.dp).clip(ShapeLg).clickable(onClick = onClick),
         colors = CardDefaults.cardColors(containerColor = bg),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        shape = RoundedCornerShape(22.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(Stroke.hairline, GlassBorder),
+        shape = ShapeLg,
     ) {
         Column(
             Modifier.fillMaxSize().padding(16.dp),

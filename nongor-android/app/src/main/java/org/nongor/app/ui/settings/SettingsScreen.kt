@@ -71,6 +71,8 @@ import org.nongor.app.ui.theme.TileShelterBg
 import org.nongor.app.ui.theme.TileShelterFg
 import org.nongor.app.ui.theme.TileSummaryBg
 import org.nongor.app.ui.theme.TileSummaryFg
+import org.nongor.app.ui.theme.ShapeMd
+import org.nongor.app.ui.theme.ShapeSm
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -284,8 +286,8 @@ private fun SectionLabel(text: String) {
 @Composable
 private fun SettingsCard(content: @Composable androidx.compose.foundation.layout.ColumnScope.() -> Unit) {
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
-            .border(1.dp, GlassBorder, RoundedCornerShape(16.dp)).background(BgCard),
+        Modifier.fillMaxWidth().clip(ShapeMd)
+            .border(1.dp, GlassBorder, ShapeMd).background(BgCard),
         content = content,
     )
 }
@@ -300,9 +302,9 @@ private fun IconBubble(icon: ImageVector, bg: Color, fg: Color) {
 @Composable
 private fun LangChip(label: String, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
     Box(
-        modifier.clip(RoundedCornerShape(12.dp))
+        modifier.clip(ShapeSm)
             .background(if (selected) BrandBlue else BgDark)
-            .border(1.dp, if (selected) BrandBlue else GlassBorder, RoundedCornerShape(12.dp))
+            .border(1.dp, if (selected) BrandBlue else GlassBorder, ShapeSm)
             .clickable(onClick = onClick).padding(vertical = 12.dp),
         contentAlignment = Alignment.Center,
     ) {

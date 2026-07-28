@@ -11,7 +11,7 @@
     <path
         android:fillColor="#00000000"
         android:pathData="M60,26 m-9,0 a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0"
-        android:strokeColor="#F5A524"
+        android:strokeColor="#C9A227"
         android:strokeWidth="6" />
     <!-- shaft -->
     <path
@@ -36,9 +36,9 @@
         android:strokeWidth="7" />
     <!-- flukes -->
     <path
-        android:fillColor="#F5A524"
+        android:fillColor="#C9A227"
         android:pathData="M18,61 L37,64 L28,78 Z" />
     <path
-        android:fillColor="#F5A524"
+        android:fillColor="#C9A227"
         android:pathData="M102,61 L83,64 L92,78 Z" />
 </vector>

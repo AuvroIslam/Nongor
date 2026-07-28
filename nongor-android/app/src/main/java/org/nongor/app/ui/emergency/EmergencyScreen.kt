@@ -45,8 +45,13 @@ import org.nongor.app.ui.theme.BrandBlue
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.TextPrimary
 import org.nongor.app.ui.theme.TextSecondary
+import org.nongor.app.ui.theme.ShapeMd
+import androidx.compose.foundation.BorderStroke
+import org.nongor.app.ui.theme.GlassBorder
+import org.nongor.app.ui.theme.Stroke
+import org.nongor.app.ui.theme.ErrorRed
 
-private val EmergencyRed = Color(0xFFD92D20)
+private val EmergencyRed = ErrorRed
 private val EmergencyRedSoft = Color(0xFFFDECEA)
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,8 +84,9 @@ fun EmergencyScreen(onBack: () -> Unit, onMesh: () -> Unit = {}) {
                 modifier = Modifier.fillMaxWidth()
                     .clickable { dialNumber(context, primary.number) },
                 colors = CardDefaults.cardColors(containerColor = EmergencyRed),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(20.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(Stroke.hairline, GlassBorder),
+                shape = ShapeMd,
             ) {
                 Row(Modifier.padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                     Box(Modifier.size(56.dp).clip(CircleShape).background(Color.White.copy(alpha = 0.18f)),
@@ -126,7 +132,8 @@ fun EmergencyScreen(onBack: () -> Unit, onMesh: () -> Unit = {}) {
                 Modifier.fillMaxWidth().clickable(onClick = onMesh),
                 colors = CardDefaults.cardColors(containerColor = BrandBlue.copy(alpha = 0.08f)),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(Stroke.hairline, GlassBorder),
+                shape = ShapeMd,
             ) {
                 Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
                     Box(Modifier.size(40.dp).clip(CircleShape).background(BrandBlue.copy(alpha = 0.16f)),
@@ -160,11 +167,12 @@ private fun ContactRow(number: String, title: String, desc: String, onCall: () -
     Card(
         Modifier.fillMaxWidth().clickable(onClick = onCall),
         colors = CardDefaults.cardColors(containerColor = BgCard),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(Stroke.hairline, GlassBorder),
+        shape = ShapeMd,
     ) {
         Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(58.dp).clip(RoundedCornerShape(14.dp)).background(EmergencyRedSoft),
+            Box(Modifier.size(58.dp).clip(ShapeMd).background(EmergencyRedSoft),
                 contentAlignment = Alignment.Center) {
                 Text(number, color = EmergencyRed, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
             }

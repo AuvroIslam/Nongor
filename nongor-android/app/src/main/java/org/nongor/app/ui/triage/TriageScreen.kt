@@ -46,6 +46,8 @@ import org.nongor.app.R
 import org.nongor.app.ui.components.HeroBanner
 import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.tr
+import compose.icons.feathericons.AlertTriangle
+import org.nongor.app.ui.theme.TileTriageFg
 
 private val EXAMPLES_EN = listOf(
     "Pregnant woman trapped on the rooftop, water is still rising fast, no food since morning.",
@@ -86,7 +88,7 @@ fun TriageScreen(viewModel: TriageViewModel, onBack: () -> Unit) {
         Column(
             Modifier.padding(pad).padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState()),
         ) {
-            HeroBanner(R.drawable.hero_triage,
+            HeroBanner(FeatherIcons.AlertTriangle, tint = TileTriageFg,
                 title = tr("Rescue Triage", "উদ্ধার ট্রায়াজ"),
                 subtitle = tr("Prioritise SOS by urgency", "জরুরিতা অনুযায়ী এসওএস সাজান"))
             Spacer(Modifier.height(12.dp))

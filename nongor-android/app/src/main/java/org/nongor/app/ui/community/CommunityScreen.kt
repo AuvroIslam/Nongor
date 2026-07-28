@@ -51,6 +51,9 @@ import org.nongor.app.data.CommunityKinds
 import org.nongor.app.data.CommunityReport
 import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.tr
+import org.nongor.app.ui.theme.ShapeSm
+import org.nongor.app.ui.theme.CautionAmber
+import org.nongor.app.ui.theme.SafeGreen
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -79,7 +82,7 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
             // ---- mesh status ----
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(10.dp).clip(CircleShape)
-                    .background(if (ui.started) Color(0xFF22A565) else Color(0xFFF5822B)))
+                    .background(if (ui.started) SafeGreen else CautionAmber))
                 Spacer(Modifier.width(8.dp))
                 Text(
                     (if (ui.started) tr("Sharing over mesh · ${ui.peers} peer(s)",
@@ -215,7 +218,7 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
 private fun KindChip(label: String, selected: Boolean, danger: Boolean, onClick: () -> Unit) {
     val base = if (danger) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
     Box(
-        Modifier.clip(RoundedCornerShape(10.dp))
+        Modifier.clip(ShapeSm)
             .background(if (selected) base.copy(alpha = 0.18f) else MaterialTheme.colorScheme.surfaceVariant)
             .clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = 8.dp),
     ) {

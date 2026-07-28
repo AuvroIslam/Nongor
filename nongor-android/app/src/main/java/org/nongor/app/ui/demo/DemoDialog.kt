@@ -62,6 +62,9 @@ import org.nongor.app.ui.theme.TileSummaryBg
 import org.nongor.app.ui.theme.TileSummaryFg
 import org.nongor.app.ui.theme.TileTriageBg
 import org.nongor.app.ui.theme.TileTriageFg
+import org.nongor.app.ui.theme.ShapeLg
+import org.nongor.app.ui.theme.ShapePill
+import org.nongor.app.ui.components.AnchorBadge
 
 private data class DemoStep(
     val icon: ImageVector?,
@@ -169,7 +172,7 @@ fun DemoDialog(
 
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Column(
-            Modifier.fillMaxWidth(0.92f).clip(RoundedCornerShape(24.dp)).background(BgCard)
+            Modifier.fillMaxWidth(0.92f).clip(ShapeLg).background(BgCard)
                 .padding(20.dp),
         ) {
             // Header row: progress dots + close
@@ -178,7 +181,7 @@ fun DemoDialog(
                     STEPS.indices.forEach { i ->
                         Box(
                             Modifier.height(6.dp).width(if (i == step) 20.dp else 6.dp)
-                                .clip(RoundedCornerShape(3.dp))
+                                .clip(ShapePill)
                                 .background(if (i == step) BrandBlue else BrandBlue.copy(alpha = 0.2f)),
                         )
                     }
@@ -192,10 +195,9 @@ fun DemoDialog(
             }
 
             Spacer(Modifier.height(16.dp))
-            // Illustration: mascot on intro, tool icon otherwise
+            // Anchor mark on the intro step, the tool's own icon on every other
             if (s.icon == null) {
-                Image(painterResource(R.drawable.mascot_1), null,
-                    modifier = Modifier.size(120.dp).align(Alignment.CenterHorizontally))
+                AnchorBadge(110.dp, Modifier.align(Alignment.CenterHorizontally))
             } else {
                 Box(Modifier.size(72.dp).clip(CircleShape).background(s.bg)
                     .align(Alignment.CenterHorizontally), contentAlignment = Alignment.Center) {
