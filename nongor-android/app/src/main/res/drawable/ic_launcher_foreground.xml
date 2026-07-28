@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- নোঙর — an anchor: what holds you when everything else is moving. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- ring -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,25 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0"
+        android:strokeColor="#F5A524"
+        android:strokeWidth="5" />
+    <!-- shaft -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,33 L54,86"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="6" />
+    <!-- crossbar -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M37,44 L71,44"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="6" />
+    <!-- arms -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M26,62 C26,79 39,87 54,87 C69,87 82,79 82,62"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="6" />
+    <!-- flukes -->
+    <path
+        android:fillColor="#F5A524"
+        android:pathData="M18,56 L34,58 L26,70 Z" />
+    <path
+        android:fillColor="#F5A524"
+        android:pathData="M90,56 L74,58 L82,70 Z" />
+</vector>

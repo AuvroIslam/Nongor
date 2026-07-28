@@ -1,0 +1,25 @@
+# Reference material (not part of this submission)
+
+# Claude Code
+.claude/
+CLAUDE.md
+
+# Android / Gradle
+*.iml
+.gradle/
+.idea/
+.DS_Store
+build/
+captures/
+.externalNativeBuild
+.cxx
+local.properties
+keystore.properties
+*.jks
+*.keystore
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
