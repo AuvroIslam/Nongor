@@ -1,73 +1,83 @@
 package org.nongor.app.data
 
 import android.content.Context
-import android.content.SharedPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Device-local settings. Deliberately SharedPreferences and not a datastore migration
- * dance: this file must be readable the instant the process starts, because the home
- * screen has to render in Bangla on a cold launch during an emergency.
+ * Small persisted app settings shared across screens: interface language and which offline
+ * region packs are installed / active. Backed by SharedPreferences, exposed as StateFlows so
+ * Compose recomposes when they change.
  */
-class AppPrefs private constructor(context: Context) {
+class AppPrefs(context: Context) {
 
-    private val sp: SharedPreferences =
-        context.applicationContext.getSharedPreferences("nongor_prefs", Context.MODE_PRIVATE)
+    private val sp = context.applicationContext.getSharedPreferences("nongor_prefs", Context.MODE_PRIVATE)
 
-    private val _bangla = MutableStateFlow(sp.getBoolean(KEY_BANGLA, true))
-    val bangla: StateFlow<Boolean> = _bangla
+    private val _language = MutableStateFlow(sp.getString(KEY_LANG, "en") ?: "en")
+    val language: StateFlow<String> = _language.asStateFlow()
+    val isBangla: Boolean get() = _language.value == "bn"
 
-    private val _onboarded = MutableStateFlow(sp.getBoolean(KEY_ONBOARDED, false))
-    val onboarded: StateFlow<Boolean> = _onboarded
+    private val _installedRegions = MutableStateFlow(
+        sp.getStringSet(KEY_INSTALLED, setOf(DEFAULT_REGION))?.toSet() ?: setOf(DEFAULT_REGION),
+    )
+    val installedRegions: StateFlow<Set<String>> = _installedRegions.asStateFlow()
 
-    private val _displayName = MutableStateFlow(sp.getString(KEY_NAME, "") ?: "")
-    val displayName: StateFlow<String> = _displayName
+    private val _activeRegion = MutableStateFlow(sp.getString(KEY_ACTIVE, DEFAULT_REGION) ?: DEFAULT_REGION)
+    val activeRegion: StateFlow<String> = _activeRegion.asStateFlow()
 
-    private val _familyCode = MutableStateFlow(sp.getString(KEY_FAMILY, "") ?: "")
-    val familyCode: StateFlow<String> = _familyCode
+    // First-run coaching balloon on Home — shown once, then dismissed for good.
+    private val _coachSeen = MutableStateFlow(sp.getBoolean(KEY_COACH_SEEN, false))
+    val coachSeen: StateFlow<Boolean> = _coachSeen.asStateFlow()
 
-    private val _highContrast = MutableStateFlow(sp.getBoolean(KEY_CONTRAST, false))
-    val highContrast: StateFlow<Boolean> = _highContrast
-
-    fun setBangla(value: Boolean) {
-        sp.edit().putBoolean(KEY_BANGLA, value).apply()
-        _bangla.value = value
+    fun markCoachSeen() {
+        _coachSeen.value = true
+        sp.edit().putBoolean(KEY_COACH_SEEN, true).apply()
     }
 
-    fun setOnboarded(value: Boolean) {
-        sp.edit().putBoolean(KEY_ONBOARDED, value).apply()
-        _onboarded.value = value
+    // Family Reunion: the shared family code (never broadcast in clear) + this phone's member name.
+    private val _familyCode = MutableStateFlow(sp.getString(KEY_FAMILY_CODE, "") ?: "")
+    val familyCode: StateFlow<String> = _familyCode.asStateFlow()
+
+    private val _memberName = MutableStateFlow(sp.getString(KEY_MEMBER_NAME, "") ?: "")
+    val memberName: StateFlow<String> = _memberName.asStateFlow()
+
+    fun setFamily(code: String, name: String) {
+        _familyCode.value = code.trim()
+        _memberName.value = name.trim()
+        sp.edit().putString(KEY_FAMILY_CODE, code.trim())
+            .putString(KEY_MEMBER_NAME, name.trim()).apply()
     }
 
-    fun setDisplayName(value: String) {
-        sp.edit().putString(KEY_NAME, value).apply()
-        _displayName.value = value
+    fun clearFamily() {
+        _familyCode.value = ""; _memberName.value = ""
+        sp.edit().remove(KEY_FAMILY_CODE).remove(KEY_MEMBER_NAME).apply()
     }
 
-    fun setFamilyCode(value: String) {
-        sp.edit().putString(KEY_FAMILY, value).apply()
-        _familyCode.value = value
+    fun setLanguage(lang: String) {
+        _language.value = lang
+        sp.edit().putString(KEY_LANG, lang).apply()
     }
 
-    fun setHighContrast(value: Boolean) {
-        sp.edit().putBoolean(KEY_CONTRAST, value).apply()
-        _highContrast.value = value
+    fun installRegion(id: String) {
+        val next = _installedRegions.value + id
+        _installedRegions.value = next
+        sp.edit().putStringSet(KEY_INSTALLED, next).apply()
+        setActiveRegion(id)
+    }
+
+    fun setActiveRegion(id: String) {
+        _activeRegion.value = id
+        sp.edit().putString(KEY_ACTIVE, id).apply()
     }
 
     companion object {
-        private const val KEY_BANGLA = "bangla"
-        private const val KEY_ONBOARDED = "onboarded"
-        private const val KEY_NAME = "display_name"
-        private const val KEY_FAMILY = "family_code"
-        private const val KEY_CONTRAST = "high_contrast"
-
-        @Volatile
-        private var instance: AppPrefs? = null
-
-        fun get(context: Context): AppPrefs =
-            instance ?: synchronized(this) {
-                instance ?: AppPrefs(context).also { instance = it }
-            }
+        const val DEFAULT_REGION = "chattogram"
+        private const val KEY_LANG = "language"
+        private const val KEY_INSTALLED = "installed_regions"
+        private const val KEY_ACTIVE = "active_region"
+        private const val KEY_COACH_SEEN = "coach_seen"
+        private const val KEY_FAMILY_CODE = "family_code"
+        private const val KEY_MEMBER_NAME = "member_name"
     }
 }
