@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The in-app brand mark: the anchor on a filled deep-water tile. Used at small sizes on the
+     home header, where it is clipped to a circle, so the background runs full bleed. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <path
+        android:fillColor="#0C3B5E"
+        android:pathData="M0,0 L120,0 L120,120 L0,120 Z" />
+
+    <!-- ring -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M60,30 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0"
+        android:strokeColor="#F5A524"
+        android:strokeWidth="5.5" />
+    <!-- shaft -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M60,38 L60,92"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="6.5" />
+    <!-- crossbar -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M42,49 L78,49"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="6.5" />
+    <!-- arms -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M32,68 C32,85 45,93 60,93 C75,93 88,85 88,68"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="6.5" />
+    <!-- flukes -->
+    <path
+        android:fillColor="#F5A524"
+        android:pathData="M24,62 L40,64 L32,76 Z" />
+    <path
+        android:fillColor="#F5A524"
+        android:pathData="M96,62 L80,64 L88,76 Z" />
+</vector>

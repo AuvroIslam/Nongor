@@ -41,7 +41,7 @@ import compose.icons.feathericons.Phone
 import compose.icons.feathericons.PhoneCall
 import compose.icons.feathericons.Radio
 import org.nongor.app.ui.i18n.tr
-import org.nongor.app.ui.theme.AccentPurple
+import org.nongor.app.ui.theme.BrandBlue
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.TextPrimary
 import org.nongor.app.ui.theme.TextSecondary
@@ -124,14 +124,14 @@ fun EmergencyScreen(onBack: () -> Unit, onMesh: () -> Unit = {}) {
             Spacer(Modifier.height(8.dp))
             Card(
                 Modifier.fillMaxWidth().clickable(onClick = onMesh),
-                colors = CardDefaults.cardColors(containerColor = AccentPurple.copy(alpha = 0.08f)),
+                colors = CardDefaults.cardColors(containerColor = BrandBlue.copy(alpha = 0.08f)),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                 shape = RoundedCornerShape(16.dp),
             ) {
                 Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Box(Modifier.size(40.dp).clip(CircleShape).background(AccentPurple.copy(alpha = 0.16f)),
+                    Box(Modifier.size(40.dp).clip(CircleShape).background(BrandBlue.copy(alpha = 0.16f)),
                         contentAlignment = Alignment.Center) {
-                        Icon(FeatherIcons.Radio, null, tint = AccentPurple, modifier = Modifier.size(22.dp))
+                        Icon(FeatherIcons.Radio, null, tint = BrandBlue, modifier = Modifier.size(22.dp))
                     }
                     Spacer(Modifier.width(12.dp))
                     Column(Modifier.weight(1f)) {

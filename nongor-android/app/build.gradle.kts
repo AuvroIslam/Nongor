@@ -25,6 +25,13 @@ android {
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Ship only the ABIs real phones use. The x86/x86_64 slices exist for emulators and
+        // were 24 MB of a 57 MB APK — dead weight for anyone downloading this over a patchy
+        // connection, which is exactly our user.
+        ndk {
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+        }
     }
 
     signingConfigs {

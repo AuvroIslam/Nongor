@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- নোঙর — an anchor. Drawn as a vector rather than shipped as bitmap art so it stays sharp at
+     every size and costs the APK a couple of kilobytes instead of a megabyte. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- ring -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M60,26 m-9,0 a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0"
+        android:strokeColor="#F5A524"
+        android:strokeWidth="6" />
+    <!-- shaft -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M60,35 L60,96"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="7" />
+    <!-- crossbar -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M40,48 L80,48"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="7" />
+    <!-- arms -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M28,68 C28,88 43,97 60,97 C77,97 92,88 92,68"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="7" />
+    <!-- flukes -->
+    <path
+        android:fillColor="#F5A524"
+        android:pathData="M18,61 L37,64 L28,78 Z" />
+    <path
+        android:fillColor="#F5A524"
+        android:pathData="M102,61 L83,64 L92,78 Z" />
+</vector>

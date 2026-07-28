@@ -64,7 +64,7 @@ fun NongorGradientBackground(
             // Mesh blobs
             drawCircle(
                 brush = Brush.radialGradient(
-                    listOf(AccentPurple.copy(alpha = 0.20f), Color.Transparent),
+                    listOf(BrandBlue.copy(alpha = 0.20f), Color.Transparent),
                     center = Offset(size.width * (0.18f + 0.08f * driftA), size.height * (0.16f + 0.07f * driftB)),
                     radius = size.width * 0.52f,
                 ),
@@ -73,7 +73,7 @@ fun NongorGradientBackground(
             )
             drawCircle(
                 brush = Brush.radialGradient(
-                    listOf(AccentViolet.copy(alpha = 0.18f), Color.Transparent),
+                    listOf(BrandTeal.copy(alpha = 0.18f), Color.Transparent),
                     center = Offset(size.width * (0.80f - 0.10f * driftB), size.height * (0.18f + 0.06f * driftC)),
                     radius = size.width * 0.46f,
                 ),
@@ -91,7 +91,7 @@ fun NongorGradientBackground(
             )
             drawCircle(
                 brush = Brush.radialGradient(
-                    listOf(AccentGlow.copy(alpha = 0.10f), Color.Transparent),
+                    listOf(BrandBlueGlow.copy(alpha = 0.10f), Color.Transparent),
                     center = Offset(size.width * (0.76f - 0.06f * driftA), size.height * (0.72f - 0.08f * driftC)),
                     radius = size.width * 0.42f,
                 ),
@@ -107,7 +107,7 @@ fun NongorGradientBackground(
                 val alpha = 0.035f + ((i % 6) / 120f)
                 val radius = 0.8f + (i % 3) * 0.8f
                 drawCircle(
-                    color = AccentViolet.copy(alpha = alpha),
+                    color = BrandTeal.copy(alpha = alpha),
                     radius = radius,
                     center = Offset(
                         x + (driftA - 0.5f) * ((i % 5) * 1.5f),

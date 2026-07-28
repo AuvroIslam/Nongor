@@ -50,8 +50,8 @@ fun HeroBanner(
             Box(
                 Modifier.fillMaxSize().background(
                     Brush.horizontalGradient(
-                        0.0f to Color(0xFF2A1A66).copy(alpha = 0.55f),
-                        0.42f to Color(0xFF2A1A66).copy(alpha = 0.18f),
+                        0.0f to Color(0xFF0C3B5E).copy(alpha = 0.55f),
+                        0.42f to Color(0xFF0C3B5E).copy(alpha = 0.18f),
                         0.62f to Color.Transparent,
                     ),
                 ),

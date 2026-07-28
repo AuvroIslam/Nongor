@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.dp
 import org.nongor.app.R
 import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.tr
-import org.nongor.app.ui.theme.AccentPurple
+import org.nongor.app.ui.theme.BrandBlue
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.TextPrimary
 import org.nongor.app.ui.theme.TextSecondary
@@ -211,7 +211,7 @@ private fun FeatureExplainer(f: Feature) {
 private fun MascotNote(@DrawableRes mascot: Int, title: String, lines: List<String>) {
     Card(
         Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = AccentPurple.copy(alpha = 0.08f)),
+        colors = CardDefaults.cardColors(containerColor = BrandBlue.copy(alpha = 0.08f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         shape = RoundedCornerShape(18.dp),
     ) {
@@ -220,7 +220,7 @@ private fun MascotNote(@DrawableRes mascot: Int, title: String, lines: List<Stri
                 contentScale = ContentScale.Fit)
             Spacer(Modifier.width(12.dp))
             Column(Modifier.padding(top = 6.dp)) {
-                Text(title, color = AccentPurple, fontWeight = FontWeight.Bold,
+                Text(title, color = BrandBlue, fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleSmall)
                 Spacer(Modifier.height(6.dp))
                 lines.forEach {

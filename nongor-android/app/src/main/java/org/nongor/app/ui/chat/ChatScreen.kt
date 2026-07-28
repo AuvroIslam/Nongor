@@ -119,9 +119,9 @@ import coil.request.ImageRequest
 import org.nongor.app.R
 import org.nongor.app.actions.AppActionLauncher
 import org.nongor.app.actions.AssistantAction
-import org.nongor.app.ui.theme.AccentGlow
-import org.nongor.app.ui.theme.AccentPurple
-import org.nongor.app.ui.theme.AccentViolet
+import org.nongor.app.ui.theme.BrandBlueGlow
+import org.nongor.app.ui.theme.BrandBlue
+import org.nongor.app.ui.theme.BrandTeal
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.BgDark
 import org.nongor.app.ui.theme.BgMid
@@ -608,13 +608,13 @@ private fun PolkaDotsAccent(mirrored: Boolean = false) {
         horizontalAlignment = if (mirrored) Alignment.End else Alignment.Start,
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-            Dot(color = AccentViolet.copy(alpha = 0.95f), size = 4.dp)
-            Dot(color = AccentPurple.copy(alpha = 0.65f), size = 3.dp)
+            Dot(color = BrandTeal.copy(alpha = 0.95f), size = 4.dp)
+            Dot(color = BrandBlue.copy(alpha = 0.65f), size = 3.dp)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-            Dot(color = AccentPurple.copy(alpha = 0.55f), size = 3.dp)
-            Dot(color = AccentViolet.copy(alpha = 0.8f), size = 4.dp)
-            Dot(color = AccentGlow.copy(alpha = 0.45f), size = 2.dp)
+            Dot(color = BrandBlue.copy(alpha = 0.55f), size = 3.dp)
+            Dot(color = BrandTeal.copy(alpha = 0.8f), size = 4.dp)
+            Dot(color = BrandBlueGlow.copy(alpha = 0.45f), size = 2.dp)
         }
     }
 }
@@ -707,7 +707,7 @@ private fun SideDrawer(
                 .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(Icons.Outlined.EditNote, contentDescription = null, tint = AccentViolet, modifier = Modifier.size(20.dp))
+            Icon(Icons.Outlined.EditNote, contentDescription = null, tint = BrandTeal, modifier = Modifier.size(20.dp))
             Spacer(Modifier.width(10.dp))
             Text(tr("New chat", "নতুন চ্যাট"), color = TextPrimary, fontWeight = FontWeight.Medium)
         }
@@ -856,9 +856,9 @@ private fun GlowOrb(size: Int, animated: Boolean = false) {
                         width = 1.5.dp,
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                AccentViolet.copy(alpha = 0f),
-                                AccentViolet.copy(alpha = 0.9f),
-                                AccentPurple.copy(alpha = 0f),
+                                BrandTeal.copy(alpha = 0f),
+                                BrandTeal.copy(alpha = 0.9f),
+                                BrandBlue.copy(alpha = 0f),
                             ),
                             start = Offset.Zero,
                             end = Offset(size.toFloat() * 2f, size.toFloat() * 2f),
@@ -878,9 +878,9 @@ private fun GlowOrb(size: Int, animated: Boolean = false) {
                         width = 1.dp,
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                AccentPurple.copy(alpha = 0f),
-                                AccentGlow.copy(alpha = 0.7f),
-                                AccentViolet.copy(alpha = 0f),
+                                BrandBlue.copy(alpha = 0f),
+                                BrandBlueGlow.copy(alpha = 0.7f),
+                                BrandTeal.copy(alpha = 0f),
                             ),
                             start = Offset.Zero,
                             end = Offset(size.toFloat() * 2.4f, size.toFloat() * 2.4f),
@@ -903,8 +903,8 @@ private fun GlowOrb(size: Int, animated: Boolean = false) {
                 .background(
                     brush = Brush.radialGradient(
                         colors = listOf(
-                            AccentPurple.copy(alpha = 0.3f),
-                            AccentGlow.copy(alpha = 0.1f),
+                            BrandBlue.copy(alpha = 0.3f),
+                            BrandBlueGlow.copy(alpha = 0.1f),
                             Color.Transparent,
                         ),
                     ),
@@ -923,9 +923,9 @@ private fun GlowOrb(size: Int, animated: Boolean = false) {
                 .background(
                     brush = Brush.linearGradient(
                         colors = if (animated) {
-                            listOf(AccentPurple, AccentViolet, AccentGlow, AccentPurple)
+                            listOf(BrandBlue, BrandTeal, BrandBlueGlow, BrandBlue)
                         } else {
-                            listOf(AccentPurple, AccentViolet)
+                            listOf(BrandBlue, BrandTeal)
                         },
                         start = Offset.Zero,
                         end = Offset(size.toFloat(), size.toFloat()),
@@ -1010,7 +1010,7 @@ private fun GlassButton(label: String, onClick: () -> Unit) {
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = AccentPurple,
+            containerColor = BrandBlue,
             contentColor = Color.White,
         ),
     ) { Text(label, fontWeight = FontWeight.SemiBold) }
@@ -1045,7 +1045,7 @@ private fun SmallToggleChip(
         modifier = Modifier
             .clip(RoundedCornerShape(999.dp))
             .background(if (active) BgCard else BgDark.copy(alpha = 0.42f))
-            .border(1.dp, if (active) AccentViolet.copy(alpha = 0.4f) else Divider, RoundedCornerShape(999.dp))
+            .border(1.dp, if (active) BrandTeal.copy(alpha = 0.4f) else Divider, RoundedCornerShape(999.dp))
             .clickable { onClick() }
             .padding(horizontal = 10.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -1088,7 +1088,7 @@ private fun UserMessage(text: String, imagePath: String? = null) {
                 .clip(RoundedCornerShape(18.dp, 18.dp, 4.dp, 18.dp))
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(UserBubble, AccentPurple.copy(alpha = 0.3f)),
+                        colors = listOf(UserBubble, BrandBlue.copy(alpha = 0.3f)),
                     ),
                 )
                 .border(1.dp, GlassBorder, RoundedCornerShape(18.dp, 18.dp, 4.dp, 18.dp))
@@ -1110,7 +1110,7 @@ private fun AssistantMessage(text: String, isStreaming: Boolean = false) {
             Modifier
                 .size(30.dp)
                 .background(
-                    brush = Brush.linearGradient(listOf(AccentPurple, AccentViolet)),
+                    brush = Brush.linearGradient(listOf(BrandBlue, BrandTeal)),
                     shape = CircleShape,
                 ),
             contentAlignment = Alignment.Center,
@@ -1124,7 +1124,7 @@ private fun AssistantMessage(text: String, isStreaming: Boolean = false) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(12.dp),
                     strokeWidth = 1.5.dp,
-                    color = AccentViolet,
+                    color = BrandTeal,
                 )
             }
         }
@@ -1357,7 +1357,7 @@ private fun Composer(
                     Icon(
                         Icons.Default.Bolt,
                         contentDescription = null,
-                        tint = if (conciseMode) AccentViolet else TextMuted,
+                        tint = if (conciseMode) BrandTeal else TextMuted,
                         modifier = Modifier.size(14.dp),
                     )
                 },
@@ -1370,7 +1370,7 @@ private fun Composer(
                     Icon(
                         Icons.Default.Lightbulb,
                         contentDescription = null,
-                        tint = if (thinking) AccentViolet else TextMuted,
+                        tint = if (thinking) BrandTeal else TextMuted,
                         modifier = Modifier.size(14.dp),
                     )
                 },
@@ -1461,8 +1461,8 @@ private fun Composer(
                     1.25.dp,
                     Brush.linearGradient(
                         colors = listOf(
-                            AccentPurple.copy(alpha = composerBorderAlpha),
-                            AccentViolet.copy(alpha = composerBorderAlpha),
+                            BrandBlue.copy(alpha = composerBorderAlpha),
+                            BrandTeal.copy(alpha = composerBorderAlpha),
                             Color(0xFF7DD3FC).copy(alpha = composerBorderAlpha * 0.8f),
                         ),
                         start = Offset.Zero,
@@ -1496,7 +1496,7 @@ private fun Composer(
                         .fillMaxWidth()
                         .onFocusChanged { isFocused = it.isFocused },
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = TextPrimary),
-                    cursorBrush = SolidColor(AccentViolet),
+                    cursorBrush = SolidColor(BrandTeal),
                     maxLines = 6,
                 )
             }
@@ -1513,7 +1513,7 @@ private fun Composer(
                     .size(38.dp)
                     .clip(CircleShape)
                     .background(
-                        if (canSend) Brush.linearGradient(listOf(AccentPurple, AccentViolet))
+                        if (canSend) Brush.linearGradient(listOf(BrandBlue, BrandTeal))
                         else Brush.linearGradient(listOf(BgCard, BgCard)),
                     )
                     .then(if (canSend) Modifier.border(0.dp, Color.Transparent, CircleShape) else Modifier.border(1.dp, Divider, CircleShape))
@@ -1538,9 +1538,9 @@ private fun Composer(
                         Brush.linearGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                AccentViolet.copy(alpha = 0.15f),
+                                BrandTeal.copy(alpha = 0.15f),
                                 Color.White.copy(alpha = 0.35f),
-                                AccentPurple.copy(alpha = 0.15f),
+                                BrandBlue.copy(alpha = 0.15f),
                                 Color.Transparent,
                             ),
                             start = Offset(shimmerShift - 180f, 0f),
@@ -1567,7 +1567,7 @@ private fun Composer(
             if (showTokPerSec) {
                 Text(
                     " · %.1f tok/s".format(tokPerSec),
-                    color = AccentViolet.copy(alpha = 0.7f),
+                    color = BrandTeal.copy(alpha = 0.7f),
                     fontSize = 10.sp,
                     fontFamily = GeistMono,
                 )

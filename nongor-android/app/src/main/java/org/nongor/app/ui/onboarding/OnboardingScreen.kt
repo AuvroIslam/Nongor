@@ -49,9 +49,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.nongor.app.R
-import org.nongor.app.ui.theme.AccentGlow
-import org.nongor.app.ui.theme.AccentPurple
-import org.nongor.app.ui.theme.AccentViolet
+import org.nongor.app.ui.theme.BrandBlueGlow
+import org.nongor.app.ui.theme.BrandBlue
+import org.nongor.app.ui.theme.BrandTeal
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.BgDark
 import org.nongor.app.ui.theme.BgMid
@@ -148,8 +148,8 @@ fun OnboardingScreen(
                 .background(
                     brush = Brush.radialGradient(
                         colors = listOf(
-                            AccentPurple.copy(alpha = 0.2f),
-                            AccentGlow.copy(alpha = 0.05f),
+                            BrandBlue.copy(alpha = 0.2f),
+                            BrandBlueGlow.copy(alpha = 0.05f),
                             Color.Transparent,
                         ),
                     ),
@@ -174,7 +174,7 @@ fun OnboardingScreen(
                         .size(140.dp)
                         .background(
                             brush = Brush.radialGradient(
-                                colors = listOf(AccentPurple.copy(alpha = 0.35f), AccentGlow.copy(alpha = 0.1f), Color.Transparent),
+                                colors = listOf(BrandBlue.copy(alpha = 0.35f), BrandBlueGlow.copy(alpha = 0.1f), Color.Transparent),
                             ),
                             shape = CircleShape,
                         ),
@@ -184,7 +184,7 @@ fun OnboardingScreen(
                         .size(88.dp)
                         .background(
                             brush = Brush.linearGradient(
-                                colors = listOf(AccentPurple, AccentViolet),
+                                colors = listOf(BrandBlue, BrandTeal),
                                 start = Offset.Zero,
                                 end = Offset(88f, 88f),
                             ),
@@ -298,7 +298,7 @@ fun OnboardingScreen(
                         .fillMaxWidth()
                         .height(6.dp)
                         .clip(RoundedCornerShape(3.dp)),
-                    color = AccentViolet,
+                    color = BrandTeal,
                     trackColor = Divider,
                 )
                 Spacer(Modifier.height(8.dp))
@@ -320,7 +320,7 @@ fun OnboardingScreen(
                     .height(54.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AccentPurple,
+                    containerColor = BrandBlue,
                     contentColor = Color.White,
                     disabledContainerColor = BgCard,
                     disabledContentColor = TextMuted,
@@ -379,7 +379,7 @@ private fun ConsentLine(text: String) {
                 .padding(top = 8.dp)
                 .size(6.dp)
                 .clip(CircleShape)
-                .background(AccentViolet),
+                .background(BrandTeal),
         )
         Text(
             text = text,
@@ -420,7 +420,7 @@ private fun LegalLinkRow(
         )
         Text(
             action,
-            color = AccentViolet,
+            color = BrandTeal,
             style = MaterialTheme.typography.labelMedium,
         )
     }

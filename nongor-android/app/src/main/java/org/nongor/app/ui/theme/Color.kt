@@ -2,50 +2,58 @@ package org.nongor.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// ---- Nongor light pastel palette (names kept for base-app compatibility) ----
-val BgDark        = Color(0xFFF5F3FB)   // app background (light lavender)
-val BgMid         = Color(0xFFECE8F8)   // subtle variant
+/**
+ * Nongor's palette: deep water blue for structure, amber for "act now", one red for danger.
+ *
+ * The light, low-saturation background is deliberate — a dark theme photographs better but a
+ * bright screen is what is actually readable outdoors at midday, which is when an evacuation
+ * happens. Semantic meanings live in [NongorColors]; this file is the raw brand ramp.
+ */
+
+// ---- Surfaces ----
+val BgDark        = Color(0xFFF4F7F9)   // app background (cool off-white)
+val BgMid         = Color(0xFFE6EEF3)   // subtle variant
 val BgCard        = Color(0xFFFFFFFF)   // cards / surface
 
 val GlassBg       = Color(0xFFFFFFFF)
-val GlassBorder   = Color(0xFFE9E5F4)
+val GlassBorder   = Color(0xFFDCE6EC)
 
-// Purple accent family
-val AccentPurple  = Color(0xFF7B5CF0)
-val AccentIndigo  = Color(0xFF6C5CE7)
-val AccentViolet  = Color(0xFF8B5CF6)
-val AccentLilac   = Color(0xFFB79CF7)
-val AccentGlow    = Color(0xFF9D86F5)
-val AccentPink    = Color(0xFFEC6A8C)
+// ---- Brand blues ----
+val BrandBlue     = Color(0xFF0E5A85)   // primary accent
+val BrandBlueDeep = Color(0xFF0C3B5E)   // headings, launcher tile, splash
+val BrandTeal     = Color(0xFF0E7C86)   // secondary accent (translation)
+val BrandBlueSoft = Color(0xFF8FC3DE)
+val BrandBlueGlow = Color(0xFF3F8DB8)
+val BrandCoral    = Color(0xFFEC6A5E)
 
-// Text
-val TextPrimary   = Color(0xFF221C36)
-val TextSecondary = Color(0xFF5C5873)
-val TextMuted     = Color(0xFF9A96AD)
+// ---- Text ----
+val TextPrimary   = Color(0xFF10202B)
+val TextSecondary = Color(0xFF4E6472)
+val TextMuted     = Color(0xFF8FA0AC)
 
-// Functional
-val SendGreen     = AccentPurple
-val ErrorRed      = Color(0xFFE5484D)
+// ---- Functional ----
+val SendGreen     = BrandBlue
+val ErrorRed      = Color(0xFFD62828)
 
-// Compat aliases
-val GemmaBlue     = AccentViolet
+// ---- Aliases kept so every screen reaches for the same few names ----
+val GemmaBlue     = BrandTeal
 val GemmaBlack    = TextPrimary
-val GemmaGreen    = AccentPurple
-val GemmaAvatarBg = AccentPurple
+val GemmaGreen    = BrandBlue
+val GemmaAvatarBg = BrandBlue
 val Background    = BgDark
 val Surface       = BgCard
-val InputBar      = Color(0xFFF1EDFB)
+val InputBar      = Color(0xFFEAF1F5)
 val OnBackground  = TextPrimary
 val Muted         = TextSecondary
-val Divider       = Color(0xFFE9E5F4)
-val UserBubble    = AccentPurple
+val Divider       = Color(0xFFDCE6EC)
+val UserBubble    = BrandBlue
 
-// ---- Pastel feature tiles (Nongor home) ----
-val TileTriageBg  = Color(0xFFFCE9EC); val TileTriageFg  = Color(0xFFE5484D)
-val TileAidBg     = Color(0xFFE4F6EC); val TileAidFg     = Color(0xFF1FA463)
+// ---- Feature tiles ----
+val TileTriageBg  = Color(0xFFFDECEA); val TileTriageFg  = Color(0xFFD62828)
+val TileAidBg     = Color(0xFFE4F6EC); val TileAidFg     = Color(0xFF1B9C6B)
 val TileShelterBg = Color(0xFFE7F0FE); val TileShelterFg = Color(0xFF2E7DF5)
-val TileSummaryBg = Color(0xFFEEE9FC); val TileSummaryFg = Color(0xFF7B5CF0)
-val TileMeshBg    = Color(0xFFFFF0E1); val TileMeshFg    = Color(0xFFF5822B)
-val TileChatBg    = Color(0xFFEFE9FB); val TileChatFg    = Color(0xFF8B5CF6)
+val TileSummaryBg = Color(0xFFE3EEF5); val TileSummaryFg = Color(0xFF0E5A85)
+val TileMeshBg    = Color(0xFFFFF0E1); val TileMeshFg    = Color(0xFFE07B00)
+val TileChatBg    = Color(0xFFDFF1F3); val TileChatFg    = Color(0xFF0E7C86)
 val TileCommunityBg = Color(0xFFDFF5F1); val TileCommunityFg = Color(0xFF12A594)
-val TileFamilyBg  = Color(0xFFE9EAFB); val TileFamilyFg  = Color(0xFF5457D6)
+val TileFamilyBg  = Color(0xFFE4EBF2); val TileFamilyFg  = Color(0xFF3C5A78)

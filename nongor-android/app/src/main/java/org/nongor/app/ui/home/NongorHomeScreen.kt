@@ -66,7 +66,7 @@ import org.nongor.app.ui.demo.Actions
 import org.nongor.app.ui.demo.DemoDialog
 import org.nongor.app.ui.emergency.dialNumber
 import org.nongor.app.ui.i18n.tr
-import org.nongor.app.ui.theme.AccentPurple
+import org.nongor.app.ui.theme.BrandBlue
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.TextPrimary
 import org.nongor.app.ui.theme.TextSecondary
@@ -132,9 +132,9 @@ fun NongorHomeScreen(
                 modifier = Modifier.size(48.dp).clip(CircleShape))
             Spacer(Modifier.width(8.dp))
             Column {
-                Text("নোঙর", color = AccentPurple, fontWeight = FontWeight.ExtraBold,
+                Text("নোঙর", color = BrandBlue, fontWeight = FontWeight.ExtraBold,
                     fontSize = 26.sp, lineHeight = 26.sp)
-                Text("NONGOR", color = AccentPurple, fontSize = 11.sp,
+                Text("NONGOR", color = BrandBlue, fontSize = 11.sp,
                     fontWeight = FontWeight.Bold, letterSpacing = 3.sp,
                     modifier = Modifier.offset(y = (-5).dp))
             }
@@ -168,12 +168,12 @@ fun NongorHomeScreen(
         Spacer(Modifier.height(14.dp))
         Row(
             Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
-                .background(AccentPurple.copy(alpha = 0.10f))
+                .background(BrandBlue.copy(alpha = 0.10f))
                 .clickable { showDemo = true }
                 .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(Modifier.size(36.dp).clip(CircleShape).background(AccentPurple),
+            Box(Modifier.size(36.dp).clip(CircleShape).background(BrandBlue),
                 contentAlignment = Alignment.Center) {
                 Icon(FeatherIcons.Play, null, tint = Color.White, modifier = Modifier.size(18.dp))
             }
@@ -209,16 +209,16 @@ fun NongorHomeScreen(
             // when the model was skipped and only the deterministic core tools are available.
             val dotColor = if (modelReady) Color(0xFF22A565) else Color(0xFFF5822B)
             Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(44.dp).clip(CircleShape).background(AccentPurple.copy(alpha = 0.14f)),
+                Box(Modifier.size(44.dp).clip(CircleShape).background(BrandBlue.copy(alpha = 0.14f)),
                     contentAlignment = Alignment.Center) {
-                    Icon(FeatherIcons.Shield, null, tint = AccentPurple, modifier = Modifier.size(24.dp))
+                    Icon(FeatherIcons.Shield, null, tint = BrandBlue, modifier = Modifier.size(24.dp))
                 }
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(tr("You are in ", "আপনি এখন "), color = TextPrimary,
                             style = MaterialTheme.typography.bodyMedium)
-                        Text(tr("Offline Mode", "অফলাইন মোডে"), color = AccentPurple,
+                        Text(tr("Offline Mode", "অফলাইন মোডে"), color = BrandBlue,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyMedium)
                         Text(" ●", color = dotColor,
@@ -358,10 +358,10 @@ private fun CoachBalloon(onDismiss: () -> Unit) {
             val p = Path().apply {
                 moveTo(0f, size.height); lineTo(size.width / 2f, 0f); lineTo(size.width, size.height); close()
             }
-            drawPath(p, AccentPurple)
+            drawPath(p, BrandBlue)
         }
         Row(
-            Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(AccentPurple)
+            Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(BrandBlue)
                 .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {

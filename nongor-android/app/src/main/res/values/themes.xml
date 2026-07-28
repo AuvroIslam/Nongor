@@ -2,13 +2,13 @@
     <!-- The system splash is just the Nongor purple — no icon — so the only branded moment is the
          in-app splash (owl + নোঙর), avoiding a big-icon-then-small-icon double. -->
     <style name="Theme.Nongor" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#7B5CF0</item>
+        <item name="windowSplashScreenBackground">#0C3B5E</item>
         <item name="windowSplashScreenAnimatedIcon">@android:color/transparent</item>
         <item name="postSplashScreenTheme">@style/Theme.Nongor.Main</item>
     </style>
     <style name="Theme.Nongor.Main" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#F5F3FB</item>
-        <item name="android:navigationBarColor">#F5F3FB</item>
+        <item name="android:statusBarColor">#F4F7F9</item>
+        <item name="android:navigationBarColor">#F4F7F9</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
     </style>

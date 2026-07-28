@@ -59,7 +59,7 @@ import androidx.compose.runtime.collectAsState
 import org.nongor.app.data.RegionAssets
 import org.nongor.app.data.Regions
 import org.nongor.app.ui.i18n.tr
-import org.nongor.app.ui.theme.AccentPurple
+import org.nongor.app.ui.theme.BrandBlue
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.BgDark
 import org.nongor.app.ui.theme.ErrorRed
@@ -224,7 +224,7 @@ fun SettingsScreen(
                     tr("Remove all conversation history", "সব কথোপকথন মুছে ফেলুন"),
                 ) { viewModel.clearChatHistory(); cleared = true }
                 if (cleared) {
-                    Text(tr("Chats cleared", "চ্যাট মোছা হয়েছে"), color = AccentPurple,
+                    Text(tr("Chats cleared", "চ্যাট মোছা হয়েছে"), color = BrandBlue,
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(start = 58.dp, bottom = 6.dp))
                 }
@@ -301,8 +301,8 @@ private fun IconBubble(icon: ImageVector, bg: Color, fg: Color) {
 private fun LangChip(label: String, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
     Box(
         modifier.clip(RoundedCornerShape(12.dp))
-            .background(if (selected) AccentPurple else BgDark)
-            .border(1.dp, if (selected) AccentPurple else GlassBorder, RoundedCornerShape(12.dp))
+            .background(if (selected) BrandBlue else BgDark)
+            .border(1.dp, if (selected) BrandBlue else GlassBorder, RoundedCornerShape(12.dp))
             .clickable(onClick = onClick).padding(vertical = 12.dp),
         contentAlignment = Alignment.Center,
     ) {

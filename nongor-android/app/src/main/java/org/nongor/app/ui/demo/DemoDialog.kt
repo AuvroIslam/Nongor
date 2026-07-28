@@ -45,7 +45,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import org.nongor.app.R
 import org.nongor.app.ui.i18n.LocalBangla
-import org.nongor.app.ui.theme.AccentPurple
+import org.nongor.app.ui.theme.BrandBlue
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.TextPrimary
 import org.nongor.app.ui.theme.TextSecondary
@@ -164,7 +164,7 @@ fun DemoDialog(
                         Box(
                             Modifier.height(6.dp).width(if (i == step) 20.dp else 6.dp)
                                 .clip(RoundedCornerShape(3.dp))
-                                .background(if (i == step) AccentPurple else AccentPurple.copy(alpha = 0.2f)),
+                                .background(if (i == step) BrandBlue else BrandBlue.copy(alpha = 0.2f)),
                         )
                     }
                 }

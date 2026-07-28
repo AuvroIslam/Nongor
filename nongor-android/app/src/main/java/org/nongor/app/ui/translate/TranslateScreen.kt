@@ -57,7 +57,7 @@ import org.nongor.app.core.Priority
 import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.localiseDigits
 import org.nongor.app.ui.i18n.tr
-import org.nongor.app.ui.theme.AccentPurple
+import org.nongor.app.ui.theme.BrandBlue
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.TextPrimary
 import org.nongor.app.ui.theme.TextSecondary
@@ -272,7 +272,7 @@ private fun LanguageRow(
             val written = coverage(lang.code)
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = if (isSelected) AccentPurple else BgCard,
+                    containerColor = if (isSelected) BrandBlue else BgCard,
                 ),
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier.clickable { onSelect(if (isSelected) null else lang.code) },
@@ -315,13 +315,13 @@ private fun GuidedCard(
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .background(AccentPurple.copy(alpha = 0.10f))
+            .background(BrandBlue.copy(alpha = 0.10f))
             .clickable { if (active) onResume() else onStart() }
             .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            Modifier.size(36.dp).clip(CircleShape).background(AccentPurple),
+            Modifier.size(36.dp).clip(CircleShape).background(BrandBlue),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
@@ -398,7 +398,7 @@ private fun HandoverCard(
                 Row(
                     Modifier
                         .clip(RoundedCornerShape(999.dp))
-                        .background(AccentPurple)
+                        .background(BrandBlue)
                         .clickable(onClick = onSend)
                         .padding(horizontal = 12.dp, vertical = 7.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -444,7 +444,7 @@ private fun PhraseRow(phrase: Phrase, bangla: Boolean, answered: Boolean, onClic
                     if (answered) {
                         NongorColors.Safe.copy(alpha = 0.16f)
                     } else {
-                        AccentPurple.copy(alpha = 0.10f)
+                        BrandBlue.copy(alpha = 0.10f)
                     },
                 ),
             contentAlignment = Alignment.Center,
@@ -452,7 +452,7 @@ private fun PhraseRow(phrase: Phrase, bangla: Boolean, answered: Boolean, onClic
             Icon(
                 phraseIcon(phrase.icon),
                 contentDescription = null,
-                tint = if (answered) NongorColors.Safe else AccentPurple,
+                tint = if (answered) NongorColors.Safe else BrandBlue,
                 modifier = Modifier.size(18.dp),
             )
         }

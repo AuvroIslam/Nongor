@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.nongor.app.R
-import org.nongor.app.ui.theme.AccentPurple
+import org.nongor.app.ui.theme.BrandBlue
 
 /**
  * Brand splash shown for a beat after the system splash: the Nongor owl with the name "নোঙর" beneath
@@ -42,12 +42,12 @@ fun BrandSplashScreen() {
     androidx.compose.runtime.LaunchedEffect(Unit) { shown.value = true }
 
     Column(
-        Modifier.fillMaxSize().background(AccentPurple),
+        Modifier.fillMaxSize().background(BrandBlue),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Image(
-            painterResource(R.drawable.nongor_logo), contentDescription = null,
+            painterResource(R.drawable.nongor_mark), contentDescription = null,
             modifier = Modifier.size(200.dp).alpha(fade),
         )
         Spacer(Modifier.height(12.dp))
