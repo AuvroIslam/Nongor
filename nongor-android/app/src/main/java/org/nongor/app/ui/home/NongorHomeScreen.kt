@@ -113,7 +113,7 @@ fun NongorHomeScreen(
             onSeed = onSeedDemo,
             actions = Actions(
                 triage = onTriage, firstAid = onFirstAid, shelter = onGis,
-                mesh = onMesh, summary = onSummary,
+                mesh = onMesh, summary = onSummary, translate = onTranslate,
             ),
         )
     }

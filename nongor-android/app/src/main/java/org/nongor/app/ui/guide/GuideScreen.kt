@@ -25,7 +25,9 @@ import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.BarChart2
 import compose.icons.feathericons.MapPin
 import compose.icons.feathericons.MessageCircle
+import compose.icons.feathericons.MessageSquare
 import compose.icons.feathericons.Radio
+import compose.icons.feathericons.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -91,6 +93,18 @@ private val FEATURES = listOf(
         "Mesh SOS", "মেশ এসওএস",
         "Send an SOS from phone to phone with no internet. Nearby phones pass it onward.",
         "ইন্টারনেট ছাড়াই ফোন থেকে ফোনে এসওএস পাঠান। কাছের ফোনগুলো তা এগিয়ে দেয়।"),
+    Feature(FeatherIcons.MessageSquare, TileChatBg, TileChatFg,
+        "Emergency Translation", "জরুরি অনুবাদ",
+        "Talk to someone who does not speak Bangla. Lay the phone flat between you — they read " +
+            "their half and answer by tapping, with pictures when there are no words.",
+        "যিনি বাংলা বলেন না তার সাথে কথা বলুন। ফোনটি দুজনের মাঝে সমতলে রাখুন — তিনি নিজের অংশ পড়ে " +
+            "আঙুলের ছোঁয়ায় উত্তর দেবেন, শব্দ না থাকলে ছবি দিয়ে।"),
+    Feature(FeatherIcons.Send, TileMeshBg, TileMeshFg,
+        "SMS bridge", "এসএমএস সেতু",
+        "No phone in range? Turn the SOS into one short SMS that works on any handset, even a " +
+            "button phone, and can be pasted back into Nongor at the other end.",
+        "কাছে কোনো ফোন নেই? এসওএসকে একটি ছোট এসএমএসে পরিণত করুন — যেকোনো ফোনে, এমনকি বাটন ফোনেও " +
+            "চলে, আর অন্য প্রান্তে নোঙরে পেস্ট করা যায়।"),
     Feature(FeatherIcons.MessageCircle, TileChatBg, TileChatFg,
         "AI Assistant", "এআই সহকারী",
         "Ask me anything about flood safety or first aid, answered right on your phone.",
@@ -122,7 +136,7 @@ fun GuideScreen(onBack: () -> Unit) {
             Image(painterResource(R.drawable.mascot_1), null,
                 modifier = Modifier.size(150.dp).align(Alignment.CenterHorizontally),
                 contentScale = ContentScale.Fit)
-            Text(tr("Hi, I'm Nongor! 🦉", "আমি নোঙর! 🦉"), color = TextPrimary,
+            Text(tr("Hi, I am Nongor ⚓", "আমি নোঙর ⚓"), color = TextPrimary,
                 fontWeight = FontWeight.ExtraBold,
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.align(Alignment.CenterHorizontally))

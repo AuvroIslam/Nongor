@@ -26,8 +26,8 @@ import org.nongor.app.R
 import org.nongor.app.ui.theme.BrandBlue
 
 /**
- * Brand splash shown for a beat after the system splash: the Nongor owl with the name "নোঙর" beneath
- * it. Compose shapes the Bangla correctly, which a baked splash image can't guarantee. The owl
+ * Brand splash shown for a beat after the system splash: the anchor mark with the name "নোঙর"
+ * beneath it. Compose shapes the Bangla correctly, which a baked splash image can't guarantee. The mark
  * matches the system splash icon, so the two read as one continuous opening moment.
  */
 @Composable

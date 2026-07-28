@@ -20,6 +20,7 @@ import compose.icons.feathericons.Activity
 import compose.icons.feathericons.AlertTriangle
 import compose.icons.feathericons.BarChart2
 import compose.icons.feathericons.MapPin
+import compose.icons.feathericons.MessageSquare
 import compose.icons.feathericons.Radio
 import compose.icons.feathericons.X
 import androidx.compose.material3.Button
@@ -51,6 +52,8 @@ import org.nongor.app.ui.theme.TextPrimary
 import org.nongor.app.ui.theme.TextSecondary
 import org.nongor.app.ui.theme.TileAidBg
 import org.nongor.app.ui.theme.TileAidFg
+import org.nongor.app.ui.theme.TileChatBg
+import org.nongor.app.ui.theme.TileChatFg
 import org.nongor.app.ui.theme.TileMeshBg
 import org.nongor.app.ui.theme.TileMeshFg
 import org.nongor.app.ui.theme.TileShelterBg
@@ -80,6 +83,7 @@ class Actions(
     val shelter: () -> Unit,
     val mesh: () -> Unit,
     val summary: () -> Unit,
+    val translate: () -> Unit = {},
 )
 
 private val STEPS = listOf(
@@ -131,8 +135,19 @@ private val STEPS = listOf(
         "Open Mesh SOS", "মেশ এসওএস খুলুন", { it.mesh() },
     ),
     DemoStep(
+        FeatherIcons.MessageSquare, TileChatBg, TileChatFg,
+        "5 · Emergency Translation", "৫ · জরুরি অনুবাদ",
+        "The family you reached speaks Chakma, not Bangla. Open Translation, pick their language, and " +
+            "lay the phone flat between you — they read their half upside down and answer by tapping. " +
+            "Ten guided questions build a hand-over note you can send straight over the mesh.",
+        "যে পরিবারটির কাছে পৌঁছেছেন তারা বাংলা নয়, চাকমা বলে। অনুবাদ খুলে তাদের ভাষা বেছে নিন, তারপর " +
+            "ফোনটি দুজনের মাঝে সমতলে রাখুন — তারা উল্টো দিক থেকে পড়ে আঙুলের ছোঁয়ায় উত্তর দেবেন। দশটি " +
+            "প্রশ্নে একটি হস্তান্তর নোট তৈরি হয়, যা সরাসরি মেশে পাঠানো যায়।",
+        "Open Translation", "অনুবাদ খুলুন", { it.translate() },
+    ),
+    DemoStep(
         FeatherIcons.BarChart2, TileSummaryBg, TileSummaryFg,
-        "5 · Coordinator Summary", "৫ · সমন্বয়কারী সারাংশ",
+        "6 · Coordinator Summary", "৬ · সমন্বয়কারী সারাংশ",
         "Finally, see the whole picture. The Summary counts every report on this device and Gemma " +
             "writes a briefing — totals, top cases and shortages — never invented numbers.",
         "শেষে, পুরো চিত্র দেখুন। সারাংশ এই ডিভাইসের প্রতিটি রিপোর্ট গণনা করে এবং Gemma একটি ব্রিফিং লেখে — " +
