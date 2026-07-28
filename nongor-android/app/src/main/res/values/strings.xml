@@ -1,3 +1,91 @@
 <resources>
     <string name="app_name">Nongor</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Nongor needs Gemma 4</string>
+    <string name="onboarding_body">Download once so Nongor can guide, triage, route, and coordinate fully on-device.</string>
+    <string name="low_memory_warning">This device has less than 6 GB RAM. The model may not load correctly.</string>
+    <string name="downloading_model">Downloading…</string>
+    <string name="download_and_continue">Download Gemma 4 (2.5 GB)</string>
+    <string name="consent_title">Before you download</string>
+    <string name="consent_download_size">About 2.5 GB will be downloaded and stored locally.</string>
+    <string name="consent_ram">Gemma works best on devices with at least 6 GB RAM.</string>
+    <string name="consent_intensive">Inference is compute-intensive and may warm the device or use more battery.</string>
+    <string name="consent_offline">After setup, chats stay on-device and the model runs offline.</string>
+    <string name="consent_checkbox">I understand this is a large local model download and a high-memory task.</string>
+    <string name="consent_required">Please confirm the download details before continuing.</string>
+    <string name="review_terms_credits_privacy">Review terms, credits, and privacy</string>
+    <string name="legal_title">Terms, Credits, and Privacy</string>
+    <string name="legal_intro">Nongor downloads the public LiteRT-LM model from Hugging Face, stores it on this device, and runs disaster-response reasoning locally after setup.</string>
+    <string name="legal_privacy_blurb">Chat history stays in local app storage. Network is used for model download and any links you choose to open.</string>
+    <string name="legal_download_blurb">The initial model download is about 2.5 GB and local inference is memory-intensive.</string>
+    <string name="legal_open_x">Open starter author profile</string>
+    <string name="legal_open_hf">Open model source on Hugging Face</string>
+    <string name="legal_open_deepmind">Open Gemma 4 page</string>
+    <string name="legal_open_litert">Open LiteRT-LM docs</string>
+
+    <!-- Chat hero -->
+    <string name="hero_title">Nongor + Gemma 4</string>
+    <string name="hero_subtitle">Offline disaster response, reasoning, vision, and chat.</string>
+
+    <!-- Suggestion chips -->
+    <string name="chip_plan_title">Flood safety</string>
+    <string name="chip_plan_hint">safe steps, evacuation…</string>
+    <string name="chip_plan_fill">Floodwater is rising near my home. What should I do first?</string>
+    <string name="chip_identify_title">Assess a photo</string>
+    <string name="chip_identify_hint">flood, damage, hazards…</string>
+    <string name="chip_identify_fill">Describe the visible hazards in this photo and suggest safe next steps.</string>
+    <string name="chip_boost_title">Prepare an SOS</string>
+    <string name="chip_boost_hint">location, people, needs…</string>
+    <string name="chip_boost_fill">Help me write a clear SOS with our location, the number of people, and urgent needs.</string>
+    <string name="chip_write_title">Emergency kit</string>
+    <string name="chip_write_hint">water, medicine, documents…</string>
+    <string name="chip_write_fill">What should I take in an emergency kit before evacuating during a flood?</string>
+
+    <!-- Composer -->
+    <string name="ask_anything">Ask Nongor…</string>
+    <string name="attachment_ready">Attachment ready to send</string>
+    <string name="attachment_failed">Could not attach that image</string>
+    <string name="attach_from_camera">Take photo</string>
+    <string name="attach_from_gallery">Choose photo</string>
+    <string name="attach_options_title">Add image</string>
+    <string name="preset_describe">Describe</string>
+    <string name="preset_read_text">Read text</string>
+    <string name="preset_explain">Explain</string>
+    <string name="preset_summarize">Summarize</string>
+
+    <!-- Error states -->
+    <string name="error">Error</string>
+    <string name="retry">Retry</string>
+    <string name="download_model">Re-download model</string>
+
+    <!-- Model info -->
+    <string name="model_info_title">Gemma 4 E2B</string>
+    <string name="model_info_body">On-device LiteRT-LM model (~2.5 GB). All inference runs locally.\nhttps://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm</string>
+    <string name="model_name_strip">Gemma Local</string>
+
+    <!-- Chat list -->
+    <string name="conversations">Conversations</string>
+    <string name="chat_title">Chat %1$d</string>
+    <string name="chat_untitled">New chat</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="settings_privacy_note">All Nongor chats, SOS reports, and the model file are stored on this device only. Network is used once for the model download; no sign-in is required.</string>
+    <string name="clear_chats">Clear all chats</string>
+    <string name="delete_model">Delete downloaded model</string>
+    <string name="about">About</string>
+    <string name="about_app_title">Nongor</string>
+    <string name="about_app_description">Offline disaster-response companion powered by on-device Gemma 4 E2B.</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_creator_title">Android starter by 1littlecoder</string>
+    <string name="about_creator_description">Based on the open-source LiteRT-LM Gemma chat starter</string>
+    <string name="about_litert_title">Thanks to LiteRT Community</string>
+    <string name="about_litert_description">Hugging Face model packaging and distribution</string>
+    <string name="about_gemma_title">Gemma 4 by Google DeepMind</string>
+    <string name="about_gemma_description">Model family and product page</string>
+    <string name="about_privacy_title">Privacy</string>
+    <string name="about_privacy_description">Chats stay on this device. No sign-in required.</string>
+    <string name="about_runtime_title">Runtime and model</string>
+    <string name="about_runtime_description">LiteRT-LM · ~2.5 GB model download · high-memory local inference</string>
 </resources>

@@ -1,43 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- নোঙর — an anchor: what holds you when everything else is moving. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-
-    <!-- ring -->
+    <!-- Glow circle behind letter -->
+    <path android:pathData="M54,54m-22,0a22,22 0,1 1,44 0a22,22 0,1 1,-44 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="radial"
+                android:centerX="54"
+                android:centerY="54"
+                android:gradientRadius="22">
+                <item android:color="#668CB7FF" android:offset="0.0" />
+                <item android:color="#004FD1FF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- "G" letter -->
     <path
-        android:fillColor="#00000000"
-        android:pathData="M54,25 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0"
-        android:strokeColor="#F5A524"
-        android:strokeWidth="5" />
-    <!-- shaft -->
-    <path
-        android:fillColor="#00000000"
-        android:pathData="M54,33 L54,86"
-        android:strokeColor="#FFFFFF"
-        android:strokeLineCap="round"
-        android:strokeWidth="6" />
-    <!-- crossbar -->
-    <path
-        android:fillColor="#00000000"
-        android:pathData="M37,44 L71,44"
-        android:strokeColor="#FFFFFF"
-        android:strokeLineCap="round"
-        android:strokeWidth="6" />
-    <!-- arms -->
-    <path
-        android:fillColor="#00000000"
-        android:pathData="M26,62 C26,79 39,87 54,87 C69,87 82,79 82,62"
-        android:strokeColor="#FFFFFF"
-        android:strokeLineCap="round"
-        android:strokeWidth="6" />
-    <!-- flukes -->
-    <path
-        android:fillColor="#F5A524"
-        android:pathData="M18,56 L34,58 L26,70 Z" />
-    <path
-        android:fillColor="#F5A524"
-        android:pathData="M90,56 L74,58 L82,70 Z" />
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,36c-9.94,0 -18,8.06 -18,18s8.06,18 18,18c7.46,0 13.85,-4.53 16.58,-11h-7.16c-2.22,3.56 -5.89,6 -9.42,6c-6.63,0 -12,-5.37 -12,-13s5.37,-13 12,-13c3.31,0 6.31,1.34 8.49,3.51L54,50v16h16v-7.84C70,44.45 62.84,36 54,36z" />
 </vector>

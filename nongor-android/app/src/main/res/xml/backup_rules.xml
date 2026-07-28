@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-    <!-- Nongor holds crisis reports and a private mesh identity key. Nothing leaves the device. -->
-    <exclude domain="sharedpref" path="." />
-    <exclude domain="file" path="." />
+    <exclude domain="file" path="chat_store.json" />
+    <exclude domain="file" path="models" />
+    <exclude domain="file" path="models/" />
 </full-backup-content>

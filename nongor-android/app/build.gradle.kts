@@ -8,7 +8,9 @@ plugins {
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val hasReleaseKeystore = keystorePropertiesFile.exists().also { exists ->
-    if (exists) keystorePropertiesFile.inputStream().use(keystoreProperties::load)
+    if (exists) {
+        keystorePropertiesFile.inputStream().use(keystoreProperties::load)
+    }
 }
 
 android {
@@ -17,8 +19,7 @@ android {
 
     defaultConfig {
         applicationId = "org.nongor.app"
-        // Android 8.0 — Nongor deliberately supports cheap, old handsets.
-        minSdk = 26
+        minSdk = 31
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
@@ -40,7 +41,9 @@ android {
     buildTypes {
         release {
             isDebuggable = false
-            if (hasReleaseKeystore) signingConfig = signingConfigs.getByName("release")
+            if (hasReleaseKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -49,16 +52,12 @@ android {
             )
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
-    }
-    packaging {
-        resources.excludes += setOf("/META-INF/{AL2.0,LGPL2.1}")
     }
 }
 
@@ -81,13 +80,26 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
 
     implementation(libs.gson)
+
+    implementation(libs.litertlm.android)
+    implementation(libs.tflite.java)
+    implementation(libs.tflite.gpu)
+    implementation(libs.tflite.support)
+
+    implementation(libs.okhttp)
     implementation(libs.androidx.splashscreen)
-    implementation(libs.androidx.datastore.preferences)
+
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.camerax.view)
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.accompanist.permissions)
+    implementation(libs.coil.compose)
     implementation(libs.play.services.nearby)
     implementation(libs.play.services.location)
+    implementation(libs.lucide.icons)
     implementation(libs.bouncycastle.prov)
 
     debugImplementation(libs.androidx.ui.tooling)

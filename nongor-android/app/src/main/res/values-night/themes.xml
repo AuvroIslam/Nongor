@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- The system splash is just the Nongor purple — no icon — so the only branded moment is the
-         in-app splash (owl + নোঙর), avoiding a big-icon-then-small-icon double. -->
+    <!-- Nongor uses a single light palette (no dark UI), so the splash stays light in night mode too
+         to match the app that loads right after it. -->
     <style name="Theme.Nongor" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#7B5CF0</item>
         <item name="windowSplashScreenAnimatedIcon">@android:color/transparent</item>
