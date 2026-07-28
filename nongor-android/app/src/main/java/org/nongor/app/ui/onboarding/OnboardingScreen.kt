@@ -27,6 +27,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -49,6 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.nongor.app.R
+import org.nongor.app.ui.i18n.tr
 import org.nongor.app.ui.theme.BrandBlueGlow
 import org.nongor.app.ui.theme.BrandBlue
 import org.nongor.app.ui.theme.BrandTeal
@@ -199,14 +201,23 @@ fun OnboardingScreen(
             Spacer(Modifier.height(32.dp))
 
             Text(
-                stringResource(R.string.onboarding_title),
+                tr("Nongor is ready to use", "নোঙর এখনই ব্যবহারের জন্য প্রস্তুত"),
                 style = MaterialTheme.typography.displayLarge,
                 color = TextPrimary,
                 textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(12.dp))
             Text(
-                stringResource(R.string.onboarding_body),
+                tr(
+                    "Emergency calls, translation, mesh SOS, shelters, routes, first aid and " +
+                        "family reunion all work right now, with no internet and no download.\n\n" +
+                        "An optional AI model adds free-form questions and photo assessment. " +
+                        "It is a large download and it is not needed for anything above.",
+                    "জরুরি কল, অনুবাদ, মেশ SOS, আশ্রয়কেন্দ্র, পথ, প্রাথমিক চিকিৎসা ও পরিবার " +
+                        "পুনর্মিলন — সবই এখনই চলে, ইন্টারনেট বা ডাউনলোড ছাড়াই।\n\n" +
+                        "একটি ঐচ্ছিক এআই মডেল যোগ করলে খোলা প্রশ্ন ও ছবি বিশ্লেষণ করা যায়। " +
+                        "এটি বড় ডাউনলোড, এবং উপরের কোনো কিছুর জন্যই এটি লাগে না।",
+                ),
                 style = MaterialTheme.typography.bodyLarge,
                 color = TextSecondary,
                 textAlign = TextAlign.Center,
@@ -359,11 +370,20 @@ fun OnboardingScreen(
             ) {
                 Text(stringResource(R.string.review_terms_credits_privacy))
             }
-            TextButton(
+            // Skipping is the expected path, not a fallback for people who gave up, so it
+            // gets a real button rather than a grey link buried under the download CTA.
+            Spacer(Modifier.height(4.dp))
+            OutlinedButton(
                 onClick = onSkip,
                 enabled = !ui.downloading,
+                modifier = Modifier.fillMaxWidth().height(52.dp),
+                shape = RoundedCornerShape(14.dp),
             ) {
-                Text("Continue without the model (mesh & maps)")
+                Text(
+                    tr("Skip — start using Nongor now", "বাদ দিন — এখনই নোঙর ব্যবহার করুন"),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                )
             }
         }
     }

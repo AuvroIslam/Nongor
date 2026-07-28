@@ -2,22 +2,22 @@
     <string name="app_name">Nongor</string>
 
     <!-- Onboarding -->
-    <string name="onboarding_title">Nongor needs Gemma 4</string>
-    <string name="onboarding_body">Download once so Nongor can guide, triage, route, and coordinate fully on-device.</string>
+    <string name="onboarding_title">Optional: add the AI model</string>
+    <string name="onboarding_body">Nongor already works without it. The model only adds free-form questions and photo assessment.</string>
     <string name="low_memory_warning">This device has less than 6 GB RAM. The model may not load correctly.</string>
     <string name="downloading_model">Downloading…</string>
-    <string name="download_and_continue">Download Gemma 4 (2.5 GB)</string>
+    <string name="download_and_continue">Download the AI model (2.5 GB)</string>
     <string name="consent_title">Before you download</string>
     <string name="consent_download_size">About 2.5 GB will be downloaded and stored locally.</string>
     <string name="consent_ram">Gemma works best on devices with at least 6 GB RAM.</string>
     <string name="consent_intensive">Inference is compute-intensive and may warm the device or use more battery.</string>
-    <string name="consent_offline">After setup, chats stay on-device and the model runs offline.</string>
+    <string name="consent_offline">After setup, everything stays on-device and runs offline.</string>
     <string name="consent_checkbox">I understand this is a large local model download and a high-memory task.</string>
     <string name="consent_required">Please confirm the download details before continuing.</string>
     <string name="review_terms_credits_privacy">Review terms, credits, and privacy</string>
     <string name="legal_title">Terms, Credits, and Privacy</string>
-    <string name="legal_intro">Nongor downloads the public LiteRT-LM model from Hugging Face, stores it on this device, and runs disaster-response reasoning locally after setup.</string>
-    <string name="legal_privacy_blurb">Chat history stays in local app storage. Network is used for model download and any links you choose to open.</string>
+    <string name="legal_intro">Nongor works entirely offline. If you choose to add the optional AI model, it is downloaded once from Hugging Face, stored on this device, and run locally; nothing is sent anywhere.</string>
+    <string name="legal_privacy_blurb">Reports, chats and your mesh key stay in local app storage. The network is used only for the optional model download and any links you choose to open.</string>
     <string name="legal_download_blurb">The initial model download is about 2.5 GB and local inference is memory-intensive.</string>
     <string name="legal_open_x">Open starter author profile</string>
     <string name="legal_open_hf">Open model source on Hugging Face</string>
@@ -25,7 +25,7 @@
     <string name="legal_open_litert">Open LiteRT-LM docs</string>
 
     <!-- Chat hero -->
-    <string name="hero_title">Nongor + Gemma 4</string>
+    <string name="hero_title">Ask Nongor</string>
     <string name="hero_subtitle">Offline disaster response, reasoning, vision, and chat.</string>
 
     <!-- Suggestion chips -->
@@ -61,7 +61,8 @@
 
     <!-- Model info -->
     <string name="model_info_title">Gemma 4 E2B</string>
-    <string name="model_info_body">On-device LiteRT-LM model (~2.5 GB). All inference runs locally.\nhttps://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm</string>
+    <string name="model_info_body">Optional on-device LiteRT-LM model (~2.5 GB). All inference runs locally.
+https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm</string>
     <string name="model_name_strip">Gemma Local</string>
 
     <!-- Chat list -->
@@ -71,12 +72,12 @@
 
     <!-- Settings -->
     <string name="settings">Settings</string>
-    <string name="settings_privacy_note">All Nongor chats, SOS reports, and the model file are stored on this device only. Network is used once for the model download; no sign-in is required.</string>
+    <string name="settings_privacy_note">All Nongor reports, chats and the optional model file are stored on this device only. There is no account and no server.</string>
     <string name="clear_chats">Clear all chats</string>
     <string name="delete_model">Delete downloaded model</string>
     <string name="about">About</string>
     <string name="about_app_title">Nongor</string>
-    <string name="about_app_description">Offline disaster-response companion powered by on-device Gemma 4 E2B.</string>
+    <string name="about_app_description">Offline crisis companion for Bangladesh: mesh SOS, shelters, first aid and emergency translation — no internet required.</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_creator_title">Android starter by 1littlecoder</string>
     <string name="about_creator_description">Based on the open-source LiteRT-LM Gemma chat starter</string>
@@ -85,7 +86,7 @@
     <string name="about_gemma_title">Gemma 4 by Google DeepMind</string>
     <string name="about_gemma_description">Model family and product page</string>
     <string name="about_privacy_title">Privacy</string>
-    <string name="about_privacy_description">Chats stay on this device. No sign-in required.</string>
+    <string name="about_privacy_description">Everything stays on this device. No account, no server, no analytics.</string>
     <string name="about_runtime_title">Runtime and model</string>
-    <string name="about_runtime_description">LiteRT-LM · ~2.5 GB model download · high-memory local inference</string>
+    <string name="about_runtime_description">Optional on-device model · LiteRT-LM · ~2.5 GB download · not required for any rescue feature</string>
 </resources>

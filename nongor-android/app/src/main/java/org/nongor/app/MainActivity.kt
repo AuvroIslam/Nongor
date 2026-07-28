@@ -84,8 +84,11 @@ private fun NongorNavHost() {
     val app = context.applicationContext as NongorApplication
     val language by app.prefs.language.collectAsState()
     app.engineHolder.respondInBangla = language == "bn"
-    val start =
-        if (HfDownloadRepository.modelFile(context).exists()) Routes.HOME else Routes.ONBOARDING
+    // The intro is shown once. Whether the optional AI model was downloaded is irrelevant
+    // here — Nongor's rescue tools do not depend on it, so declining must be a real choice
+    // and not a prompt that returns on every launch.
+    val introSeen by app.prefs.introSeen.collectAsState()
+    val start = if (introSeen) Routes.HOME else Routes.ONBOARDING
     val navController = rememberNavController()
 
     fun toStartFromSplash() {
@@ -112,6 +115,7 @@ private fun NongorNavHost() {
         composable(Routes.ONBOARDING) {
             val vm: OnboardingViewModel = viewModel(factory = appFactory())
             val toHome: () -> Unit = {
+                app.prefs.markIntroSeen()
                 navController.navigate(Routes.HOME) {
                     popUpTo(Routes.ONBOARDING) { inclusive = true }
                     launchSingleTop = true

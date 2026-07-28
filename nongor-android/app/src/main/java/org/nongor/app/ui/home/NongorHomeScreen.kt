@@ -151,8 +151,8 @@ fun NongorHomeScreen(
         Text("কিভাবে সাহায্য করতে পারি?", color = TextPrimary,
             fontWeight = FontWeight.Bold, fontSize = 28.sp, lineHeight = 34.sp)
         Spacer(Modifier.height(6.dp))
-        Text(tr("Your offline AI assistant for flood emergencies",
-            "বন্যা জরুরি অবস্থার জন্য আপনার অফলাইন এআই সহায়ক"),
+        Text(tr("Everything here works with no internet and no signal",
+            "এখানকার সবকিছু ইন্টারনেট বা নেটওয়ার্ক ছাড়াই চলে"),
             color = TextSecondary, style = MaterialTheme.typography.bodyMedium)
 
         // ---- Emergency call: always the most prominent action ----
@@ -226,11 +226,11 @@ fun NongorHomeScreen(
                     }
                     Text(
                         if (modelReady)
-                            tr("Gemma 4 is on this device. AI guidance runs fully offline.",
-                                "Gemma 4 এই ডিভাইসে আছে। এআই পরামর্শ সম্পূর্ণ অফলাইনে চলে।")
+                            tr("All tools ready, plus the optional AI model on this device.",
+                                "সব টুল প্রস্তুত, সাথে এই ডিভাইসে ঐচ্ছিক এআই মডেলও আছে।")
                         else
-                            tr("Core tools ready. Download Gemma 4 in Settings for AI guidance.",
-                                "মূল টুল প্রস্তুত। এআই পরামর্শের জন্য সেটিংসে Gemma 4 ডাউনলোড করুন।"),
+                            tr("All rescue tools ready. The optional AI model is not installed.",
+                                "সব উদ্ধার টুল প্রস্তুত। ঐচ্ছিক এআই মডেল ইনস্টল করা নেই।"),
                         color = TextSecondary, style = MaterialTheme.typography.bodySmall)
                 }
             }
