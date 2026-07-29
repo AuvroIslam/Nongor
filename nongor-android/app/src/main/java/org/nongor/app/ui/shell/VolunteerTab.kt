@@ -45,6 +45,7 @@ import org.nongor.app.ui.theme.BrandTealDeep
 import org.nongor.app.ui.theme.CautionAmber
 import org.nongor.app.ui.theme.ErrorRed
 import org.nongor.app.ui.theme.SafeGreen
+import org.nongor.app.ui.theme.ShapeLg
 import org.nongor.app.ui.theme.ShapeMd
 import org.nongor.app.ui.theme.ShapePill
 import org.nongor.app.ui.theme.TextPrimary
@@ -116,69 +117,75 @@ fun VolunteerTab(
         )
 
         // ---- Do the work ----
-        // Two tiles side by side rather than two full-width rows. With only two of them a
-        // stacked list left the screen looking half-finished, and these are the two questions
-        // a volunteer asks in order — who first, then what overall — so sitting them next to
-        // each other reads as a pair rather than the start of a longer list.
+        // The same tinted panel of white rows that Home uses. Two screens that do the same
+        // kind of thing — "here is a short list of tools, pick one" — should not look like two
+        // different apps, and the full-width row leaves room for a subtitle that finishes its
+        // sentence.
         Spacer(Modifier.height(18.dp))
-        Row(Modifier.fillMaxWidth()) {
-            VolunteerTile(
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .clip(ShapeLg)
+                .background(BrandTealDeep)
+                .padding(12.dp),
+        ) {
+            VolunteerRow(
                 icon = FeatherIcons.AlertTriangle, tint = CautionAmber,
                 title = tr("Who needs help first", "আগে কার সাহায্য দরকার"),
                 subtitle = tr("Every case on this phone, ranked", "এই ফোনের সব কেস, অগ্রাধিকার অনুযায়ী"),
                 onClick = onTriage,
-                modifier = Modifier.weight(1f),
             )
-            Spacer(Modifier.width(12.dp))
-            VolunteerTile(
-                icon = FeatherIcons.BarChart2, tint = BrandTealDeep,
+            Spacer(Modifier.height(8.dp))
+            VolunteerRow(
+                icon = FeatherIcons.BarChart2, tint = BrandTeal,
                 title = tr("Situation briefing", "পরিস্থিতির সারসংক্ষেপ"),
                 subtitle = tr("Counts, worst cases, shelter pressure", "সংখ্যা, খারাপ কেস, আশ্রয়ের চাপ"),
                 onClick = onSummary,
-                modifier = Modifier.weight(1f),
             )
         }
     }
 }
 
-/**
- * One square in the volunteer grid.
- *
- * Taller than it is busy: a big target, a colour you can aim at, and enough room for the
- * subtitle to say what the tool actually returns rather than trailing off.
- */
+/** One white row inside the volunteer panel — the same shape as Home's. */
 @Composable
-private fun VolunteerTile(
+private fun VolunteerRow(
     icon: ImageVector,
     tint: Color,
     title: String,
     subtitle: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier
-            .height(152.dp)
+    Row(
+        Modifier
+            .fillMaxWidth()
             .clip(ShapeMd)
             .background(BgCard)
             .clickable(onClick = onClick)
-            .padding(15.dp),
+            .padding(horizontal = 14.dp, vertical = 15.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            Modifier.size(46.dp).clip(CircleShape).background(tint.copy(alpha = 0.14f)),
+            Modifier.size(50.dp).clip(CircleShape).background(tint.copy(alpha = 0.13f)),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(icon, null, tint = tint, modifier = Modifier.size(23.dp))
+            Icon(icon, null, tint = tint, modifier = Modifier.size(28.dp))
         }
-        Spacer(Modifier.weight(1f))
-        Text(
-            title,
-            fontWeight = FontWeight.ExtraBold,
-            style = MaterialTheme.typography.titleSmall,
-            color = TextPrimary,
-        )
-        Spacer(Modifier.height(3.dp))
-        Text(subtitle, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+        Spacer(Modifier.width(14.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                title,
+                fontWeight = FontWeight.ExtraBold,
+                style = MaterialTheme.typography.titleMedium,
+                color = tint,
+            )
+            Text(
+                subtitle,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleSmall,
+                color = tint,
+            )
+        }
+        Icon(FeatherIcons.ChevronRight, null, tint = tint.copy(alpha = 0.5f))
     }
 }
 
