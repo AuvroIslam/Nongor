@@ -152,13 +152,15 @@ fun NongorHomeScreen(
         Spacer(Modifier.height(18.dp))
         Text(tr("Assalamu Alaikum", "আসসালামু আলাইকুম"), color = TextSecondary,
             style = MaterialTheme.typography.bodyLarge)
-        Spacer(Modifier.height(2.dp))
-        Text("কিভাবে সাহায্য করতে পারি?", color = TextPrimary,
-            fontWeight = FontWeight.Bold, fontSize = 28.sp, lineHeight = 34.sp)
-        Spacer(Modifier.height(6.dp))
-        Text(tr("Everything here works with no internet and no signal",
-            "এখানকার সবকিছু ইন্টারনেট বা নেটওয়ার্ক ছাড়াই চলে"),
-            color = TextSecondary, style = MaterialTheme.typography.bodyMedium)
+
+        // The banner carries the greeting straight into what the app is for, so there is no
+        // separate headline repeating it.
+        Spacer(Modifier.height(10.dp))
+        HeroBanner(
+            FeatherIcons.Anchor, tint = BrandTeal,
+            title = tr("We're here to help", "আমরা পাশে আছি"),
+            subtitle = tr("Signed SOS, shelters and translation — all offline", "স্বাক্ষরিত এসওএস, আশ্রয় ও অনুবাদ — সবই অফলাইনে"),
+        )
 
         // ---- A live SOS outranks everything, including the call button ----
         if (sosActive) {
@@ -174,14 +176,6 @@ fun NongorHomeScreen(
         // cannot understand the person in front of them is stuck before any other tool helps.
         Spacer(Modifier.height(10.dp))
         TranslateCard(onTranslate = onTranslate)
-
-        // ---- Hero illustration ----
-        Spacer(Modifier.height(16.dp))
-        HeroBanner(
-            FeatherIcons.Anchor, tint = BrandTeal,
-            title = tr("We're here to help", "আমরা পাশে আছি"),
-            subtitle = tr("Signed SOS, shelters and translation — all offline", "স্বাক্ষরিত এসওএস, আশ্রয় ও অনুবাদ — সবই অফলাইনে"),
-        )
 
         // ---- Offline mode status card ----
         Spacer(Modifier.height(16.dp))
