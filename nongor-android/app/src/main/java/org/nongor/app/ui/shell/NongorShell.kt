@@ -1,64 +1,68 @@
 package org.nongor.app.ui.shell
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import compose.icons.FeatherIcons
-import compose.icons.feathericons.LifeBuoy
-import compose.icons.feathericons.MapPin
-import compose.icons.feathericons.MessageSquare
-import compose.icons.feathericons.Users
+import compose.icons.feathericons.Bell
+import compose.icons.feathericons.Grid
+import compose.icons.feathericons.Home
+import compose.icons.feathericons.Map
+import org.nongor.app.R
 import org.nongor.app.ui.i18n.tr
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.BrandTeal
+import org.nongor.app.ui.theme.ErrorRed
+import org.nongor.app.ui.theme.GlassBorder
+import org.nongor.app.ui.theme.ShapeLg
 import org.nongor.app.ui.theme.TextSecondary
 
 /**
- * Nongor's four places.
+ * Nongor's four resting places, plus the one thing that is never more than a thumb away.
  *
- * The app used to open onto a grid of ten tiles — every tool given equal weight, and the user
- * asked to pick one before anything happened. That is a fine shape for a toolbox and a poor
- * one for an emergency, where the answer to "what do I do" should already be on screen.
- *
- * So the app is now organised by the four things a person is actually trying to do, and it
- * opens on [Tab.TALK], because the gap Nongor exists to close is that the person in front of
- * you cannot tell you what is wrong.
+ * The bar carries Home, Map, Alerts and More. The SOS button sits in the middle, raised out
+ * of the bar, and is reachable from **every** screen in the app — because the moment you
+ * need it is not a moment to be navigating, and because a person who has never opened this
+ * app before will still understand a big red circle in the middle of the screen.
  */
-enum class Tab(
-    val route: String,
-    val icon: ImageVector,
-) {
-    /** Understand each other. The reason this app exists. */
-    TALK("tab_talk", FeatherIcons.MessageSquare),
-
-    /** Get help, or give it: SOS, the siren, 999, first aid. */
-    HELP("tab_help", FeatherIcons.LifeBuoy),
-
-    /** Get somewhere: shelters, routes, family. */
-    MOVE("tab_move", FeatherIcons.MapPin),
-
-    /** What everyone else is seeing: the board, the queue, the briefing. */
-    AREA("tab_area", FeatherIcons.Users),
+enum class Tab(val icon: ImageVector) {
+    HOME(FeatherIcons.Home),
+    MAP(FeatherIcons.Map),
+    ALERTS(FeatherIcons.Bell),
+    MORE(FeatherIcons.Grid),
     ;
 
     @Composable
     fun label(): String = when (this) {
-        TALK -> tr("Talk", "কথা")
-        HELP -> tr("Help", "সাহায্য")
-        MOVE -> tr("Move", "চলুন")
-        AREA -> tr("Area", "এলাকা")
+        HOME -> tr("Home", "হোম")
+        MAP -> tr("Map", "মানচিত্র")
+        ALERTS -> tr("Alerts", "খবর")
+        MORE -> tr("More", "আরও")
     }
 }
 
@@ -66,38 +70,96 @@ enum class Tab(
 fun NongorShell(
     current: Tab,
     onSelect: (Tab) -> Unit,
-    content: @Composable (Modifier) -> Unit,
+    onSos: () -> Unit,
+    sosActive: Boolean,
+    content: @Composable () -> Unit,
 ) {
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        bottomBar = {
-            NavigationBar(containerColor = BgCard, tonalElevation = 0.dp) {
-                Tab.entries.forEach { tab ->
-                    val selected = tab == current
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = { onSelect(tab) },
-                        icon = { Icon(tab.icon, contentDescription = null) },
-                        label = {
-                            Text(
-                                tab.label(),
-                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = BrandTeal,
-                            selectedTextColor = BrandTeal,
-                            indicatorColor = BrandTeal.copy(alpha = 0.12f),
-                            unselectedIconColor = TextSecondary,
-                            unselectedTextColor = TextSecondary,
-                        ),
+    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+        // Content runs under the bar; screens add their own bottom padding.
+        Box(Modifier.fillMaxSize().padding(bottom = 74.dp)) { content() }
+
+        Box(
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(horizontal = 14.dp, vertical = 10.dp),
+        ) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(62.dp)
+                    .clip(ShapeLg)
+                    .background(BgCard)
+                    .padding(horizontal = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                BarItem(Tab.HOME, current, onSelect, Modifier.weight(1f))
+                BarItem(Tab.MAP, current, onSelect, Modifier.weight(1f))
+                // Space the raised SOS button sits over.
+                Spacer(Modifier.weight(1f))
+                BarItem(Tab.ALERTS, current, onSelect, Modifier.weight(1f))
+                BarItem(Tab.MORE, current, onSelect, Modifier.weight(1f))
+            }
+
+            // The anchor, raised. Red while an SOS is going out, so the app never looks calm
+            // while it is shouting for help.
+            Box(
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .size(60.dp)
+                    .clip(CircleShape)
+                    .background(if (sosActive) ErrorRed else BrandTeal)
+                    .clickable(onClick = onSos),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (sosActive) {
+                    Text(
+                        "SOS",
+                        color = Color.White,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 15.sp,
+                    )
+                } else {
+                    Image(
+                        painterResource(R.drawable.nongor_mark),
+                        contentDescription = tr("Send an SOS", "এসওএস পাঠান"),
+                        modifier = Modifier.size(34.dp),
                     )
                 }
             }
-        },
-    ) { pad ->
-        Box(Modifier.fillMaxSize().padding(bottom = pad.calculateBottomPadding())) {
-            content(Modifier)
         }
+    }
+}
+
+@Composable
+private fun BarItem(
+    tab: Tab,
+    current: Tab,
+    onSelect: (Tab) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val selected = tab == current
+    Column(
+        modifier
+            .fillMaxSize()
+            .clip(ShapeLg)
+            .clickable { onSelect(tab) },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Icon(
+            tab.icon,
+            contentDescription = null,
+            tint = if (selected) BrandTeal else TextSecondary,
+            modifier = Modifier.size(19.dp),
+        )
+        Spacer(Modifier.height(3.dp))
+        Text(
+            tab.label(),
+            color = if (selected) BrandTeal else TextSecondary,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+            fontSize = 10.sp,
+        )
     }
 }

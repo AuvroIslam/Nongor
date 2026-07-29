@@ -63,7 +63,7 @@ import org.nongor.app.ui.theme.ShapeMd
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
+fun CommunityScreen(viewModel: CommunityViewModel, onBack: (() -> Unit)? = null) {
     val ui by viewModel.ui.collectAsState()
     DisposableEffect(Unit) {
         viewModel.enter()
@@ -84,7 +84,11 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
             TopAppBar(
                 title = { Text(tr("Nongor · Community Board", "নোঙর · কমিউনিটি বোর্ড")) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(FeatherIcons.ArrowLeft, contentDescription = "Back") }
+                    if (onBack != null) {
+                        IconButton(onClick = onBack) {
+                            Icon(FeatherIcons.ArrowLeft, contentDescription = "Back")
+                        }
+                    }
                 },
             )
         },

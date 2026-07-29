@@ -51,9 +51,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import org.nongor.app.ui.shell.NongorShell
 import org.nongor.app.ui.shell.Tab
-import org.nongor.app.ui.shell.HelpTab
-import org.nongor.app.ui.shell.MoveTab
-import org.nongor.app.ui.shell.AreaTab
+import org.nongor.app.ui.shell.HomeTab
+import org.nongor.app.ui.shell.MoreTab
+import org.nongor.app.ui.shell.HomeUpdate
+import org.nongor.app.data.CommunityKinds
+import androidx.compose.runtime.remember
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.Radio
+import org.nongor.app.ui.community.kindStyle
 
 private object Routes {
     const val SPLASH = "splash"
@@ -148,47 +153,92 @@ private fun NongorNavHost() {
             OnboardingScreen(viewModel = vm, onFinished = toHome, onSkip = toHome)
         }
         composable(Routes.HOME) {
-            // The tabbed shell replaces what used to be a ten-tile grid. Nongor opens on
-            // Talk because the gap it exists to close is that the person in front of you
-            // cannot tell you what is wrong.
-            var tab by rememberSaveable { mutableStateOf(Tab.TALK) }
+            // Four resting places plus a permanently reachable SOS. Everything the app can
+            // do is on Home or one row inside More; nothing is deeper than two taps.
+            var tab by rememberSaveable { mutableStateOf(Tab.HOME) }
             val sosActive by app.sosSession.active.collectAsState()
-            val sirenOn by app.sosSession.sirenOn.collectAsState()
+            val meshMsgs by app.meshHub.sosMessages.collectAsState()
+            val boardReports by app.communityRepository.entries.collectAsState()
+            val peers by app.meshHub.peers.collectAsState()
+            val modelReady = HfDownloadRepository.modelFile(context).exists()
 
-            NongorShell(current = tab, onSelect = { tab = it }) {
+            // The feed is assembled from what actually arrived over the radio. There is no
+            // placeholder activity: an empty feed means nothing has happened, and on this
+            // screen that is genuinely the good news.
+            val now = System.currentTimeMillis()
+            val updates = remember(meshMsgs, boardReports) {
+                val fromMesh = meshMsgs.takeLast(6).map {
+                    HomeUpdate(
+                        title = if (it.mine) "SOS sent" else "SOS received",
+                        detail = it.text.take(70),
+                        minutesAgo = 0,
+                        urgent = true,
+                        icon = FeatherIcons.Radio,
+                    )
+                }
+                val fromBoard = boardReports.takeLast(6).map { r ->
+                    HomeUpdate(
+                        title = CommunityKinds.byId(r.kind).en,
+                        detail = r.note.ifBlank { if (r.mine) "You reported this" else "From " + r.sender },
+                        minutesAgo = ((now - r.ts) / 60000L).coerceAtLeast(0),
+                        urgent = CommunityKinds.byId(r.kind).danger,
+                        icon = kindStyle(r.kind).icon,
+                    )
+                }
+                (fromMesh + fromBoard).sortedBy { it.minutesAgo }
+            }
+
+            NongorShell(
+                current = tab,
+                onSelect = { tab = it },
+                onSos = { navController.navigate(Routes.MESH) },
+                sosActive = sosActive,
+            ) {
                 when (tab) {
-                    Tab.TALK -> {
-                        val vm: TranslateViewModel = viewModel(factory = appFactory())
-                        TranslateScreen(
-                            viewModel = vm,
-                            onBack = null,
-                            onOpenGuide = { navController.navigate(Routes.GUIDE) },
-                            onOpenSettings = { navController.navigate(Routes.SETTINGS) },
-                            onSendAsSos = { note ->
-                                app.pendingSosDraft = note
-                                navController.navigate(Routes.MESH)
-                            },
-                        )
-                    }
-                    Tab.HELP -> HelpTab(
-                        sosActive = sosActive,
-                        sirenOn = sirenOn,
-                        onStopSos = { app.sosSession.stop() },
-                        onMesh = { navController.navigate(Routes.MESH) },
-                        onEmergency = { navController.navigate(Routes.EMERGENCY) },
-                        onFirstAid = { navController.navigate(Routes.FIRSTAID) },
-                        onTriage = { navController.navigate(Routes.TRIAGE) },
-                    )
-                    Tab.MOVE -> MoveTab(
+                    Tab.HOME -> HomeTab(
+                        modelReady = modelReady,
+                        peers = peers,
+                        updates = updates,
+                        onTranslate = { navController.navigate(Routes.TRANSLATE) },
                         onShelter = { navController.navigate(Routes.GIS) },
+                        onFirstAid = { navController.navigate(Routes.FIRSTAID) },
                         onFamily = { navController.navigate(Routes.FAMILY) },
-                    )
-                    Tab.AREA -> AreaTab(
                         onBoard = { navController.navigate(Routes.COMMUNITY) },
+                        onEmergency = { navController.navigate(Routes.EMERGENCY) },
+                        onSettings = { navController.navigate(Routes.SETTINGS) },
+                        onGuide = { navController.navigate(Routes.GUIDE) },
+                    )
+                    Tab.MAP -> {
+                        val vm: GisViewModel = viewModel(factory = appFactory())
+                        GisScreen(viewModel = vm, onBack = null)
+                    }
+                    Tab.ALERTS -> {
+                        val vm: CommunityViewModel = viewModel(factory = appFactory())
+                        CommunityScreen(viewModel = vm, onBack = null)
+                    }
+                    Tab.MORE -> MoreTab(
+                        onTranslate = { navController.navigate(Routes.TRANSLATE) },
+                        onTriage = { navController.navigate(Routes.TRIAGE) },
                         onSummary = { navController.navigate(Routes.SUMMARY) },
+                        onEmergency = { navController.navigate(Routes.EMERGENCY) },
+                        onGuide = { navController.navigate(Routes.GUIDE) },
+                        onSettings = { navController.navigate(Routes.SETTINGS) },
                     )
                 }
             }
+        }
+        composable(Routes.TRANSLATE) {
+            val vm: TranslateViewModel = viewModel(factory = appFactory())
+            TranslateScreen(
+                viewModel = vm,
+                onBack = { navController.popBackStack() },
+                onOpenGuide = { navController.navigate(Routes.GUIDE) },
+                onOpenSettings = { navController.navigate(Routes.SETTINGS) },
+                onSendAsSos = { note ->
+                    app.pendingSosDraft = note
+                    navController.navigate(Routes.MESH)
+                },
+            )
         }
         composable(Routes.TRIAGE) {
             val vm: TriageViewModel = viewModel(factory = appFactory())
@@ -216,17 +266,6 @@ private fun NongorNavHost() {
                 viewModel = vm,
                 onBack = { navController.popBackStack() },
                 prefill = draft.orEmpty(),
-            )
-        }
-        composable(Routes.TRANSLATE) {
-            val vm: TranslateViewModel = viewModel(factory = appFactory())
-            TranslateScreen(
-                viewModel = vm,
-                onBack = { navController.popBackStack() },
-                onSendAsSos = { note ->
-                    app.pendingSosDraft = note
-                    navController.navigate(Routes.MESH)
-                },
             )
         }
         composable(Routes.GUIDE) {

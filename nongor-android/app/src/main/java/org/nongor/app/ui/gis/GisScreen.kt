@@ -84,7 +84,7 @@ private val USER = Color(0xFF1B1030)
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
-fun GisScreen(viewModel: GisViewModel, onBack: () -> Unit) {
+fun GisScreen(viewModel: GisViewModel, onBack: (() -> Unit)? = null) {
     val ui by viewModel.ui.collectAsState()
     val locationPerm = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION) {
         viewModel.findNearestShelter()
@@ -111,8 +111,10 @@ fun GisScreen(viewModel: GisViewModel, onBack: () -> Unit) {
             TopAppBar(
                 title = { Text(tr("Nongor · Safe Shelter & Route", "নোঙর · নিরাপদ আশ্রয় ও পথ")) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(FeatherIcons.ArrowLeft, contentDescription = "Back")
+                    if (onBack != null) {
+                        IconButton(onClick = onBack) {
+                            Icon(FeatherIcons.ArrowLeft, contentDescription = "Back")
+                        }
                     }
                 },
             )
