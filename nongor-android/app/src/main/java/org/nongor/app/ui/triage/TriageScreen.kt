@@ -48,6 +48,7 @@ import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.tr
 import compose.icons.feathericons.AlertTriangle
 import org.nongor.app.ui.theme.TileTriageFg
+import org.nongor.app.ui.components.PriorityDot
 
 private val EXAMPLES_EN = listOf(
     "Pregnant woman trapped on the rooftop, water is still rising fast, no food since morning.",
@@ -205,7 +206,7 @@ private fun TriageCard(item: TriagedItem) {
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(r.color)
+                PriorityDot(r.priority)
                 Spacer(Modifier.width(8.dp))
                 Text(r.priority.uppercase(), fontWeight = FontWeight.Bold)
                 Spacer(Modifier.width(8.dp))

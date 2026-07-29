@@ -366,7 +366,7 @@ private fun MapAssistantCard(ui: GisUiState, onAsk: (String) -> Unit) {
                 Card(colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer)) {
                     Column(Modifier.padding(12.dp)) {
-                        Text("✦ Gemma", style = MaterialTheme.typography.labelSmall,
+                        Text("Gemma", style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                         Spacer(Modifier.height(4.dp))
                         Text(ans, style = MaterialTheme.typography.bodyMedium,

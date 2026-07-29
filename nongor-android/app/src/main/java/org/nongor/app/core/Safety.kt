@@ -32,7 +32,7 @@ object Safety {
     }
 
     fun redFlagBanner(): String =
-        "🚨 জীবন-সংকটজনক অবস্থা — এখনই সাহায্য নিন / LIFE-THREATENING: seek emergency help NOW."
+        "জীবন-সংকটজনক অবস্থা — এখনই সাহায্য নিন / LIFE-THREATENING: seek emergency help NOW."
 
     fun ensureDisclaimer(answer: String, medical: Boolean = true): String =
         if (medical && DISCLAIMER !in answer) answer.trimEnd() + "\n" + DISCLAIMER else answer

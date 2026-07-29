@@ -47,6 +47,7 @@ import org.nongor.app.ui.i18n.tr
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import org.nongor.app.ui.theme.TileMeshFg
+import org.nongor.app.ui.components.PriorityDot
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -179,7 +180,7 @@ private fun MeshRow(m: org.nongor.app.mesh.MeshMsg) {
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(m.color)
+                PriorityDot(m.priority)
                 Spacer(Modifier.width(6.dp))
                 Text(m.priority.uppercase(), fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.labelMedium)

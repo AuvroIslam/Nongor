@@ -34,6 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.nongor.app.ui.i18n.tr
+import org.nongor.app.ui.components.PriorityCount
+import org.nongor.app.ui.components.PriorityDot
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -114,10 +116,10 @@ fun SummaryScreen(viewModel: SummaryViewModel, onBack: () -> Unit) {
                 Spacer(Modifier.height(12.dp))
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     AssistChip(onClick = {}, label = { Text("${tr("Total", "মোট")} ${st.totalSos}") })
-                    AssistChip(onClick = {}, label = { Text("🔴 ${st.critical}") })
-                    AssistChip(onClick = {}, label = { Text("🟠 ${st.high}") })
-                    AssistChip(onClick = {}, label = { Text("🟡 ${st.moderate}") })
-                    AssistChip(onClick = {}, label = { Text("🟢 ${st.low}") })
+                    PriorityCount("critical", st.critical, tr("Critical", "সংকটাপন্ন"))
+                    PriorityCount("high", st.high, tr("High", "জরুরি"))
+                    PriorityCount("moderate", st.moderate, tr("Moderate", "মাঝারি"))
+                    PriorityCount("low", st.low, tr("Low", "কম"))
                 }
             }
 
@@ -140,8 +142,13 @@ fun SummaryScreen(viewModel: SummaryViewModel, onBack: () -> Unit) {
                             Spacer(Modifier.height(8.dp))
                             val loc = if (c.loc == "loc?") tr("no GPS location", "জিপিএস অবস্থান নেই")
                             else tr("GPS ${c.loc}", "জিপিএস ${c.loc}")
-                            Text("${priEmoji(c.priority)}  ${c.id} · $loc",
-                                style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                PriorityDot(c.priority, 8.dp)
+                                Spacer(Modifier.width(8.dp))
+                                Text("${c.id} · $loc",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.SemiBold)
+                            }
                             Text(c.reason, style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
@@ -169,10 +176,3 @@ fun SummaryScreen(viewModel: SummaryViewModel, onBack: () -> Unit) {
     }
 }
 
-/** Same severity dots the count chips use, for the per-case list. */
-private fun priEmoji(priority: String): String = when (priority) {
-    "critical" -> "🔴"
-    "high" -> "🟠"
-    "moderate" -> "🟡"
-    else -> "🟢"
-}

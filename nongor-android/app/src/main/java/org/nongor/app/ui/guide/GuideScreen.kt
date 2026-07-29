@@ -162,7 +162,7 @@ fun GuideScreen(
         ) {
             // Intro
             AnchorBadge(126.dp, Modifier.align(Alignment.CenterHorizontally))
-            Text(tr("Hi, I am Nongor ⚓", "আমি নোঙর ⚓"), color = TextPrimary,
+            Text(tr("Hi, I am Nongor", "আমি নোঙর"), color = TextPrimary,
                 fontWeight = FontWeight.ExtraBold,
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.align(Alignment.CenterHorizontally))

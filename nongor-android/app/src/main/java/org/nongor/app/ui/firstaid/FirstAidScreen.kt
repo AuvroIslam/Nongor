@@ -48,6 +48,20 @@ import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.tr
 import compose.icons.feathericons.Activity
 import org.nongor.app.ui.theme.TileAidFg
+import compose.icons.feathericons.AlertOctagon
+import compose.icons.feathericons.PhoneCall
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import org.nongor.app.ui.emergency.dialNumber
+import org.nongor.app.ui.theme.ErrorRed
+import org.nongor.app.ui.theme.ShapeMd
+import org.nongor.app.ui.theme.ShapeSm
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 
 private val EXAMPLES_EN = listOf(
     "Someone is bleeding heavily from a deep cut on the leg.",
@@ -100,8 +114,8 @@ fun FirstAidScreen(viewModel: FirstAidViewModel, onBack: () -> Unit) {
                         style = MaterialTheme.typography.bodySmall)
                 }
                 ui.engineReady -> Text(
-                    tr("● Grounded in offline first aid guidance (WHO, IFRC, Red Cross), answered by Gemma 4.",
-                        "● অফলাইন প্রাথমিক চিকিৎসা নির্দেশনার (WHO, IFRC, Red Cross) ভিত্তিতে, Gemma 4-এর উত্তর।"),
+                    tr("Grounded in offline first aid guidance (WHO, IFRC, Red Cross).",
+                        "অফলাইন প্রাথমিক চিকিৎসা নির্দেশনার (WHO, IFRC, Red Cross) ভিত্তিতে।"),
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                 else -> Text(tr("Model not loaded — showing the source passages directly.",
                     "মডেল লোড হয়নি — সরাসরি উৎস অনুচ্ছেদ দেখানো হচ্ছে।"),
@@ -165,12 +179,7 @@ fun FirstAidScreen(viewModel: FirstAidViewModel, onBack: () -> Unit) {
 
             if (ui.redFlag) {
                 Spacer(Modifier.height(12.dp))
-                Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF7F1D1D))) {
-                    Text(
-                        "🚨 জীবন-সংকটজনক — এখনই সাহায্য নিন / LIFE-THREATENING: seek emergency help NOW.",
-                        Modifier.padding(12.dp), color = Color.White,
-                        fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
-                }
+                LifeThreatBanner()
             }
 
             ui.answer?.let { ans ->
@@ -191,6 +200,82 @@ fun FirstAidScreen(viewModel: FirstAidViewModel, onBack: () -> Unit) {
                     }
                 }
             }
+        }
+    }
+}
+
+/**
+ * Shown when the question contains a red flag — not breathing, heavy bleeding, unresponsive.
+ *
+ * Two deliberate choices. It uses a drawn octagon rather than a siren emoji, because the
+ * emoji renders as a grey box on some of the cheap handsets this app is aimed at, and a
+ * missing glyph on the life-threat warning is the worst possible place for one.
+ *
+ * And it carries the call button itself. Telling someone "seek emergency help now" and then
+ * making them find their way back to a different screen to do it is the sort of thing that
+ * reads fine in a design review and costs minutes in a real one.
+ */
+@Composable
+private fun LifeThreatBanner() {
+    val context = LocalContext.current
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clip(ShapeMd)
+            .background(ErrorRed)
+            .padding(14.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                Modifier.size(36.dp).clip(CircleShape).background(Color.White.copy(alpha = 0.18f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    FeatherIcons.AlertOctagon,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp),
+                )
+            }
+            Spacer(Modifier.width(12.dp))
+            Column(Modifier.weight(1f)) {
+                Text(
+                    tr("Life-threatening", "জীবন-সংকটজনক"),
+                    color = Color.White,
+                    fontWeight = FontWeight.ExtraBold,
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                Text(
+                    tr("Get emergency help now.", "এখনই জরুরি সাহায্য নিন।"),
+                    color = Color.White.copy(alpha = 0.92f),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+        }
+        Spacer(Modifier.height(12.dp))
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .clip(ShapeSm)
+                .background(Color.White)
+                .clickable { dialNumber(context, "999") }
+                .padding(vertical = 11.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                FeatherIcons.PhoneCall,
+                contentDescription = null,
+                tint = ErrorRed,
+                modifier = Modifier.size(17.dp),
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                tr("Call 999", "৯৯৯-এ কল করুন"),
+                color = ErrorRed,
+                fontWeight = FontWeight.ExtraBold,
+                style = MaterialTheme.typography.titleSmall,
+            )
         }
     }
 }

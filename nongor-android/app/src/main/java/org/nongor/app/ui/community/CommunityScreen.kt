@@ -150,7 +150,7 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
                         Card(colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer)) {
                             Column(Modifier.padding(12.dp)) {
-                                Text("✦ Gemma", style = MaterialTheme.typography.labelSmall,
+                                Text("Gemma", style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                                 Spacer(Modifier.height(4.dp))
                                 Text(it, style = MaterialTheme.typography.bodyMedium,
