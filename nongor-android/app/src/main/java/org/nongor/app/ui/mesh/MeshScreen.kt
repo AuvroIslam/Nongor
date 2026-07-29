@@ -23,6 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -52,6 +53,11 @@ import org.nongor.app.ui.theme.TileMeshFg
 fun MeshScreen(viewModel: MeshViewModel, onBack: () -> Unit, prefill: String = "") {
     val ui by viewModel.ui.collectAsState()
     var text by remember { mutableStateOf(prefill) }
+    var sheet by remember { mutableStateOf(MeshSheet.NONE) }
+
+    // A note handed over from the translation screen is already written, so open straight
+    // into the composer rather than making the volunteer hunt for where it went.
+    LaunchedEffect(prefill) { if (prefill.isNotBlank()) sheet = MeshSheet.COMPOSE }
 
     val permissions = remember {
         buildList {
@@ -110,36 +116,52 @@ fun MeshScreen(viewModel: MeshViewModel, onBack: () -> Unit, prefill: String = "
                 "${tr("peers", "সংযুক্ত")}: ${ui.peers}",
                 style = MaterialTheme.typography.bodySmall)
 
-            Spacer(Modifier.height(12.dp))
-            OutlinedTextField(value = text, onValueChange = { text = it },
-                label = { Text(tr("SOS message", "এসওএস বার্তা")) },
-                modifier = Modifier.fillMaxWidth(), maxLines = 3)
-            Spacer(Modifier.height(6.dp))
-            val rooftopSos = tr("Trapped on rooftop, water rising, need boat rescue.",
-                "ছাদে আটকা, পানি বাড়ছে, নৌকায় উদ্ধার দরকার।")
-            val medicalSos = tr("Elderly man, heavy bleeding, need medic urgently.",
-                "বয়স্ক ব্যক্তি, প্রচুর রক্তক্ষরণ, দ্রুত চিকিৎসক দরকার।")
-            Row {
-                AssistChip(onClick = { text = rooftopSos },
-                    label = { Text(tr("rooftop SOS", "ছাদ এসওএস")) })
-                Spacer(Modifier.width(8.dp))
-                AssistChip(onClick = { text = medicalSos },
-                    label = { Text(tr("medical SOS", "চিকিৎসা এসওএস")) })
+            // ---- the one-press panic control, above everything that asks you to type ----
+            Spacer(Modifier.height(16.dp))
+            SosButton(
+                active = ui.sosActive,
+                sirenOn = ui.sirenOn,
+                peers = ui.peers,
+                onPress = { viewModel.pressSos(text) },
+                onStop = { viewModel.stopSos() },
+                onToggleSiren = { viewModel.toggleSiren() },
+            )
+
+            // Everything below the big button is a *considered* action, not a panic one, so
+            // it lives behind a sheet. Two calm choices beat eight controls on one screen.
+            Spacer(Modifier.height(22.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                OutlinedButton(onClick = { sheet = MeshSheet.COMPOSE }, modifier = Modifier.weight(1f)) {
+                    Text(tr("Write details", "বিস্তারিত লিখুন"))
+                }
+                OutlinedButton(onClick = { sheet = MeshSheet.SMS }, modifier = Modifier.weight(1f)) {
+                    Text(tr("Send by SMS", "এসএমএসে পাঠান"))
+                }
             }
-            Spacer(Modifier.height(8.dp))
-            Button(onClick = { viewModel.send(text); text = "" },
-                enabled = text.isNotBlank()) {
-                Icon(FeatherIcons.Radio, null, modifier = Modifier.width(18.dp).height(18.dp))
-                Spacer(Modifier.width(6.dp))
-                Text(tr("Broadcast SOS", "এসওএস সম্প্রচার"))
+            if (text.isNotBlank()) {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    tr("Your message: $text", "আপনার বার্তা: $text"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
 
-            Spacer(Modifier.height(12.dp))
-            SmsBridgeSection(
-                viewModel = viewModel,
-                sosText = text,
-                reporterName = viewModel.reporterName,
-            )
+            // ---- sheets ----
+            when (sheet) {
+                MeshSheet.COMPOSE -> ComposeSosSheet(
+                    text = text,
+                    onTextChange = { text = it },
+                    onBroadcast = { viewModel.send(text); text = ""; sheet = MeshSheet.NONE },
+                    onDismiss = { sheet = MeshSheet.NONE },
+                )
+                MeshSheet.SMS -> SmsSheet(
+                    viewModel = viewModel,
+                    sosText = text,
+                    onDismiss = { sheet = MeshSheet.NONE },
+                )
+                MeshSheet.NONE -> Unit
+            }
 
             Spacer(Modifier.height(12.dp))
             Text("${tr("Messages", "বার্তা")} (${ui.messages.size})",

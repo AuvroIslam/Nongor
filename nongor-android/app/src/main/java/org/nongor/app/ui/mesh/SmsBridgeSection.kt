@@ -49,22 +49,21 @@ import org.nongor.app.ui.theme.TextSecondary
  * send, which is why the app asks for no SMS permission at all.
  */
 @Composable
-fun SmsBridgeSection(
+fun SmsBridgeBody(
     viewModel: MeshViewModel,
     sosText: String,
     reporterName: String?,
 ) {
     val context = LocalContext.current
-    var expanded by remember { mutableStateOf(false) }
     var code by remember { mutableStateOf("") }
     var pasted by remember { mutableStateOf("") }
 
     val decoded = remember(pasted) { SmsBridge.decode(pasted) }
 
-    Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(14.dp)) {
+    Column(Modifier.fillMaxWidth()) {
+        run {
             Row(
-                Modifier.fillMaxWidth().clickable { expanded = !expanded },
+                Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
@@ -78,7 +77,7 @@ fun SmsBridgeSection(
                     Text(
                         tr("No one in range? Send it as an SMS", "কাছে কেউ নেই? এসএমএস করে পাঠান"),
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
                         tr(
@@ -89,16 +88,9 @@ fun SmsBridgeSection(
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
-                Icon(
-                    if (expanded) FeatherIcons.ChevronDown else FeatherIcons.ChevronRight,
-                    contentDescription = null,
-                    tint = TextSecondary,
-                )
             }
 
-            if (!expanded) return@Column
-
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(14.dp))
 
             // ---- Outgoing ----
             OutlinedButton(

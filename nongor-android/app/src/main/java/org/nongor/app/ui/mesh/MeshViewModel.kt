@@ -18,6 +18,9 @@ data class MeshUiState(
     val status: String = "Idle",
     val peers: Int = 0,
     val messages: List<MeshMsg> = emptyList(),
+    /** A one-press SOS is being re-broadcast on a timer. */
+    val sosActive: Boolean = false,
+    val sirenOn: Boolean = false,
 )
 
 /** Thin wrapper over the app-scoped [org.nongor.app.mesh.MeshHub] shared with Community. */
@@ -42,6 +45,8 @@ class MeshViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch { hub.status.collect { v -> _ui.update { it.copy(status = v) } } }
         viewModelScope.launch { hub.peers.collect { v -> _ui.update { it.copy(peers = v) } } }
         viewModelScope.launch { hub.sosMessages.collect { v -> _ui.update { it.copy(messages = v) } } }
+        viewModelScope.launch { app.sosSession.active.collect { v -> _ui.update { it.copy(sosActive = v) } } }
+        viewModelScope.launch { app.sosSession.sirenOn.collect { v -> _ui.update { it.copy(sirenOn = v) } } }
     }
 
     fun start() {
@@ -82,6 +87,17 @@ class MeshViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    // ---- one-press SOS -----------------------------------------------------------------
+    // Delegated to the app-scoped session so an SOS survives this screen being closed.
+
+    private val sos = app.sosSession
+
+    fun pressSos(text: String) = sos.start(text) { hub.sendSos(it) }
+
+    fun stopSos() = sos.stop()
+
+    fun toggleSiren() = sos.toggleSiren()
+
     fun stop() {
         if (!acquired) return
         acquired = false
@@ -89,6 +105,8 @@ class MeshViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     override fun onCleared() {
+        // Deliberately does NOT stop the SOS: leaving this screen is not a decision to stop
+        // asking for help. The home screen carries a banner to stop it from anywhere.
         stop()
     }
 }
