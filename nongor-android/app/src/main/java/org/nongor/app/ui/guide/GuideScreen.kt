@@ -74,6 +74,15 @@ import compose.icons.feathericons.Compass
 import compose.icons.feathericons.Info
 import org.nongor.app.ui.components.AnchorBadge
 import org.nongor.app.ui.theme.BrandTeal
+import androidx.compose.foundation.clickable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import compose.icons.feathericons.Play
+import compose.icons.feathericons.ChevronRight
+import org.nongor.app.ui.demo.Actions
+import org.nongor.app.ui.demo.DemoDialog
 
 private data class Feature(
     val icon: ImageVector, val bg: Color, val fg: Color,
@@ -121,7 +130,18 @@ private val FEATURES = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GuideScreen(onBack: () -> Unit) {
+fun GuideScreen(
+    onBack: () -> Unit,
+    actions: Actions = Actions({}, {}, {}, {}, {}),
+    onSeedDemo: () -> Unit = {},
+) {
+    // The drill lives here now rather than on the home screen. Home should be the shortest
+    // possible path to a tool in an emergency; learning belongs behind the "?".
+    var showDemo by remember { mutableStateOf(false) }
+    if (showDemo) {
+        DemoDialog(onDismiss = { showDemo = false }, onSeed = onSeedDemo, actions = actions)
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -151,6 +171,29 @@ fun GuideScreen(onBack: () -> Unit) {
                 "আপনার অফলাইন বন্যা সহায়ক। সবকিছু ইন্টারনেট ছাড়াই এই ফোনেই চলে।"),
                 color = TextSecondary, style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.fillMaxWidth())
+
+            // ---- Drill launcher ----
+            Spacer(Modifier.height(20.dp))
+            Row(
+                Modifier.fillMaxWidth().clip(ShapeMd)
+                    .background(BrandTeal.copy(alpha = 0.10f))
+                    .clickable { showDemo = true }
+                    .padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(Modifier.size(36.dp).clip(CircleShape).background(BrandTeal),
+                    contentAlignment = Alignment.Center) {
+                    Icon(FeatherIcons.Play, null, tint = Color.White, modifier = Modifier.size(18.dp))
+                }
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(tr("Try a flood drill", "একটি বন্যা মহড়া করুন"), color = TextPrimary,
+                        fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleSmall)
+                    Text(tr("A guided walkthrough of every tool", "প্রতিটি টুলের ধাপে ধাপে পরিচিতি"),
+                        color = TextSecondary, style = MaterialTheme.typography.bodySmall)
+                }
+                Icon(FeatherIcons.ChevronRight, null, tint = TextSecondary)
+            }
 
             Spacer(Modifier.height(22.dp))
             SectionTitle(tr("What each tool does", "প্রতিটি টুল কী করে"))

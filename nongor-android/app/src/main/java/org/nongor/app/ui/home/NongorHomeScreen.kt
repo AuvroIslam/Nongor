@@ -62,8 +62,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.nongor.app.R
 import org.nongor.app.ui.components.HeroBanner
-import org.nongor.app.ui.demo.Actions
-import org.nongor.app.ui.demo.DemoDialog
 import org.nongor.app.ui.emergency.dialNumber
 import org.nongor.app.ui.i18n.tr
 import org.nongor.app.ui.theme.BrandBlue
@@ -121,17 +119,6 @@ fun NongorHomeScreen(
     sirenOn: Boolean = false,
     onStopSos: () -> Unit = {},
 ) {
-    var showDemo by remember { mutableStateOf(false) }
-    if (showDemo) {
-        DemoDialog(
-            onDismiss = { showDemo = false },
-            onSeed = onSeedDemo,
-            actions = Actions(
-                triage = onTriage, firstAid = onFirstAid, shelter = onGis,
-                mesh = onMesh, summary = onSummary, translate = onTranslate,
-            ),
-        )
-    }
     Column(
         Modifier
             .fillMaxSize()
@@ -159,6 +146,9 @@ fun NongorHomeScreen(
             CircleIconButton(FeatherIcons.Settings, onClick = onSettings)
         }
 
+        // ---- First-run coach balloon, pointing up at the help button ----
+        if (showCoach) CoachBalloon(onDismiss = onCoachDismiss)
+
         Spacer(Modifier.height(18.dp))
         Text(tr("Assalamu Alaikum", "আসসালামু আলাইকুম"), color = TextSecondary,
             style = MaterialTheme.typography.bodyLarge)
@@ -184,31 +174,6 @@ fun NongorHomeScreen(
         // cannot understand the person in front of them is stuck before any other tool helps.
         Spacer(Modifier.height(10.dp))
         TranslateCard(onTranslate = onTranslate)
-
-        // ---- Flood drill launcher ----
-        Spacer(Modifier.height(14.dp))
-        Row(
-            Modifier.fillMaxWidth().clip(ShapeMd)
-                .background(BrandBlue.copy(alpha = 0.10f))
-                .clickable { showDemo = true }
-                .padding(14.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Box(Modifier.size(36.dp).clip(CircleShape).background(BrandBlue),
-                contentAlignment = Alignment.Center) {
-                Icon(FeatherIcons.Play, null, tint = Color.White, modifier = Modifier.size(18.dp))
-            }
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Text(tr("Try a flood drill", "একটি বন্যা মহড়া করুন"), color = TextPrimary,
-                    fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleSmall)
-                Text(tr("A guided walkthrough of every tool", "প্রতিটি টুলের ধাপে ধাপে পরিচিতি"),
-                    color = TextSecondary, style = MaterialTheme.typography.bodySmall)
-            }
-        }
-
-        // ---- First-run coach balloon (shown once) ----
-        if (showCoach) CoachBalloon(onDismiss = onCoachDismiss)
 
         // ---- Hero illustration ----
         Spacer(Modifier.height(16.dp))
@@ -420,12 +385,21 @@ private fun TranslateCard(onTranslate: () -> Unit) {
 private fun CoachBalloon(onDismiss: () -> Unit) {
     Column {
         Spacer(Modifier.height(6.dp))
-        // little upward pointer aligned under the drill card's icon
-        Canvas(Modifier.padding(start = 22.dp).size(width = 18.dp, height = 9.dp)) {
-            val p = Path().apply {
-                moveTo(0f, size.height); lineTo(size.width / 2f, 0f); lineTo(size.width, size.height); close()
+        // The pointer sits under the help button in the header rather than under a card,
+        // because "?" is now the single place a first-time user is being sent.
+        Row(Modifier.fillMaxWidth()) {
+            Spacer(Modifier.weight(1f))
+            Canvas(Modifier.size(width = 18.dp, height = 9.dp)) {
+                val p = Path().apply {
+                    moveTo(0f, size.height)
+                    lineTo(size.width / 2f, 0f)
+                    lineTo(size.width, size.height)
+                    close()
+                }
+                drawPath(p, BrandBlue)
             }
-            drawPath(p, BrandBlue)
+            // Half the settings button plus the gap, so the tip lands on the "?" not the gear.
+            Spacer(Modifier.width(64.dp))
         }
         Row(
             Modifier.fillMaxWidth().clip(ShapeMd).background(BrandBlue)
@@ -437,9 +411,9 @@ private fun CoachBalloon(onDismiss: () -> Unit) {
                     fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleSmall)
                 Spacer(Modifier.height(2.dp))
                 Text(
-                    tr("Tap “Try a flood drill” above for a quick guided tour of every tool — " +
+                    tr("Tap “?” above for what each tool does, and a guided flood drill — " +
                         "or pick any tile below to start.",
-                        "উপরে “একটি বন্যা মহড়া করুন”-এ চাপ দিন প্রতিটি টুলের দ্রুত পরিচিতির জন্য — " +
+                        "উপরের “?”-এ চাপ দিন — প্রতিটি টুল কী করে ও একটি বন্যা মহড়া পাবেন। " +
                             "অথবা নিচের যেকোনো টাইলে চাপ দিন।"),
                     color = Color.White.copy(alpha = 0.92f), style = MaterialTheme.typography.bodySmall)
             }

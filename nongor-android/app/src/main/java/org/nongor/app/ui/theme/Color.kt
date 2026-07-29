@@ -73,7 +73,10 @@ val TileTriageBg    = Color(0xFFFBEAE7); val TileTriageFg    = ErrorRed
 val TileAidBg       = Color(0xFFE3F3EA); val TileAidFg       = SafeGreen
 val TileShelterBg   = Color(0xFFE4EFF2); val TileShelterFg   = Color(0xFF1F6D82)
 val TileSummaryBg   = Color(0xFFE6F0EC); val TileSummaryFg   = BrandTealDeep
-val TileMeshBg      = Color(0xFFFBF0DC); val TileMeshFg      = Color(0xFFB07C10)
+// Mesh SOS is the calling-for-help tool, so it carries the alarm red rather than a warm
+// accent. Triage is red too, but that one is about *reading* danger; this is about
+// signalling it. Nothing else in the grid is allowed near this hue.
+val TileMeshBg      = Color(0xFFFBE9E7); val TileMeshFg      = ErrorRed
 val TileChatBg      = Color(0xFFE1F0EC); val TileChatFg      = BrandTeal
 val TileCommunityBg = Color(0xFFE0F1EE); val TileCommunityFg = Color(0xFF0F8377)
 val TileFamilyBg    = Color(0xFFEAEFE6); val TileFamilyFg    = Color(0xFF4B6B49)

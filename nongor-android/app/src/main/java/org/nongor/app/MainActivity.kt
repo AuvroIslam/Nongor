@@ -30,6 +30,7 @@ import org.nongor.app.ui.firstaid.FirstAidScreen
 import org.nongor.app.ui.firstaid.FirstAidViewModel
 import org.nongor.app.ui.gis.GisScreen
 import org.nongor.app.ui.gis.GisViewModel
+import org.nongor.app.ui.demo.Actions
 import org.nongor.app.ui.guide.GuideScreen
 import org.nongor.app.ui.home.NongorHomeScreen
 import org.nongor.app.ui.mesh.MeshScreen
@@ -94,6 +95,22 @@ private fun NongorNavHost() {
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
 
+    // Seeds practice data for the drill: sample SOS reports plus family encounters around
+    // wherever the user actually is. Both are labelled as practice and are purged the moment
+    // a real report or a real encounter arrives.
+    val seedDrill: () -> Unit = {
+        if (app.sosRepository.entries.value.none { it.source == "drill" }) {
+            RegionAssets.loadScenarios(context).forEach {
+                app.sosRepository.add(SosEntry(it, Triage.fallbackTriage(it), source = "drill"))
+            }
+        }
+        scope.launch {
+            val here = runCatching { app.meshHub.myLocation() }.getOrNull()
+            app.familyRepository.seedDrill(here)
+        }
+        Unit
+    }
+
     fun toStartFromSplash() {
         navController.navigate(start) {
             popUpTo(Routes.SPLASH) { inclusive = true }
@@ -149,20 +166,6 @@ private fun NongorNavHost() {
                 onCommunity = { navController.navigate(Routes.COMMUNITY) },
                 onFamily = { navController.navigate(Routes.FAMILY) },
                 onTranslate = { navController.navigate(Routes.TRANSLATE) },
-                onSeedDemo = {
-                    if (app.sosRepository.entries.value.none { it.source == "drill" }) {
-                        RegionAssets.loadScenarios(context).forEach {
-                            app.sosRepository.add(SosEntry(it, Triage.fallbackTriage(it), source = "drill"))
-                        }
-                    }
-                    // Family Reunion needs a second phone to show anything real, so the drill
-                    // seeds practice encounters around wherever the user actually is. They are
-                    // labelled as practice everywhere and vanish the moment a real one arrives.
-                    scope.launch {
-                        val here = runCatching { app.meshHub.myLocation() }.getOrNull()
-                        app.familyRepository.seedDrill(here)
-                    }
-                },
             )
         }
         composable(Routes.TRIAGE) {
@@ -205,7 +208,18 @@ private fun NongorNavHost() {
             )
         }
         composable(Routes.GUIDE) {
-            GuideScreen(onBack = { navController.popBackStack() })
+            GuideScreen(
+                onBack = { navController.popBackStack() },
+                onSeedDemo = seedDrill,
+                actions = Actions(
+                    triage = { navController.navigate(Routes.TRIAGE) },
+                    firstAid = { navController.navigate(Routes.FIRSTAID) },
+                    shelter = { navController.navigate(Routes.GIS) },
+                    mesh = { navController.navigate(Routes.MESH) },
+                    summary = { navController.navigate(Routes.SUMMARY) },
+                    translate = { navController.navigate(Routes.TRANSLATE) },
+                ),
+            )
         }
         composable(Routes.EMERGENCY) {
             EmergencyScreen(
