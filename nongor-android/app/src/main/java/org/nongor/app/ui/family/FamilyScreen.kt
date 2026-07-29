@@ -47,11 +47,15 @@ import org.nongor.app.ui.i18n.tr
 import org.nongor.app.ui.theme.BrandTeal
 import org.nongor.app.ui.theme.CautionAmber
 import org.nongor.app.ui.theme.SafeGreen
+import org.nongor.app.ui.theme.ShapePill
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
     val ui by viewModel.ui.collectAsState()
+    // Tapping someone on the radar highlights their row below, so the picture and the
+    // detail stay connected rather than being two separate things to read.
+    var selected by remember { mutableStateOf<String?>(null) }
     DisposableEffect(Unit) {
         viewModel.enter()
         onDispose { viewModel.leave() }
@@ -96,8 +100,17 @@ fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 6.dp))
 
-            // ---- family list ----
+            // ---- where they are ----
+            // The picture comes first. In an evacuation the question is "which way do I
+            // walk", and a compass answers that faster than a list of rows can.
             Spacer(Modifier.height(16.dp))
+            FamilyRadar(
+                members = ui.members,
+                listening = ui.started,
+                onSelect = { selected = it.member.name },
+            )
+
+            Spacer(Modifier.height(18.dp))
             Text(tr("Your family (${ui.members.size} seen)", "আপনার পরিবার (${ui.members.size} জন দেখা গেছে)"),
                 style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             if (ui.togetherCount >= 2) {
@@ -122,7 +135,7 @@ fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
                     }
                 }
             }
-            ui.members.forEach { MemberRow(it) }
+            ui.members.forEach { MemberRow(it, highlighted = it.member.name == selected) }
 
             // ---- family settings ----
             Spacer(Modifier.height(20.dp))
@@ -179,19 +192,48 @@ private fun SetupCard(onSave: (String, String) -> Unit) {
 }
 
 @Composable
-private fun MemberRow(s: SeenMember) {
-    Card(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+private fun MemberRow(s: SeenMember, highlighted: Boolean = false) {
+    Card(
+        Modifier.fillMaxWidth().padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (highlighted) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.surface
+            },
+        ),
+    ) {
         Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+            // The same initial as the radar blip, so a person tapped on the circle is
+            // recognisable in the list without reading.
             Box(Modifier.size(40.dp).clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center) {
-                Icon(FeatherIcons.Users, null, tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(20.dp))
+                Text(
+                    s.member.name.trim().take(1).uppercase(),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.ExtraBold,
+                )
             }
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
-                Text(s.member.name, fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleSmall)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(s.member.name, fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleSmall)
+                    // Practice entries say so, every time they are shown. Nobody should ever
+                    // go looking for a relative who only existed in a drill.
+                    if (s.member.isDrill) {
+                        Spacer(Modifier.width(6.dp))
+                        Box(
+                            Modifier.clip(ShapePill).background(CautionAmber.copy(alpha = 0.18f))
+                                .padding(horizontal = 7.dp, vertical = 2.dp),
+                        ) {
+                            Text(tr("practice", "মহড়া"), color = CautionAmber,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
                 Text(whereLine(s), style = MaterialTheme.typography.bodyMedium)
                 Text(agoLine(s), style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)

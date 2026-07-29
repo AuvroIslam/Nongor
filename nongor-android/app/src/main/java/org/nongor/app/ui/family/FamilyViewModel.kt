@@ -21,9 +21,18 @@ import kotlin.math.sin
 data class SeenMember(
     val member: FamilyMember,
     val distanceM: Int?,       // null when we don't have both positions
-    val direction: String?,    // 8-point compass, null when unknown
+    val direction: String?,    // 8-point compass label, null when unknown
     val minutesAgo: Long,
-)
+    /**
+     * True bearing in degrees, 0 = north. Kept alongside the rounded [direction] label
+     * because the radar places people by angle: snapping to the nearest of eight points
+     * would move someone by up to 22 degrees, which at 500 m is most of a village.
+     */
+    val bearingDeg: Float? = null,
+) {
+    /** Everything needed to draw this person on the radar. */
+    val hasFix: Boolean get() = distanceM != null && bearingDeg != null
+}
 
 data class FamilyUiState(
     val familyCode: String = "",
@@ -104,9 +113,15 @@ class FamilyViewModel(application: Application) : AndroidViewModel(application) 
             val seen = raw.map { m ->
                 val d = if (me != null && m.lat != null && m.lon != null)
                     Gis.haversineM(me.first, me.second, m.lat, m.lon).toInt() else null
-                val dir = if (me != null && m.lat != null && m.lon != null)
-                    bearingLabel(me.first, me.second, m.lat, m.lon) else null
-                SeenMember(m, d, dir, (now - m.lastSeenTs) / 60_000)
+                val deg = if (me != null && m.lat != null && m.lon != null)
+                    bearingDegrees(me.first, me.second, m.lat, m.lon) else null
+                SeenMember(
+                    member = m,
+                    distanceM = d,
+                    direction = deg?.let { POINTS[(((it + 22.5) / 45).toInt()) % 8] },
+                    minutesAgo = (now - m.lastSeenTs) / 60_000,
+                    bearingDeg = deg?.toFloat(),
+                )
             }
             // "Three phones from your family were together": members last seen close in space+time.
             val together = seen.count { a ->
@@ -120,14 +135,13 @@ class FamilyViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private fun bearingLabel(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double): String {
+    /** True bearing from us to them, 0 = north, clockwise. */
+    private fun bearingDegrees(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double): Double {
         val dLon = Math.toRadians(toLon - fromLon)
         val p1 = Math.toRadians(fromLat); val p2 = Math.toRadians(toLat)
         val y = sin(dLon) * cos(p2)
         val x = cos(p1) * sin(p2) - sin(p1) * cos(p2) * cos(dLon)
-        val deg = (Math.toDegrees(atan2(y, x)) + 360) % 360
-        val idx = ((deg + 22.5) / 45).toInt() % 8
-        return POINTS[idx]
+        return (Math.toDegrees(atan2(y, x)) + 360) % 360
     }
 
     override fun onCleared() { leave() }
