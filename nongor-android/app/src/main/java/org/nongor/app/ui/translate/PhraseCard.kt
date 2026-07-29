@@ -304,7 +304,7 @@ fun PhraseCard(
 /** What the other person reads — their language when we have it, Bangla when we do not. */
 @Composable
 private fun TheirLine(phrase: Phrase, translation: Translation?, target: LangInfo?) {
-    val line = translation?.beng?.takeIf { it.isNotBlank() }
+    val line = translation?.display
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         if (line != null) {
             Text(
@@ -313,7 +313,7 @@ private fun TheirLine(phrase: Phrase, translation: Translation?, target: LangInf
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
-            translation.latn?.let {
+            translation.pronunciation?.let {
                 Text(
                     it,
                     style = MaterialTheme.typography.bodyMedium,

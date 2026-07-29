@@ -114,7 +114,9 @@ class PhrasebookAssetTest {
         assertTrue("expected corpus-sourced lines", corpusLines.isNotEmpty())
         corpusLines.forEach { (id, entry) ->
             val line = entry.value
-            assertFalse("$id/${entry.key}: blank text", line.beng.isNullOrBlank())
+            // Script-agnostic: Rohingya, Kokborok and Santali are published in Latin, so
+            // requiring Bengali script here would fail on perfectly good translations.
+            assertTrue("$id/${entry.key}: no line in any script", line.hasLine)
             assertFalse("$id/${entry.key}: no source", line.src.isNullOrBlank())
             assertFalse("$id/${entry.key}: no original english", line.srcEn.isNullOrBlank())
         }
@@ -146,10 +148,24 @@ class PhrasebookAssetTest {
         assertTrue("undeclared sources: ${cited - declared}", (cited - declared).isEmpty())
     }
 
+    /** Every language the picker offers as a "seed" must actually have something behind it. */
     @Test
-    fun `the four seeded languages all have some coverage`() {
-        listOf("ccp", "mrh", "grt", "rhg").forEach {
-            assertTrue("$it has no lines at all", book.coverage(it) > 0)
+    fun `every seeded language has coverage`() {
+        book.allLanguages.filter { it.status == "seed" }.forEach {
+            assertTrue("${it.code} is offered as seeded but has no lines", book.coverage(it.code) > 0)
+        }
+    }
+
+    @Test
+    fun `a latin-script line is shown rather than hidden`() {
+        val latinOnly = book.allPhrases
+            .flatMap { it.translations.values }
+            .filter { it.beng.isNullOrBlank() && !it.latn.isNullOrBlank() }
+        assertTrue("expected Latin-script entries", latinOnly.isNotEmpty())
+        latinOnly.forEach {
+            assertEquals(it.latn, it.display)
+            // The Latin *is* the writing here, so it must not also be repeated as a hint.
+            assertEquals(null, it.pronunciation)
         }
     }
 

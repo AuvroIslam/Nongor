@@ -39,14 +39,14 @@
       "code": "trp",
       "name": "Kokborok",
       "native": "ককবরক",
-      "status": "empty",
+      "status": "seed",
       "region": "Tripura communities"
     },
     {
       "code": "sat",
       "name": "Santali",
       "native": "সাঁওতালি",
-      "status": "empty",
+      "status": "seed",
       "region": "Rajshahi, Rangpur"
     },
     {
@@ -118,6 +118,12 @@
       "en": "Single words",
       "bn": "একক শব্দ",
       "icon": "translate"
+    },
+    {
+      "id": "comfort",
+      "en": "Reassurance",
+      "bn": "সান্ত্বনা",
+      "icon": "shield"
     }
   ],
   "phrases": [
@@ -919,9 +925,22 @@
           "src_en": "Can I get a glass of water?"
         },
         "rhg": {
-          "beng": "ফানি",
           "latn": "faní",
-          "v": "unverified"
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "water"
+        },
+        "trp": {
+          "latn": "twi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "water"
+        },
+        "sat": {
+          "latn": "ᱫᱟᱜ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "water"
         }
       }
     },
@@ -944,9 +963,22 @@
           "v": "unverified"
         },
         "rhg": {
-          "beng": "হানা",
           "latn": "hána",
-          "v": "unverified"
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "food"
+        },
+        "trp": {
+          "latn": "chamung",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "food"
+        },
+        "sat": {
+          "latn": "ᱡᱚᱢᱟᱜ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "food"
         }
       }
     },
@@ -970,15 +1002,28 @@
           "src_en": "Can I help you?"
         },
         "rhg": {
-          "beng": "মদত",
-          "latn": "modot",
-          "v": "unverified"
+          "latn": "modot gora",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "help"
         },
         "mrh": {
           "beng": "ঙা কুহু নুইং হোলঃ?",
           "v": "corpus",
           "src": "MELD",
           "src_en": "Can I help you?"
+        },
+        "trp": {
+          "latn": "chubagradi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "help"
+        },
+        "sat": {
+          "latn": "ᱜᱚᱲᱚ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "help"
         }
       }
     },
@@ -1001,9 +1046,22 @@
           "v": "unverified"
         },
         "rhg": {
-          "beng": "ওই",
-          "latn": "oóu",
-          "v": "unverified"
+          "latn": "Ói",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "yes"
+        },
+        "trp": {
+          "latn": "E",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "yes"
+        },
+        "sat": {
+          "latn": "ᱦᱤ ᱦᱮᱸ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "yes"
         }
       }
     },
@@ -1026,9 +1084,22 @@
           "v": "unverified"
         },
         "rhg": {
-          "beng": "নো",
-          "latn": "noó",
-          "v": "unverified"
+          "latn": "Noó",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "no"
+        },
+        "trp": {
+          "latn": "Ihi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "no"
+        },
+        "sat": {
+          "latn": "ᱵᱟᱝ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "no"
         }
       }
     },
@@ -1052,15 +1123,28 @@
           "src_en": "Where do you have pain?"
         },
         "rhg": {
-          "beng": "বিশ",
-          "latn": "bish",
-          "v": "unverified"
+          "latn": "bic",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "pain"
         },
         "mrh": {
           "beng": "নাগ মা আডে নারেলে",
           "v": "corpus",
           "src": "MELD",
           "src_en": "Where do you have pain?"
+        },
+        "trp": {
+          "latn": "samani",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "pain"
+        },
+        "sat": {
+          "latn": "ᱦᱟᱥᱩ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "pain"
         }
       }
     },
@@ -1084,9 +1168,22 @@
           "src_en": "I need a doctor"
         },
         "rhg": {
-          "beng": "ডাক্তর",
-          "latn": "daktor",
-          "v": "unverified"
+          "latn": "dhakthor",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "doctor"
+        },
+        "trp": {
+          "latn": "sak nainai",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "doctor"
+        },
+        "sat": {
+          "latn": "ᱫᱟᱠᱛᱟᱨ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "doctor"
         }
       }
     },
@@ -1109,9 +1206,22 @@
           "v": "unverified"
         },
         "rhg": {
-          "beng": "ফুয়া",
-          "latn": "fua",
-          "v": "unverified"
+          "latn": "baícca",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "child"
+        },
+        "trp": {
+          "latn": "cherai",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "child"
+        },
+        "sat": {
+          "latn": "ᱜᱤᱫᱽᱨᱟ.",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "child"
         }
       }
     },
@@ -1135,9 +1245,10 @@
           "src_en": "Can you come?"
         },
         "rhg": {
-          "beng": "আইয়ো",
-          "latn": "aiyó",
-          "v": "unverified"
+          "latn": "aíye",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "come"
         },
         "mrh": {
           "beng": "নাং লেনহেং হোলঃ?",
@@ -1150,6 +1261,18 @@
           "v": "corpus",
           "src": "MELD",
           "src_en": "Can you come?"
+        },
+        "trp": {
+          "latn": "phaidi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "come"
+        },
+        "sat": {
+          "latn": "ᱦᱟᱡᱩᱜ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "come"
         }
       }
     },
@@ -1172,9 +1295,22 @@
           "v": "unverified"
         },
         "rhg": {
-          "beng": "খতরা",
-          "latn": "hótora",
-          "v": "unverified"
+          "latn": "mosíbot",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "danger"
+        },
+        "trp": {
+          "latn": "danger",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "danger"
+        },
+        "sat": {
+          "latn": "ᱵᱟᱲᱤᱡ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "danger"
         }
       }
     },
@@ -1199,9 +1335,22 @@
           "src_en": "Where is your house?"
         },
         "rhg": {
-          "beng": "গর",
           "latn": "gór",
-          "v": "unverified"
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "house"
+        },
+        "trp": {
+          "latn": "nok",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "house"
+        },
+        "sat": {
+          "latn": "ᱚᱲᱟᱜ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "house"
         }
       }
     },
@@ -1224,9 +1373,2225 @@
           "v": "unverified"
         },
         "rhg": {
-          "beng": "নাও",
-          "latn": "nao",
-          "v": "unverified"
+          "latn": "buth",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "boat"
+        },
+        "trp": {
+          "latn": "rung",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "boat"
+        },
+        "sat": {
+          "latn": "ᱱᱳᱹᱠᱟ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "boat"
+        }
+      }
+    },
+    {
+      "id": "c_how_are_you",
+      "cat": "first_contact",
+      "icon": "mood",
+      "reply": "ack",
+      "en": "How are you?",
+      "bn": "আপনি কেমন আছেন",
+      "tags": [],
+      "t": {
+        "ccp": {
+          "beng": "তুই হেজান আগজ",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "How are you?"
+        },
+        "mrh": {
+          "beng": "আকং হিঃরিল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "How are you?"
+        },
+        "grt": {
+          "beng": "নামি দঙয়া মা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "How are you?"
+        }
+      }
+    },
+    {
+      "id": "c_i_am_fine",
+      "cat": "first_contact",
+      "icon": "yes",
+      "reply": "none",
+      "en": "I am fine.",
+      "bn": "আমি ভালো আছি",
+      "tags": [
+        "fine"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "মুই গম আগঙ",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I am fine."
+        },
+        "mrh": {
+          "beng": "ঙা আকং হিরি",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I am fine."
+        },
+        "grt": {
+          "beng": "আঙা নাম্মা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I am fine."
+        }
+      }
+    },
+    {
+      "id": "c_hear_me",
+      "cat": "first_contact",
+      "icon": "hearing",
+      "reply": "yesno",
+      "en": "Can you hear me?",
+      "bn": "তুমি কি আমার কথা শুনতে পাচ্ছ?",
+      "tags": [
+        "hear"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তুই মো হদা শুনি পারব?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can you hear me?"
+        },
+        "mrh": {
+          "beng": "নাং ঙা চাগা ক্রারেয় ল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can you hear me?"
+        },
+        "grt": {
+          "beng": "না্আ কি আ্ঙি কাঁথা ক খিনাঙা ?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can you hear me?"
+        }
+      }
+    },
+    {
+      "id": "c_tell_me",
+      "cat": "first_contact",
+      "icon": "person",
+      "reply": "ack",
+      "en": "Can you tell me?",
+      "bn": "আপনি কি আমাকে বলতে পারেন?",
+      "tags": [
+        "tell"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তুই মরে হোই পারিবি?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can you tell me?"
+        },
+        "mrh": {
+          "beng": "কো ঙা গো ফ্র ন্হেংরেয় ল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can you tell me?"
+        },
+        "grt": {
+          "beng": "না্আ কি আঙখো আগান্না মান্নো?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can you tell me?"
+        }
+      }
+    },
+    {
+      "id": "c_thank_you",
+      "cat": "first_contact",
+      "icon": "yes",
+      "reply": "none",
+      "en": "Thank you very much",
+      "bn": "তোমাকে অনেক ধন্যবাদ",
+      "tags": [
+        "thank",
+        "very",
+        "much"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তরে অনেক ধন্যবাদ",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Thank you very much"
+        },
+        "mrh": {
+          "beng": "নাক্ কো আ্মা কিজুটাং রে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Thank you very much"
+        },
+        "grt": {
+          "beng": "নাঙখো নাম্মিন মিথেলা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Thank you very much"
+        }
+      }
+    },
+    {
+      "id": "c_sorry",
+      "cat": "first_contact",
+      "icon": "mood",
+      "reply": "none",
+      "en": "I am sorry.",
+      "bn": "আমি দুঃখিত",
+      "tags": [
+        "sorry"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "মুই দুঃখিত",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I am sorry."
+        },
+        "mrh": {
+          "beng": "ঙা গো খোয়ং হ্রুওয়ে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I am sorry."
+        },
+        "grt": {
+          "beng": "আঙা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I am sorry."
+        }
+      }
+    },
+    {
+      "id": "c_feeling_better",
+      "cat": "comfort",
+      "icon": "healing",
+      "reply": "yesno",
+      "en": "Are you feeling better?",
+      "bn": "আপনি ভাল অনুভব করছেন?",
+      "tags": [
+        "feeling",
+        "better"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তুই গম অনুভব গরর?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Are you feeling better?"
+        },
+        "mrh": {
+          "beng": "কো মা কং রে তুইরে ল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Are you feeling better?"
+        },
+        "grt": {
+          "beng": "না্আ কি নাম্মা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Are you feeling better?"
+        }
+      }
+    },
+    {
+      "id": "c_get_well",
+      "cat": "comfort",
+      "icon": "healing",
+      "reply": "none",
+      "en": "Get well soon.",
+      "bn": "শীঘ্রই সুস্থ হয়ে উঠুন",
+      "tags": [
+        "well",
+        "soon"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "যাদি গম গজ",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Get well soon."
+        },
+        "mrh": {
+          "beng": "আয়াং কেন্থা আকং ফ্রপ থা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Get well soon."
+        },
+        "grt": {
+          "beng": "থারাকি নামবো",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Get well soon."
+        }
+      }
+    },
+    {
+      "id": "c_moment",
+      "cat": "comfort",
+      "icon": "timer",
+      "reply": "ack",
+      "en": "Just a moment",
+      "bn": "শুধু একটা মুহূর্ত",
+      "tags": [
+        "just",
+        "moment"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "বানা এক্কান মুহুর্ত",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Just a moment"
+        },
+        "mrh": {
+          "beng": "ত্ছংস্যে ব্যা/ ত্খ্যাঃসে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Just a moment"
+        },
+        "grt": {
+          "beng": "গিসা সময়‌ও",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Just a moment"
+        }
+      }
+    },
+    {
+      "id": "c_should_sleep",
+      "cat": "comfort",
+      "icon": "night",
+      "reply": "ack",
+      "en": "You should sleep",
+      "bn": "তোমার তো ঘুমানো উচিত",
+      "tags": [
+        "should",
+        "sleep"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তর ঘুম জানা দরকার",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "You should sleep"
+        },
+        "mrh": {
+          "beng": "নাং গা ওউই রাহো টেং রে ব্যা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "You should sleep"
+        },
+        "grt": {
+          "beng": "না্ঙিদেতো থুনা নাঙগিনো",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "You should sleep"
+        }
+      }
+    },
+    {
+      "id": "c_need_anything",
+      "cat": "rescue",
+      "icon": "help",
+      "reply": "yesno",
+      "en": "Do you need anything?",
+      "bn": "তোমার কোন কিছু দরকার?",
+      "tags": [
+        "need",
+        "anything"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তোর হিচ্ছু লাগিবু?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Do you need anything?"
+        },
+        "mrh": {
+          "beng": "নাক্ মা ত্খুক্ ম্সা লু হো ল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Do you need anything?"
+        },
+        "grt": {
+          "beng": "নাঙি কি মামুঙ নাঙগিনো?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Do you need anything?"
+        }
+      }
+    },
+    {
+      "id": "c_what_can_i_do",
+      "cat": "rescue",
+      "icon": "help",
+      "reply": "ack",
+      "en": "What can I do for you?",
+      "bn": "আমি আপনার জন্য কি করতে পারি?",
+      "tags": [
+        "what"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "মুই তর লাই হি গরি পারঙ?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "What can I do for you?"
+        },
+        "mrh": {
+          "beng": "ঙা কো কিজু আ্চা প্যাংন্হেং হুলে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "What can I do for you?"
+        },
+        "grt": {
+          "beng": "আ্ঙা নাঙনি গুমুন‌ ম দাকনা মান্না?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "What can I do for you?"
+        }
+      }
+    },
+    {
+      "id": "c_help_me",
+      "cat": "rescue",
+      "icon": "help",
+      "reply": "yesno",
+      "en": "Will you help me?",
+      "bn": "আপনি কি আমাকে সাহায্য করবেন?",
+      "tags": [
+        "will",
+        "help"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তুই হি মরে সাহায্য গুরিবি?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will you help me?"
+        },
+        "mrh": {
+          "beng": "কো ঙাগো ত্খ্যাক্ কু ন্হেং হো ল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will you help me?"
+        },
+        "grt": {
+          "beng": "না্আ কি আঙমুঙ অকিষা রুমফানা মান্নো?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will you help me?"
+        }
+      }
+    },
+    {
+      "id": "c_how_can_help",
+      "cat": "rescue",
+      "icon": "help",
+      "reply": "ack",
+      "en": "How can I help you?",
+      "bn": "আপনাকে কিভাবে সাহায্য করতে পারি?",
+      "tags": [
+        "help"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "মুই তরে হেঙোরি সাহায্য গুরিম?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "How can I help you?"
+        },
+        "mrh": {
+          "beng": "কোগো ম্জং প্য়াংব কোওন্হেং হোলে?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "How can I help you?"
+        },
+        "grt": {
+          "beng": "নাঙনি গুমুন‌ ম দাকনা মান্না?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "How can I help you?"
+        }
+      }
+    },
+    {
+      "id": "c_come_family",
+      "cat": "rescue",
+      "icon": "family",
+      "reply": "ack",
+      "en": "Come with your family",
+      "bn": "আপনার পরিবারের সাথে আসুন",
+      "tags": [
+        "come",
+        "with",
+        "your",
+        "family"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "ত পরিবার সুদ্ধো এজো",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Come with your family"
+        },
+        "mrh": {
+          "beng": "কো ইংসা লা ল্লে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Come with your family"
+        },
+        "grt": {
+          "beng": "নাঙনি নকনি মান্দিরাঙমু লগে হিবা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Come with your family"
+        }
+      }
+    },
+    {
+      "id": "c_come_now",
+      "cat": "rescue",
+      "icon": "arrow",
+      "reply": "ack",
+      "en": "Come and see me now",
+      "bn": "এসো এবং এখন আমাকে দেখতে",
+      "tags": [
+        "come"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "আই মরে সে জা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Come and see me now"
+        },
+        "mrh": {
+          "beng": "ঙা গো আ্গু ক্রিজং ল্লে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Come and see me now"
+        },
+        "grt": {
+          "beng": "হিবা আর দাও আঙখো নিনা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Come and see me now"
+        }
+      }
+    },
+    {
+      "id": "c_come_here",
+      "cat": "rescue",
+      "icon": "arrow",
+      "reply": "yesno",
+      "en": "Will you come here?",
+      "bn": "তুমি কি এখানে আসবে",
+      "tags": [
+        "will",
+        "come",
+        "here"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তুই হি ইয়োট এবে?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will you come here?"
+        },
+        "mrh": {
+          "beng": "নাং ইদু লেহো ল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will you come here?"
+        },
+        "grt": {
+          "beng": "না্আ কি হিচা রিবানো?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will you come here?"
+        }
+      }
+    },
+    {
+      "id": "c_want_to_go",
+      "cat": "rescue",
+      "icon": "walk",
+      "reply": "yesno",
+      "en": "Do you want to go?",
+      "bn": "আপনি কি যেতে চান?",
+      "tags": [
+        "want"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তুই হি যেবার চাস?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Do you want to go?"
+        },
+        "mrh": {
+          "beng": "কো লা খ্যাংরে ল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Do you want to go?"
+        },
+        "grt": {
+          "beng": "না্আ কি রেঙনা হামিঙা?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Do you want to go?"
+        }
+      }
+    },
+    {
+      "id": "c_you_can_go",
+      "cat": "rescue",
+      "icon": "walk",
+      "reply": "ack",
+      "en": "You can go",
+      "bn": "তুমি যেতে পার",
+      "tags": [],
+      "t": {
+        "ccp": {
+          "beng": "তুই যে পারস",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "You can go"
+        },
+        "mrh": {
+          "beng": "নাং লা ন্হেং মি ব্যা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "You can go"
+        },
+        "grt": {
+          "beng": "না্আ রেঙনা মান্না",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "You can go"
+        }
+      }
+    },
+    {
+      "id": "c_can_swim",
+      "cat": "rescue",
+      "icon": "wave",
+      "reply": "yesno",
+      "en": "I can swim.",
+      "bn": "আমি সাঁতার কাটতে পারি",
+      "tags": [
+        "swim"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "মুই সাজুরি জানঙ",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I can swim."
+        },
+        "mrh": {
+          "beng": "ঙা র্গু খেহো তেতি",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I can swim."
+        },
+        "grt": {
+          "beng": "আ্ঙা বালজ্রুনা মা্ন্না",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I can swim."
+        }
+      }
+    },
+    {
+      "id": "c_have_eaten",
+      "cat": "water_food",
+      "icon": "food",
+      "reply": "yesno",
+      "en": "Have you eaten?",
+      "bn": "তুমি কি খেয়েছ?",
+      "tags": [
+        "have",
+        "eaten"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তুই হি হিয়োজ?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Have you eaten?"
+        },
+        "mrh": {
+          "beng": "নাং চা ব্যা ল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Have you eaten?"
+        },
+        "grt": {
+          "beng": "চাজক মা না্আ?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Have you eaten?"
+        }
+      }
+    },
+    {
+      "id": "c_when_eat",
+      "cat": "water_food",
+      "icon": "clock",
+      "reply": "ack",
+      "en": "When can we eat?",
+      "bn": "আমরা কখন খেতে পারি?",
+      "tags": [
+        "when"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "আমি হক্কেনে হেবং?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "When can we eat?"
+        },
+        "mrh": {
+          "beng": "ঙো জা্খা চা হুলে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "When can we eat?"
+        },
+        "grt": {
+          "beng": "চিঙ্আ বাসকো চানা মান্নো?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "When can we eat?"
+        }
+      }
+    },
+    {
+      "id": "c_house_everyone",
+      "cat": "family",
+      "icon": "home",
+      "reply": "ack",
+      "en": "How is everyone at your house?",
+      "bn": "তোমার বাসার সবাই কেমন আছে?",
+      "tags": [
+        "everyone",
+        "your",
+        "house"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "ত গরত বেক্কুন হেজান আগন",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "How is everyone at your house?"
+        },
+        "mrh": {
+          "beng": "নাং রোমা ইংসা রোনা ম্জং লে?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "How is everyone at your house?"
+        },
+        "grt": {
+          "beng": "না্ঙনি নকনি মানদিরাঙ নাম্মিঙামা ?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "How is everyone at your house?"
+        }
+      }
+    },
+    {
+      "id": "c_stay_home",
+      "cat": "shelter",
+      "icon": "house",
+      "reply": "yesno",
+      "en": "Will you stay home?",
+      "bn": "তুমি কি বাড়িতে থাকবে",
+      "tags": [
+        "will",
+        "stay",
+        "home"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তুই হি গরত থেবে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will you stay home?"
+        },
+        "mrh": {
+          "beng": "নাং ইংমা নিং হো ল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will you stay home?"
+        },
+        "grt": {
+          "beng": "না্আ কি ন‌ওক্কো দঙনো?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will you stay home?"
+        }
+      }
+    },
+    {
+      "id": "c_about_family",
+      "cat": "family",
+      "icon": "family",
+      "reply": "text",
+      "en": "Tell me something about your family",
+      "bn": "আপনার পরিবার সম্পর্কে কিছু বলেন",
+      "tags": [
+        "tell",
+        "something",
+        "about",
+        "your",
+        "family"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তু পরিবার সম্বন্ধে হিচ্ছু হ?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Tell me something about your family"
+        },
+        "mrh": {
+          "beng": "কো রো ইংসা গো ইউব  তখুমসা প্র",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Tell me something about your family"
+        },
+        "grt": {
+          "beng": "নাঙনি নকগুমুন খ রায়ৈ মামুঙ আগানবো",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Tell me something about your family"
+        }
+      }
+    },
+    {
+      "id": "c_rain_today",
+      "cat": "danger",
+      "icon": "wave",
+      "reply": "yesno",
+      "en": "Will it rain today?",
+      "bn": "আজ কি বৃষ্টি হবে?",
+      "tags": [
+        "will",
+        "rain",
+        "today"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "ইচ্ছি হি ঝড় দিবু?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will it rain today?"
+        },
+        "mrh": {
+          "beng": "গ্নি মোঃ ওয়রাহলঃ",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will it rain today?"
+        },
+        "grt": {
+          "beng": "দাসাল কি মিক্খা ওয়ানো?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Will it rain today?"
+        }
+      }
+    },
+    {
+      "id": "c_will_get_wet",
+      "cat": "danger",
+      "icon": "wave",
+      "reply": "ack",
+      "en": "If it rains, we will get wet",
+      "bn": "যদি বৃষ্টি হয়, আমরা ভিজে যাব",
+      "tags": [
+        "rains,",
+        "will"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "যুদি ঝড় দে, আমি বিজি জেবং",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "If it rains, we will get wet"
+        },
+        "mrh": {
+          "beng": "মু রু্ওয়ারে ছুগ্যে, ঙো মু চু্ওয়েকেহো ব্যা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "If it rains, we will get wet"
+        },
+        "grt": {
+          "beng": "মিখ্খা ওয়াওদে, আচিঙ সুসিগেন",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "If it rains, we will get wet"
+        }
+      }
+    },
+    {
+      "id": "c_nice_to_meet",
+      "cat": "first_contact",
+      "icon": "shield",
+      "reply": "none",
+      "en": "It's nice to meet you",
+      "bn": "তোমার সাথে দেখা করে ভালো লাগলো",
+      "tags": [
+        "it's",
+        "nice",
+        "meet"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "তর লোই দেগা ওনেই গম লাক্কি",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "It's nice to meet you"
+        },
+        "mrh": {
+          "beng": "নাং লা আতুই খেংব কংহারে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "It's nice to meet you"
+        },
+        "grt": {
+          "beng": "নাঙখ নিক্কি নাম্মি নিকজক",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "It's nice to meet you"
+        }
+      }
+    },
+    {
+      "id": "c_dont_worry",
+      "cat": "comfort",
+      "icon": "shield",
+      "reply": "ack",
+      "en": "Don't worry.",
+      "bn": "কোন চিন্তা করো না",
+      "tags": [
+        "don't",
+        "worry"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "হনো চিদে নগুরিজ",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Don't worry."
+        },
+        "mrh": {
+          "beng": "নাং ওউই ম্ছাগ্যে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Don't worry."
+        },
+        "grt": {
+          "beng": "চানচিয়ানি মামুঙ দঙজা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Don't worry."
+        }
+      }
+    },
+    {
+      "id": "c_cant_see",
+      "cat": "medical",
+      "icon": "eye",
+      "reply": "yesno",
+      "en": "I can't see anything",
+      "bn": "আমি কিছুই দেখতে পাচ্ছি না",
+      "tags": [
+        "can't",
+        "anything"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "মুই হিচ্ছু সে নোপারঙ অর",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I can't see anything"
+        },
+        "mrh": {
+          "beng": "ঙা ত্খু্বাং ম্রাং",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I can't see anything"
+        },
+        "grt": {
+          "beng": "আ্ঙা মামুঙখন নিনা মানজাঙজক",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I can't see anything"
+        }
+      }
+    },
+    {
+      "id": "c_cant_come",
+      "cat": "rescue",
+      "icon": "block",
+      "reply": "none",
+      "en": "I can't come.",
+      "bn": "আমি আসতে পারব না",
+      "tags": [
+        "can't",
+        "come"
+      ],
+      "t": {
+        "ccp": {
+          "beng": "মুই এই নোপারিম",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I can't come."
+        },
+        "mrh": {
+          "beng": "ঙা ম্লেন্হেং/ ঙা লেহো ম্নংই",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I can't come."
+        },
+        "grt": {
+          "beng": "আ্ঙা রিবানা মানজানো",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I can't come."
+        }
+      }
+    },
+    {
+      "id": "w_blood",
+      "cat": "words",
+      "icon": "blood",
+      "reply": "none",
+      "en": "Blood",
+      "bn": "রক্ত",
+      "tags": [
+        "blood",
+        "রক্ত"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "lou",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "blood"
+        },
+        "trp": {
+          "latn": "thwi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "blood"
+        },
+        "sat": {
+          "latn": "ᱢᱟᱭᱟᱢ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "blood"
+        }
+      }
+    },
+    {
+      "id": "w_hospital",
+      "cat": "words",
+      "icon": "medication",
+      "reply": "none",
+      "en": "Hospital",
+      "bn": "হাসপাতাল",
+      "tags": [
+        "hospital",
+        "হাসপাতাল"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "hóspital",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "hospital"
+        },
+        "trp": {
+          "latn": "sakham nok",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "hospital"
+        },
+        "sat": {
+          "latn": "ᱨᱟᱱ ᱚᱲᱟᱹ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "hospital"
+        }
+      }
+    },
+    {
+      "id": "w_medicine",
+      "cat": "words",
+      "icon": "medication",
+      "reply": "none",
+      "en": "Medicine",
+      "bn": "ওষুধ",
+      "tags": [
+        "medicine",
+        "ওষুধ"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "dabai",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "medicine"
+        },
+        "trp": {
+          "latn": "bithi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "medicine"
+        },
+        "sat": {
+          "latn": "ᱨᱟᱱ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "medicine"
+        }
+      }
+    },
+    {
+      "id": "w_sick",
+      "cat": "words",
+      "icon": "healing",
+      "reply": "none",
+      "en": "Sick",
+      "bn": "অসুস্থ",
+      "tags": [
+        "sick",
+        "অসুস্থ"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "bíaraímma",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "sick"
+        },
+        "trp": {
+          "latn": "lumjak",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "sick"
+        },
+        "sat": {
+          "latn": "ᱨᱩᱣᱟᱹ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "sick"
+        }
+      }
+    },
+    {
+      "id": "w_safe",
+      "cat": "words",
+      "icon": "shield",
+      "reply": "none",
+      "en": "Safe",
+      "bn": "নিরাপদ",
+      "tags": [
+        "safe",
+        "নিরাপদ"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "maháfuz",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "safe"
+        },
+        "trp": {
+          "latn": "kaham kwrwng",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "safe"
+        },
+        "sat": {
+          "latn": "ᱨᱩᱠᱷᱤᱭᱟᱹ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "safe"
+        }
+      }
+    },
+    {
+      "id": "w_wait",
+      "cat": "words",
+      "icon": "timer",
+      "reply": "none",
+      "en": "Wait",
+      "bn": "অপেক্ষা করুন",
+      "tags": [
+        "wait",
+        "অপেক্ষা করুন"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "entezar goro",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "wait"
+        },
+        "trp": {
+          "latn": "tongradi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "wait"
+        },
+        "sat": {
+          "latn": "ᱛᱟᱺᱜᱤ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "wait"
+        }
+      }
+    },
+    {
+      "id": "w_name",
+      "cat": "words",
+      "icon": "badge",
+      "reply": "none",
+      "en": "Name",
+      "bn": "নাম",
+      "tags": [
+        "name",
+        "নাম"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "nam",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "name"
+        },
+        "trp": {
+          "latn": "mung",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "name"
+        },
+        "sat": {
+          "latn": "ᱧᱩᱛᱩᱢ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "name"
+        }
+      }
+    },
+    {
+      "id": "w_mother",
+      "cat": "words",
+      "icon": "family",
+      "reply": "none",
+      "en": "Mother",
+      "bn": "মা",
+      "tags": [
+        "mother",
+        "মা"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "maa",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "mother"
+        },
+        "trp": {
+          "latn": "ma",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "mother"
+        },
+        "sat": {
+          "latn": "ᱜᱚᱜᱚ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "mother"
+        }
+      }
+    },
+    {
+      "id": "w_father",
+      "cat": "words",
+      "icon": "family",
+      "reply": "none",
+      "en": "Father",
+      "bn": "বাবা",
+      "tags": [
+        "father",
+        "বাবা"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "baf",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "father"
+        },
+        "trp": {
+          "latn": "pha",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "father"
+        },
+        "sat": {
+          "latn": "ᱵᱟᱵᱟ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "father"
+        }
+      }
+    },
+    {
+      "id": "w_baby",
+      "cat": "words",
+      "icon": "baby",
+      "reply": "none",
+      "en": "Baby",
+      "bn": "শিশু",
+      "tags": [
+        "baby",
+        "শিশু"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "baícca",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "baby"
+        },
+        "trp": {
+          "latn": "kwlwi bwsa",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "baby"
+        },
+        "sat": {
+          "latn": "ᱜᱤᱫᱨᱚ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "baby"
+        }
+      }
+    },
+    {
+      "id": "w_woman",
+      "cat": "words",
+      "icon": "person",
+      "reply": "none",
+      "en": "Woman",
+      "bn": "নারী",
+      "tags": [
+        "woman",
+        "নারী"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "beçi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "woman"
+        },
+        "trp": {
+          "latn": "bwrwi borok",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "woman"
+        },
+        "sat": {
+          "latn": "ᱠᱩᱫᱤ ᱦᱯᱱ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "woman"
+        }
+      }
+    },
+    {
+      "id": "w_man",
+      "cat": "words",
+      "icon": "person",
+      "reply": "none",
+      "en": "Man",
+      "bn": "পুরুষ",
+      "tags": [
+        "man",
+        "পুরুষ"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "manúic",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "man"
+        },
+        "trp": {
+          "latn": "chwla borok",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "man"
+        },
+        "sat": {
+          "latn": "ᱦᱚᱲᱠᱚ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "man"
+        }
+      }
+    },
+    {
+      "id": "w_river",
+      "cat": "words",
+      "icon": "wave",
+      "reply": "none",
+      "en": "River",
+      "bn": "নদী",
+      "tags": [
+        "river",
+        "নদী"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "doryá",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "river"
+        },
+        "trp": {
+          "latn": "twima",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "river"
+        },
+        "sat": {
+          "latn": "ᱜᱟᱰᱟ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "river"
+        }
+      }
+    },
+    {
+      "id": "w_flood",
+      "cat": "words",
+      "icon": "wave",
+      "reply": "none",
+      "en": "Flood",
+      "bn": "বন্যা",
+      "tags": [
+        "flood",
+        "বন্যা"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "faniban",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "flood"
+        },
+        "trp": {
+          "latn": "twi tormani",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "flood"
+        },
+        "sat": {
+          "latn": "ᱵᱟᱱ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "flood"
+        }
+      }
+    },
+    {
+      "id": "w_rain",
+      "cat": "words",
+      "icon": "wave",
+      "reply": "none",
+      "en": "Rain",
+      "bn": "বৃষ্টি",
+      "tags": [
+        "rain",
+        "বৃষ্টি"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "zór",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "rain"
+        },
+        "trp": {
+          "latn": "uatwi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "rain"
+        },
+        "sat": {
+          "latn": "ᱫᱟᱜ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "rain"
+        }
+      }
+    },
+    {
+      "id": "w_road",
+      "cat": "words",
+      "icon": "signpost",
+      "reply": "none",
+      "en": "Road",
+      "bn": "রাস্তা",
+      "tags": [
+        "road",
+        "রাস্তা"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "rasta",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "road"
+        },
+        "trp": {
+          "latn": "lahar",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "road"
+        },
+        "sat": {
+          "latn": "ᱥᱚᱲᱠ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "road"
+        }
+      }
+    },
+    {
+      "id": "w_village",
+      "cat": "words",
+      "icon": "place",
+      "reply": "none",
+      "en": "Village",
+      "bn": "গ্রাম",
+      "tags": [
+        "village",
+        "গ্রাম"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "fara",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "village"
+        },
+        "trp": {
+          "latn": "kami",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "village"
+        },
+        "sat": {
+          "latn": "ᱟᱛᱳ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "village"
+        }
+      }
+    },
+    {
+      "id": "w_eat",
+      "cat": "words",
+      "icon": "food",
+      "reply": "none",
+      "en": "Eat",
+      "bn": "খাওয়া",
+      "tags": [
+        "eat",
+        "খাওয়া"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "hoon",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "eat"
+        },
+        "trp": {
+          "latn": "chadi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "eat"
+        },
+        "sat": {
+          "latn": "ᱡᱚᱢ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "eat"
+        }
+      }
+    },
+    {
+      "id": "w_drink",
+      "cat": "words",
+      "icon": "water",
+      "reply": "none",
+      "en": "Drink",
+      "bn": "পান করা",
+      "tags": [
+        "drink",
+        "পান করা"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "fíyon",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "drink"
+        },
+        "trp": {
+          "latn": "nwngdi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "drink"
+        },
+        "sat": {
+          "latn": "ᱧᱩᱹ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "drink"
+        }
+      }
+    },
+    {
+      "id": "w_sleep",
+      "cat": "words",
+      "icon": "night",
+      "reply": "none",
+      "en": "Sleep",
+      "bn": "ঘুম",
+      "tags": [
+        "sleep",
+        "ঘুম"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "gum zon",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "sleep"
+        },
+        "trp": {
+          "latn": "thudi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "sleep"
+        },
+        "sat": {
+          "latn": "ᱡᱟᱹᱯᱤᱫᱽ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "sleep"
+        }
+      }
+    },
+    {
+      "id": "w_cold",
+      "cat": "words",
+      "icon": "clothes",
+      "reply": "none",
+      "en": "Cold",
+      "bn": "ঠান্ডা",
+      "tags": [
+        "cold",
+        "ঠান্ডা"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "thanda",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "cold"
+        },
+        "trp": {
+          "latn": "kwchang",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "cold"
+        },
+        "sat": {
+          "latn": "ᱨᱟᱵᱟᱝ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "cold"
+        }
+      }
+    },
+    {
+      "id": "w_stop",
+      "cat": "words",
+      "icon": "block",
+      "reply": "none",
+      "en": "Stop",
+      "bn": "থামুন",
+      "tags": [
+        "stop",
+        "থামুন"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "rukó",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "stop"
+        },
+        "trp": {
+          "latn": "bathakdi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "stop"
+        },
+        "sat": {
+          "latn": "ᱛᱮᱜᱩᱱ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "stop"
+        }
+      }
+    },
+    {
+      "id": "w_go",
+      "cat": "words",
+      "icon": "arrow",
+      "reply": "none",
+      "en": "Go",
+      "bn": "যান",
+      "tags": [
+        "go",
+        "যান"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "zoo",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "go"
+        },
+        "trp": {
+          "latn": "thangdi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "go"
+        },
+        "sat": {
+          "latn": "ᱪᱟᱞᱟᱜ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "go"
+        }
+      }
+    },
+    {
+      "id": "w_here",
+      "cat": "words",
+      "icon": "place",
+      "reply": "none",
+      "en": "Here",
+      "bn": "এখানে",
+      "tags": [
+        "here",
+        "এখানে"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "eçe",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "here"
+        },
+        "trp": {
+          "latn": "oro",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "here"
+        },
+        "sat": {
+          "latn": "ᱱᱚᱱᱰᱮ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "here"
+        }
+      }
+    },
+    {
+      "id": "w_who",
+      "cat": "words",
+      "icon": "person",
+      "reply": "none",
+      "en": "Who",
+      "bn": "কে",
+      "tags": [
+        "who",
+        "কে"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "hon",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "who"
+        },
+        "trp": {
+          "latn": "Sabo",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "who"
+        },
+        "sat": {
+          "latn": "ᱚᱠᱚᱭ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "who"
+        }
+      }
+    },
+    {
+      "id": "w_where",
+      "cat": "words",
+      "icon": "place",
+      "reply": "none",
+      "en": "Where",
+      "bn": "কোথায়",
+      "tags": [
+        "where",
+        "কোথায়"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "hoçé",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "where"
+        },
+        "trp": {
+          "latn": "Boro",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "where"
+        },
+        "sat": {
+          "latn": "ᱚᱠᱟᱨᱮ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "where"
+        }
+      }
+    },
+    {
+      "id": "w_when",
+      "cat": "words",
+      "icon": "clock",
+      "reply": "none",
+      "en": "When",
+      "bn": "কখন",
+      "tags": [
+        "when",
+        "কখন"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "hoóñtte",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "when"
+        },
+        "trp": {
+          "latn": "Buphuru",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "when"
+        },
+        "sat": {
+          "latn": "ᱛᱤᱨᱮ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "when"
+        }
+      }
+    },
+    {
+      "id": "w_fire",
+      "cat": "words",
+      "icon": "boil",
+      "reply": "none",
+      "en": "Fire",
+      "bn": "আগুন",
+      "tags": [
+        "fire",
+        "আগুন"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "oin",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "fire"
+        },
+        "trp": {
+          "latn": "hor",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "fire"
+        },
+        "sat": {
+          "latn": "ᱥᱮᱜᱮᱞ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "fire"
+        }
+      }
+    },
+    {
+      "id": "w_wound",
+      "cat": "words",
+      "icon": "healing",
+      "reply": "none",
+      "en": "Wound",
+      "bn": "ক্ষত",
+      "tags": [
+        "wound",
+        "ক্ষত"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "zohóm",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "wound"
+        },
+        "trp": {
+          "latn": "kwsa",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "wound"
+        },
+        "sat": {
+          "latn": "ᱵᱟᱡᱟᱣ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "wound"
+        }
+      }
+    },
+    {
+      "id": "w_rescue",
+      "cat": "words",
+      "icon": "rescue",
+      "reply": "none",
+      "en": "Rescue",
+      "bn": "উদ্ধার",
+      "tags": [
+        "rescue",
+        "উদ্ধার"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "hálas gora",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "rescue"
+        },
+        "trp": {
+          "latn": "biyalni tikhlaima",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "rescue"
+        },
+        "sat": {
+          "latn": "ᱵᱟᱱᱪᱟᱶ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "rescue"
+        }
+      }
+    },
+    {
+      "id": "w_hungry",
+      "cat": "words",
+      "icon": "food",
+      "reply": "none",
+      "en": "Hungry",
+      "bn": "ক্ষুধার্ত",
+      "tags": [
+        "hungry",
+        "ক্ষুধার্ত"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "búka",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "hungry"
+        },
+        "trp": {
+          "latn": "okhuimani",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "hungry"
+        },
+        "sat": {
+          "latn": "ᱨᱮᱜᱮᱡ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "hungry"
+        }
+      }
+    },
+    {
+      "id": "w_thirsty",
+      "cat": "words",
+      "icon": "water",
+      "reply": "none",
+      "en": "Thirsty",
+      "bn": "তৃষ্ণার্ত",
+      "tags": [
+        "thirsty",
+        "তৃষ্ণার্ত"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "fanír tirác laiggéde",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "thirsty"
+        },
+        "trp": {
+          "latn": "twi kangmani",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "thirsty"
+        },
+        "sat": {
+          "latn": "ᱛᱮᱛᱟᱝ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "thirsty"
+        }
+      }
+    },
+    {
+      "id": "w_sit",
+      "cat": "words",
+      "icon": "person",
+      "reply": "none",
+      "en": "Sit",
+      "bn": "বসুন",
+      "tags": [
+        "sit",
+        "বসুন"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "boiyon",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "sit"
+        },
+        "trp": {
+          "latn": "achukdi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "sit"
+        },
+        "sat": {
+          "latn": "ᱫᱩᱨᱩᱵ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "sit"
+        }
+      }
+    },
+    {
+      "id": "w_stand",
+      "cat": "words",
+      "icon": "person",
+      "reply": "none",
+      "en": "Stand",
+      "bn": "দাঁড়ান",
+      "tags": [
+        "stand",
+        "দাঁড়ান"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "tia",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "stand"
+        },
+        "trp": {
+          "latn": "bachadi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "stand"
+        },
+        "sat": {
+          "latn": "ᱛᱮᱜᱚ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "stand"
+        }
+      }
+    },
+    {
+      "id": "w_walk",
+      "cat": "words",
+      "icon": "walk",
+      "reply": "none",
+      "en": "Walk",
+      "bn": "হাঁটা",
+      "tags": [
+        "walk",
+        "হাঁটা"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "hañça",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "walk"
+        },
+        "trp": {
+          "latn": "himdi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "walk"
+        },
+        "sat": {
+          "latn": "ᱛᱟᱲᱟᱢ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "walk"
+        }
+      }
+    },
+    {
+      "id": "w_run",
+      "cat": "words",
+      "icon": "walk",
+      "reply": "none",
+      "en": "Run",
+      "bn": "দৌড়ানো",
+      "tags": [
+        "run",
+        "দৌড়ানো"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "dúron",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "run"
+        },
+        "trp": {
+          "latn": "khachikdi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "run"
+        },
+        "sat": {
+          "latn": "ᱧᱤᱨ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "run"
+        }
+      }
+    },
+    {
+      "id": "w_give",
+      "cat": "words",
+      "icon": "hand",
+      "reply": "none",
+      "en": "Give",
+      "bn": "দিন",
+      "tags": [
+        "give",
+        "দিন"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "doon",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "give"
+        },
+        "trp": {
+          "latn": "rwdi",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "give"
+        },
+        "sat": {
+          "latn": "ᱮᱢ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "give"
+        }
+      }
+    },
+    {
+      "id": "w_open",
+      "cat": "words",
+      "icon": "hand",
+      "reply": "none",
+      "en": "Open",
+      "bn": "খুলুন",
+      "tags": [
+        "open",
+        "খুলুন"
+      ],
+      "t": {
+        "rhg": {
+          "latn": "kúla",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "open"
+        },
+        "trp": {
+          "latn": "phiyokjak",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "open"
+        },
+        "sat": {
+          "latn": "ᱠᱷᱩᱞᱟᱳ",
+          "v": "corpus",
+          "src": "GATITOS",
+          "src_en": "open"
         }
       }
     }
@@ -1314,6 +3679,14 @@
       "url": "https://data.mendeley.com/datasets/dy5dyfygbp/4",
       "licence": "CC BY 4.0",
       "note": "Sentences collected from native Chakma, Garo and Marma speakers and transliterated into Bengali script. Lines are reproduced verbatim; src_en records the English the line was translated from, which may differ slightly from the phrase it is shown for."
+    },
+    {
+      "id": "GATITOS",
+      "title": "GATITOS / SMOL: professional translations into low-resource languages",
+      "authors": "Google Research",
+      "url": "https://huggingface.co/datasets/google/smol",
+      "licence": "CC BY 4.0",
+      "note": "Token-level professional human translations. Rohingya, Kokborok and Santali entries are in Latin script as published, so they are stored in the latn field."
     }
   ]
 }

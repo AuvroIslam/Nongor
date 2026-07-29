@@ -44,9 +44,13 @@ That last one is why Nongor exists in the shape it does.
 No offline translator covers Chakma, Marma, Kokborok, Santali, Garo or Rohingya. So Nongor
 does not pretend to be one. It does something that actually works with no shared language:
 
-**1. A fixed set of the questions that matter in a rescue.** 58 phrases across first contact,
-medical, rescue, water and food, shelter, family, danger and directions — written properly in
-Bangla and English, which is the half we can guarantee is correct.
+**1. A fixed set of the questions that matter in a rescue.** 127 phrases across first contact,
+medical, rescue, reassurance, water and food, shelter, family, danger and directions — with
+**276 lines of sourced translation** across six languages:
+
+| | Chakma | Rohingya | Kokborok | Santali | Marma | Garo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| lines | 51 | 50 | 50 | 50 | 39 | 36 |
 
 **2. A hand-over card, split down the middle.** The top half is drawn upside down. You lay the
 phone flat between you and the other person reads their half across it — nobody snatches the
@@ -190,6 +194,9 @@ JVM — the disaster logic is verifiable without a device and without the model.
   Marma in Bengali script with English and standard Bengali translation*, Mahi, Khan, Anik &
   Mojumdar, Daffodil International University —
   [Mendeley Data](https://data.mendeley.com/datasets/dy5dyfygbp/4), **CC BY 4.0**.
+- **Rohingya, Kokborok & Santali vocabulary** — GATITOS, from Google Research's
+  [SMOL](https://huggingface.co/datasets/google/smol) collection of professional translations
+  into low-resource languages, **CC BY 4.0**. Published in Latin script, and shown that way.
 - **First-aid content** — grounded in WHO / IFRC / Red Cross guidance.
 - **Emergency numbers** — official Government of Bangladesh short codes.
 - **Icons** — Feather (MIT) and Material Symbols (Apache-2.0).

@@ -58,6 +58,22 @@ data class Translation(
      * exact emergency — but far stronger than a guess, and the app says which it is.
      */
     val isFromCorpus: Boolean get() = v == "corpus"
+
+    /**
+     * The line to put in front of the other person, in whichever script it exists.
+     *
+     * Not every language here is written in Bengali script: Rohingya, Kokborok and Santali
+     * are published in Latin, and for those the Latin *is* the writing, not a pronunciation
+     * hint. Treating a missing [beng] as "no translation" would have hidden 150 perfectly
+     * good professional translations behind an empty card.
+     */
+    val display: String? get() = beng?.takeIf { it.isNotBlank() } ?: latn?.takeIf { it.isNotBlank() }
+
+    /** True when there is any line at all to show. */
+    val hasLine: Boolean get() = display != null
+
+    /** Shown small under [display] — only when it adds something. */
+    val pronunciation: String? get() = latn?.takeIf { it.isNotBlank() && it != display }
 }
 
 data class Category(val id: String, val en: String, val bn: String, val icon: String)
@@ -166,9 +182,9 @@ data class PhrasebookData(
     /** Languages a volunteer can actually pick, i.e. everything except the two authored ones. */
     fun targetLanguages(): List<LangInfo> = allLanguages.filter { !it.isAuthored }
 
-    /** How many phrases carry a written line in [code]. Shown honestly in the picker. */
+    /** How many phrases carry a written line in [code], in any script. Shown in the picker. */
     fun coverage(code: String): Int =
-        allPhrases.count { it.translations[code]?.beng?.isNotBlank() == true }
+        allPhrases.count { it.translations[code]?.hasLine == true }
 
     fun triagePhrases(): List<Phrase> = flow.mapNotNull { byId[it] }
 }
