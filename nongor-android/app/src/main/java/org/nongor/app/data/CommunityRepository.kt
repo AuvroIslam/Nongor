@@ -25,19 +25,32 @@ data class CommunityReport(
     val ts: Long = System.currentTimeMillis(),
 )
 
-/** The fixed set of report types, with bilingual labels — kept small so it works for low-literacy use. */
+/**
+ * The fixed set of report types, with bilingual labels — kept small so it works for
+ * low-literacy use.
+ *
+ * [icon] names a drawn vector rather than an emoji. Emoji look different on every phone,
+ * render as a blank box on some cheap ones, and are read out unhelpfully by screen readers —
+ * none of which you want on the tag that says a bridge is down.
+ */
 object CommunityKinds {
-    data class Kind(val id: String, val en: String, val bn: String, val emoji: String, val danger: Boolean)
+    data class Kind(
+        val id: String,
+        val en: String,
+        val bn: String,
+        val icon: String,
+        val danger: Boolean,
+    )
 
     val ALL = listOf(
-        Kind("road_flooded", "Road flooded", "রাস্তা প্লাবিত", "🚧", true),
-        Kind("bridge_down", "Bridge / road blocked", "সেতু / রাস্তা বন্ধ", "⛔", true),
-        Kind("shelter_full", "Shelter full", "আশ্রয় পূর্ণ", "🏠", true),
-        Kind("danger", "Danger here", "এখানে বিপদ", "⚠️", true),
-        Kind("supplies", "Food / water / medicine", "খাবার / পানি / ওষুধ", "📦", false),
-        Kind("pharmacy_open", "Pharmacy / shop open", "ফার্মেসি / দোকান খোলা", "💊", false),
-        Kind("safe_route", "Safe route / dry road", "নিরাপদ পথ / শুকনো রাস্তা", "✅", false),
-        Kind("rescue_here", "Rescue available", "উদ্ধার সহায়তা আছে", "🚤", false),
+        Kind("road_flooded", "Road flooded", "রাস্তা প্লাবিত", "flood", true),
+        Kind("bridge_down", "Bridge / road blocked", "সেতু / রাস্তা বন্ধ", "blocked", true),
+        Kind("shelter_full", "Shelter full", "আশ্রয় পূর্ণ", "shelter_full", true),
+        Kind("danger", "Danger here", "এখানে বিপদ", "danger", true),
+        Kind("supplies", "Food / water / medicine", "খাবার / পানি / ওষুধ", "supplies", false),
+        Kind("pharmacy_open", "Pharmacy / shop open", "ফার্মেসি / দোকান খোলা", "pharmacy", false),
+        Kind("safe_route", "Safe route / dry road", "নিরাপদ পথ / শুকনো রাস্তা", "safe_route", false),
+        Kind("rescue_here", "Rescue available", "উদ্ধার সহায়তা আছে", "rescue", false),
     )
 
     fun byId(id: String): Kind = ALL.firstOrNull { it.id == id } ?: ALL.first()

@@ -54,6 +54,12 @@ import org.nongor.app.ui.i18n.tr
 import org.nongor.app.ui.theme.ShapeSm
 import org.nongor.app.ui.theme.CautionAmber
 import org.nongor.app.ui.theme.SafeGreen
+import androidx.compose.material3.FloatingActionButton
+import compose.icons.feathericons.Plus
+import org.nongor.app.ui.theme.BrandTeal
+import compose.icons.feathericons.Shield
+import compose.icons.feathericons.AlertCircle
+import org.nongor.app.ui.theme.ShapeMd
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -63,8 +69,15 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
         viewModel.enter()
         onDispose { viewModel.leave() }
     }
-    var selectedKind by remember { mutableStateOf(CommunityKinds.ALL.first().id) }
-    var note by remember { mutableStateOf("") }
+    var reporting by remember { mutableStateOf(false) }
+
+    if (reporting) {
+        ReportSheet(
+            canPost = ui.started,
+            onPost = { kind, note -> viewModel.post(kind, note); reporting = false },
+            onDismiss = { reporting = false },
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -74,6 +87,17 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
                     IconButton(onClick = onBack) { Icon(FeatherIcons.ArrowLeft, contentDescription = "Back") }
                 },
             )
+        },
+        floatingActionButton = {
+            // The one thing you come here to *do*. Everything else on this screen is reading.
+            FloatingActionButton(
+                onClick = { reporting = true },
+                containerColor = BrandTeal,
+                contentColor = Color.White,
+                shape = CircleShape,
+            ) {
+                Icon(FeatherIcons.Plus, contentDescription = tr("Report", "জানান"))
+            }
         },
     ) { pad ->
         Column(
@@ -96,42 +120,6 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 4.dp))
-
-            // ---- post a report ----
-            Spacer(Modifier.height(14.dp))
-            Card(Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(12.dp)) {
-                    Text(tr("Report what you see", "যা দেখছেন জানান"),
-                        style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Spacer(Modifier.height(8.dp))
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        CommunityKinds.ALL.forEach { k ->
-                            KindChip(
-                                label = "${k.emoji} " + (if (LocalBangla.current) k.bn else k.en),
-                                selected = k.id == selectedKind,
-                                danger = k.danger,
-                                onClick = { selectedKind = k.id },
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = note, onValueChange = { note = it }, modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text(tr("Add a detail (optional) — e.g. which road",
-                            "বিস্তারিত দিন (ঐচ্ছিক) — যেমন কোন রাস্তা")) },
-                        singleLine = true,
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Button(
-                        onClick = { viewModel.post(selectedKind, note); note = "" },
-                        modifier = Modifier.fillMaxWidth(), enabled = ui.started,
-                    ) {
-                        Icon(FeatherIcons.Radio, null, modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text(tr("Share report", "রিপোর্ট শেয়ার করুন"))
-                    }
-                }
-            }
 
             // ---- Gemma situation briefing ----
             Spacer(Modifier.height(14.dp))
@@ -179,8 +167,8 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
                 style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             if (ui.reports.isEmpty()) {
                 Spacer(Modifier.height(6.dp))
-                Text(tr("No reports yet. Share one above, or wait for nearby phones.",
-                    "এখনো কোনো রিপোর্ট নেই। উপরে একটি শেয়ার করুন, বা কাছের ফোনের জন্য অপেক্ষা করুন।"),
+                Text(tr("No reports yet. Tap + to share one, or wait for nearby phones.",
+                    "এখনো কোনো রিপোর্ট নেই। + চাপ দিয়ে জানান, বা কাছের ফোনের অপেক্ষা করুন।"),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
@@ -194,7 +182,7 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
                     style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
                 ui.otherAreas.forEach { r ->
-                    Text("• ${CommunityKinds.byId(r.kind).emoji} " +
+                    Text("• " +
                         (if (LocalBangla.current) CommunityKinds.byId(r.kind).bn else CommunityKinds.byId(r.kind).en) +
                         (if (r.districtEn.isNotBlank()) " — ${r.districtEn}" else "") +
                         (if (r.note.isNotBlank()) ": ${r.note}" else ""),
@@ -214,37 +202,80 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: () -> Unit) {
     }
 }
 
+/**
+ * One report on the board.
+ *
+ * Laid out the way a timetable is: a small muted line of context on top, then the thing
+ * itself in bold. The whole card is tinted by whether this is a warning or an offer of help,
+ * so the board can be understood by colour alone before a single word is read.
+ */
 @Composable
-private fun KindChip(label: String, selected: Boolean, danger: Boolean, onClick: () -> Unit) {
-    val base = if (danger) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
-    Box(
-        Modifier.clip(ShapeSm)
-            .background(if (selected) base.copy(alpha = 0.18f) else MaterialTheme.colorScheme.surfaceVariant)
-            .clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = 8.dp),
+private fun ReportRow(r: CommunityReport) {
+    val kind = CommunityKinds.byId(r.kind)
+    val style = kindStyle(r.kind)
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clip(ShapeMd)
+            .background(style.bg)
+            .padding(horizontal = 14.dp, vertical = 12.dp),
     ) {
-        Text(label, style = MaterialTheme.typography.labelLarge,
-            color = if (selected) base else MaterialTheme.colorScheme.onSurface,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal)
+        // Context line: when, who, and whether the signature checked out.
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                ago(r.ts),
+                style = MaterialTheme.typography.labelMedium,
+                color = style.fg.copy(alpha = 0.72f),
+            )
+            Text(
+                "  ·  " + (if (r.mine) tr("You", "আপনি") else r.sender),
+                style = MaterialTheme.typography.labelMedium,
+                color = style.fg.copy(alpha = 0.72f),
+            )
+            Spacer(Modifier.weight(1f))
+            // A forged report must never look like a trusted one, whatever it claims.
+            Icon(
+                if (r.verified) FeatherIcons.Shield else FeatherIcons.AlertCircle,
+                contentDescription = if (r.verified) {
+                    tr("Signed", "স্বাক্ষরিত")
+                } else {
+                    tr("Unverified", "অযাচাইকৃত")
+                },
+                tint = if (r.verified) style.fg.copy(alpha = 0.6f) else MaterialTheme.colorScheme.error,
+                modifier = Modifier.size(13.dp),
+            )
+        }
+        Spacer(Modifier.height(4.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(style.icon, contentDescription = null, tint = style.fg, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(8.dp))
+            Text(
+                if (LocalBangla.current) kind.bn else kind.en,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = style.fg,
+            )
+        }
+        if (r.note.isNotBlank()) {
+            Spacer(Modifier.height(3.dp))
+            Text(
+                r.note,
+                style = MaterialTheme.typography.bodyMedium,
+                color = style.fg.copy(alpha = 0.85f),
+            )
+        }
     }
 }
 
+/** Relative time, in the two words a person actually needs. */
 @Composable
-private fun ReportRow(r: CommunityReport) {
-    val k = CommunityKinds.byId(r.kind)
-    Card(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-        Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(k.emoji, style = MaterialTheme.typography.titleLarge)
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Text(if (LocalBangla.current) k.bn else k.en, fontWeight = FontWeight.Bold,
-                    color = if (k.danger) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
-                if (r.note.isNotBlank()) Text(r.note, style = MaterialTheme.typography.bodyMedium)
-                Text(
-                    (if (r.mine) tr("You", "আপনি") else r.sender) +
-                        (if (r.verified) tr(" · ✓ signed", " · ✓ স্বাক্ষরিত") else tr(" · unverified", " · অযাচাইকৃত")),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-        }
+private fun ago(ts: Long): String {
+    val minutes = ((System.currentTimeMillis() - ts) / 60_000L).coerceAtLeast(0)
+    return when {
+        minutes < 1 -> tr("just now", "এইমাত্র")
+        minutes < 60 -> tr("$minutes min ago", "$minutes মিনিট আগে")
+        minutes < 1440 -> tr("${minutes / 60} h ago", "${minutes / 60} ঘণ্টা আগে")
+        else -> tr("${minutes / 1440} d ago", "${minutes / 1440} দিন আগে")
     }
 }
