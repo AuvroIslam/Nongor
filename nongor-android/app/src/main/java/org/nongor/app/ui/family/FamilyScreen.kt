@@ -64,7 +64,7 @@ fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(tr("Nongor · Family Reunion", "নোঙর · পরিবার পুনর্মিলন")) },
+                title = { Text(tr("Radar", "রাডার")) },
                 navigationIcon = {
                     IconButton(onClick = onBack) { Icon(FeatherIcons.ArrowLeft, contentDescription = "Back") }
                 },
@@ -107,6 +107,8 @@ fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
             FamilyRadar(
                 members = ui.members,
                 listening = ui.started,
+                sosBlips = ui.sosBlips,
+                volunteerBlips = ui.volunteerBlips,
                 onSelect = { selected = it.member.name },
             )
 

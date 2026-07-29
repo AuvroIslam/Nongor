@@ -41,6 +41,8 @@ import org.nongor.app.ui.theme.ErrorRed
 import org.nongor.app.ui.theme.GlassBorder
 import org.nongor.app.ui.theme.ShapeLg
 import org.nongor.app.ui.theme.TextSecondary
+import androidx.compose.foundation.layout.offset
+import compose.icons.feathericons.Radio
 
 /**
  * Nongor's four resting places, plus the one thing that is never more than a thumb away.
@@ -50,11 +52,11 @@ import org.nongor.app.ui.theme.TextSecondary
  * need it is not a moment to be navigating, and because a person who has never opened this
  * app before will still understand a big red circle in the middle of the screen.
  */
-enum class Tab(val icon: ImageVector) {
-    HOME(FeatherIcons.Home),
-    MAP(FeatherIcons.Map),
-    ALERTS(FeatherIcons.Bell),
-    MORE(FeatherIcons.Grid),
+enum class Tab {
+    HOME,
+    MAP,
+    ALERTS,
+    VOLUNTEER,
     ;
 
     @Composable
@@ -62,7 +64,7 @@ enum class Tab(val icon: ImageVector) {
         HOME -> tr("Home", "হোম")
         MAP -> tr("Map", "মানচিত্র")
         ALERTS -> tr("Alerts", "খবর")
-        MORE -> tr("More", "আরও")
+        VOLUNTEER -> tr("Volunteer", "স্বয়ংসেবক")
     }
 }
 
@@ -99,33 +101,48 @@ fun NongorShell(
                 // Space the raised SOS button sits over.
                 Spacer(Modifier.weight(1f))
                 BarItem(Tab.ALERTS, current, onSelect, Modifier.weight(1f))
-                BarItem(Tab.MORE, current, onSelect, Modifier.weight(1f))
+                BarItem(Tab.VOLUNTEER, current, onSelect, Modifier.weight(1f))
             }
 
             // The anchor, raised. Red while an SOS is going out, so the app never looks calm
             // while it is shouting for help.
+            // Raised clear of the bar, like a call button on a dashboard. White ring so it
+            // reads as a separate object rather than part of the bar behind it.
             Box(
                 Modifier
                     .align(Alignment.TopCenter)
-                    .size(60.dp)
+                    .offset(y = (-16).dp)
+                    .size(68.dp)
                     .clip(CircleShape)
-                    .background(if (sosActive) ErrorRed else BrandTeal)
+                    .background(BgCard)
+                    .padding(4.dp)
+                    .clip(CircleShape)
+                    .background(ErrorRed)
                     .clickable(onClick = onSos),
                 contentAlignment = Alignment.Center,
             ) {
-                if (sosActive) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        FeatherIcons.Radio,
+                        contentDescription = tr("Send an SOS", "এসওএস পাঠান"),
+                        tint = Color.White,
+                        modifier = Modifier.size(if (sosActive) 15.dp else 18.dp),
+                    )
                     Text(
                         "SOS",
                         color = Color.White,
                         fontWeight = FontWeight.ExtraBold,
-                        fontSize = 15.sp,
+                        fontSize = 12.sp,
+                        lineHeight = 13.sp,
                     )
-                } else {
-                    Image(
-                        painterResource(R.drawable.nongor_mark),
-                        contentDescription = tr("Send an SOS", "এসওএস পাঠান"),
-                        modifier = Modifier.size(34.dp),
-                    )
+                    if (sosActive) {
+                        Text(
+                            tr("sending", "যাচ্ছে"),
+                            color = Color.White.copy(alpha = 0.9f),
+                            fontSize = 7.sp,
+                            lineHeight = 8.sp,
+                        )
+                    }
                 }
             }
         }
@@ -140,6 +157,7 @@ private fun BarItem(
     modifier: Modifier = Modifier,
 ) {
     val selected = tab == current
+    val tint = if (selected) BrandTeal else TextSecondary
     Column(
         modifier
             .fillMaxSize()
@@ -148,12 +166,18 @@ private fun BarItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Icon(
-            tab.icon,
-            contentDescription = null,
-            tint = if (selected) BrandTeal else TextSecondary,
-            modifier = Modifier.size(19.dp),
-        )
+        when (tab) {
+            Tab.HOME -> Icon(FeatherIcons.Home, null, tint = tint, modifier = Modifier.size(19.dp))
+            Tab.MAP -> Icon(FeatherIcons.Map, null, tint = tint, modifier = Modifier.size(19.dp))
+            Tab.ALERTS -> Icon(FeatherIcons.Bell, null, tint = tint, modifier = Modifier.size(19.dp))
+            // A raised hand: the icon for offering help, not for a menu.
+            Tab.VOLUNTEER -> Icon(
+                painterResource(R.drawable.ic_volunteer),
+                contentDescription = null,
+                tint = tint,
+                modifier = Modifier.size(19.dp),
+            )
+        }
         Spacer(Modifier.height(3.dp))
         Text(
             tab.label(),

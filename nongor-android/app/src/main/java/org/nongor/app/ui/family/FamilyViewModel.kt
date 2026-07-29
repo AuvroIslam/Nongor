@@ -34,6 +34,26 @@ data class SeenMember(
     val hasFix: Boolean get() = distanceM != null && bearingDeg != null
 }
 
+/** What a blip on the radar represents. Each layer answers a different question. */
+enum class BlipKind { FAMILY, SOS, VOLUNTEER }
+
+/**
+ * One thing plotted on the radar.
+ *
+ * Family, people calling for help, and people offering it all reduce to the same three
+ * facts - who, how far, which way - so they share one shape and are told apart by colour.
+ */
+data class RadarBlip(
+    val name: String,
+    val kind: BlipKind,
+    val distanceM: Int?,
+    val bearingDeg: Float?,
+    val minutesAgo: Long,
+    val drill: Boolean = false,
+) {
+    val hasFix: Boolean get() = distanceM != null && bearingDeg != null
+}
+
 data class FamilyUiState(
     val familyCode: String = "",
     val myName: String = "",
@@ -43,6 +63,10 @@ data class FamilyUiState(
     val members: List<SeenMember> = emptyList(),
     val togetherCount: Int = 0,      // members last seen close together
     val lastBeaconTs: Long = 0L,
+    /** People calling for help, from signed SOS reports that carried a position. */
+    val sosBlips: List<RadarBlip> = emptyList(),
+    /** People offering help, from "rescue available" reports on the board. */
+    val volunteerBlips: List<RadarBlip> = emptyList(),
 )
 
 /**
@@ -69,6 +93,8 @@ class FamilyViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch { hub.started.collect { v -> _ui.update { it.copy(started = v) } } }
         viewModelScope.launch { hub.peers.collect { v -> _ui.update { it.copy(peers = v) } } }
         viewModelScope.launch { hub.familyMembers.collect { refresh(it) } }
+        viewModelScope.launch { app.sosRepository.entries.collect { refreshOthers() } }
+        viewModelScope.launch { app.communityRepository.entries.collect { refreshOthers() } }
     }
 
     fun saveFamily(code: String, name: String) {
@@ -132,6 +158,49 @@ class FamilyViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
             _ui.update { it.copy(members = seen, togetherCount = together) }
+        }
+    }
+
+    /**
+     * Plot everyone else: who is calling for help, and who is offering it.
+     *
+     * Both come from stores the mesh already fills, so nothing new goes on the air. Anything
+     * without a position is dropped rather than placed at a guess - a blip pointing the wrong
+     * way is worse than no blip, because someone will walk towards it.
+     */
+    private fun refreshOthers() {
+        viewModelScope.launch {
+            val me = runCatching { hub.myLocation() }.getOrNull() ?: return@launch
+            val now = System.currentTimeMillis()
+
+            val sos = app.sosRepository.entries.value.mapNotNull { entry ->
+                val lat = entry.report.lat ?: return@mapNotNull null
+                val lon = entry.report.lon ?: return@mapNotNull null
+                RadarBlip(
+                    name = entry.triage.priority.uppercase(),
+                    kind = BlipKind.SOS,
+                    distanceM = Gis.haversineM(me.first, me.second, lat, lon).toInt(),
+                    bearingDeg = bearingDegrees(me.first, me.second, lat, lon).toFloat(),
+                    minutesAgo = ((now - entry.ts) / 60_000L).coerceAtLeast(0),
+                    drill = entry.source == "drill",
+                )
+            }
+
+            val volunteers = app.communityRepository.entries.value
+                .filter { it.kind == "rescue_here" }
+                .mapNotNull { r ->
+                    val lat = r.lat ?: return@mapNotNull null
+                    val lon = r.lon ?: return@mapNotNull null
+                    RadarBlip(
+                        name = if (r.mine) "You" else r.sender,
+                        kind = BlipKind.VOLUNTEER,
+                        distanceM = Gis.haversineM(me.first, me.second, lat, lon).toInt(),
+                        bearingDeg = bearingDegrees(me.first, me.second, lat, lon).toFloat(),
+                        minutesAgo = ((now - r.ts) / 60_000L).coerceAtLeast(0),
+                    )
+                }
+
+            _ui.update { it.copy(sosBlips = sos, volunteerBlips = volunteers) }
         }
     }
 

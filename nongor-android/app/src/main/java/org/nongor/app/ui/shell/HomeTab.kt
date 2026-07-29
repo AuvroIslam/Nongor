@@ -63,6 +63,7 @@ import org.nongor.app.ui.theme.ShapeSm
 import org.nongor.app.ui.theme.TextPrimary
 import org.nongor.app.ui.theme.TextSecondary
 import compose.icons.feathericons.HelpCircle
+import org.nongor.app.ui.theme.ShapeLg
 
 /** One update on the home feed. Built from real mesh and board activity, never invented. */
 data class HomeUpdate(
@@ -88,9 +89,9 @@ fun HomeTab(
     peers: Int,
     updates: List<HomeUpdate>,
     onTranslate: () -> Unit,
-    onShelter: () -> Unit,
     onFirstAid: () -> Unit,
-    onFamily: () -> Unit,
+    onRadar: () -> Unit,
+    onVolunteer: () -> Unit,
     onBoard: () -> Unit,
     onEmergency: () -> Unit,
     onSettings: () -> Unit,
@@ -189,17 +190,51 @@ fun HomeTab(
             // ---- Status: the honest one-liner ----
             StatusCard(modelReady = modelReady, peers = peers, bangla = bangla)
 
-            // ---- Quick actions ----
+            // ---- What you can do ----
+            // A single tinted panel holding white rows, rather than a scatter of tiles: the
+            // panel says "these belong together", and a full-width row leaves space for a
+            // real label instead of one clipped word. Shelter and the board are not here on
+            // purpose - they have their own places in the bar below, and repeating them would
+            // just be two ways to reach the same screen.
             Spacer(Modifier.height(18.dp))
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(ShapeLg)
+                    .background(BrandTealDeep)
+                    .padding(12.dp),
             ) {
-                QuickAction(FeatherIcons.MessageSquare, BrandTeal, tr("Translate", "অনুবাদ"), onTranslate)
-                QuickAction(FeatherIcons.MapPin, Color(0xFF1F6D82), tr("Shelter", "আশ্রয়"), onShelter)
-                QuickAction(FeatherIcons.Activity, SafeGreen, tr("First aid", "চিকিৎসা"), onFirstAid)
-                QuickAction(FeatherIcons.Heart, Color(0xFF3C5A78), tr("Family", "পরিবার"), onFamily)
-                QuickAction(FeatherIcons.Users, CautionAmber, tr("Board", "বোর্ড"), onBoard)
+                ActionRow(
+                    painter = R.drawable.ic_translate,
+                    tint = BrandTeal,
+                    title = tr("Emergency", "\u099c\u09b0\u09c1\u09b0\u09bf"),
+                    title2 = tr("Translation", "\u0985\u09a8\u09c1\u09ac\u09be\u09a6"),
+                    onClick = onTranslate,
+                )
+                Spacer(Modifier.height(8.dp))
+                ActionRow(
+                    painter = R.drawable.ic_firstaid,
+                    tint = SafeGreen,
+                    title = tr("First Aid", "\u09aa\u09cd\u09b0\u09be\u09a5\u09ae\u09bf\u0995"),
+                    title2 = tr("Information", "\u099a\u09bf\u0995\u09bf\u09ce\u09b8\u09be"),
+                    onClick = onFirstAid,
+                )
+                Spacer(Modifier.height(8.dp))
+                ActionRow(
+                    painter = R.drawable.ic_radar,
+                    tint = Color(0xFF3C5A78),
+                    title = tr("Radar", "\u09b0\u09be\u09a1\u09be\u09b0"),
+                    title2 = tr("Family & help nearby", "\u09aa\u09b0\u09bf\u09ac\u09be\u09b0 \u0993 \u0995\u09be\u099b\u09c7\u09b0 \u09b8\u09be\u09b9\u09be\u09af\u09cd\u09af"),
+                    onClick = onRadar,
+                )
+                Spacer(Modifier.height(8.dp))
+                ActionRow(
+                    painter = R.drawable.ic_volunteer,
+                    tint = CautionAmber,
+                    title = tr("Volunteer", "\u09b8\u09cd\u09ac\u09df\u0982\u09b8\u09c7\u09ac\u0995"),
+                    title2 = tr("Share where you are", "\u0986\u09aa\u09a8\u09bf \u0995\u09cb\u09a5\u09be\u09df \u099c\u09be\u09a8\u09be\u09a8"),
+                    onClick = onVolunteer,
+                )
             }
 
             // ---- Emergency call ----
@@ -388,27 +423,59 @@ private fun StatusCard(modelReady: Boolean, peers: Int, bangla: Boolean) {
     }
 }
 
+/**
+ * One white row inside the action panel.
+ *
+ * Two short lines rather than one long one, so the label can say what the thing actually is
+ * without being truncated - "Emergency / Translation" reads at a glance where "Emergency
+ * translation" on one line would clip to "Emergency transl...".
+ */
 @Composable
-private fun QuickAction(icon: ImageVector, tint: Color, label: String, onClick: () -> Unit) {
-    Column(
-        Modifier.clip(ShapeSm).clickable(onClick = onClick).padding(horizontal = 2.dp, vertical = 4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+private fun ActionRow(
+    painter: Int,
+    tint: Color,
+    title: String,
+    title2: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(ShapeMd)
+            .background(BgCard)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 14.dp, vertical = 13.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            Modifier.size(54.dp).clip(CircleShape).background(tint),
+            Modifier.size(40.dp).clip(CircleShape).background(tint.copy(alpha = 0.13f)),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(23.dp))
+            Icon(
+                painterResource(painter),
+                contentDescription = null,
+                tint = tint,
+                modifier = Modifier.size(21.dp),
+            )
         }
-        Spacer(Modifier.height(6.dp))
-        Text(
-            label,
-            style = MaterialTheme.typography.labelSmall,
-            color = TextPrimary,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            fontSize = 11.sp,
-        )
+        Spacer(Modifier.width(14.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                title,
+                color = tint,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleSmall,
+                lineHeight = 19.sp,
+            )
+            Text(
+                title2,
+                color = tint,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleSmall,
+                lineHeight = 19.sp,
+            )
+        }
+        Icon(FeatherIcons.ChevronRight, null, tint = tint.copy(alpha = 0.5f))
     }
 }
 

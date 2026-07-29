@@ -64,8 +64,21 @@ class GisViewModel(application: Application) : AndroidViewModel(application) {
     val ui: StateFlow<GisUiState> = _ui
 
     init {
-        // Show the active region's map + shelters right away (an honest overview — NOT a fake "you").
-        viewModelScope.launch { loadOverview(app.prefs.activeRegion.value) }
+        viewModelScope.launch {
+            // Draw *something* immediately so the screen is never blank while GPS warms up.
+            loadOverview(app.prefs.activeRegion.value)
+
+            // Then correct it to wherever the user actually is. Opening on a stored region was
+            // quietly wrong for most of the country: someone standing in Khulna was shown
+            // Chattogram's shelters with no hint that the map was not about them. The overview
+            // is a placeholder, not an answer, so it should be replaced the moment we can.
+            if (app.locationProvider.hasPermission()) {
+                val here = runCatching { app.locationProvider.current() }.getOrNull()
+                if (here != null && !_ui.value.hasLocation) {
+                    located(here.first, here.second, usedGps = true, manual = false)
+                }
+            }
+        }
         // Warm the model so the Map Assistant can use Gemma even if this is the first screen opened.
         viewModelScope.launch {
             if (!app.engineHolder.isReady()) {
@@ -138,6 +151,9 @@ class GisViewModel(application: Application) : AndroidViewModel(application) {
             selectedPublicIdx = if (c.nearbyPublic.isNotEmpty()) 0 else null,
             overviewRegion = if (c.detailed) c.packId else _ui.value.overviewRegion,
         )
+        // Remember where they were, so the next launch frames the right part of the country
+        // even before GPS answers.
+        if (c.detailed) app.prefs.setActiveRegion(c.packId)
     }
 
     /** Pure computation from a point — no UI mutation. */

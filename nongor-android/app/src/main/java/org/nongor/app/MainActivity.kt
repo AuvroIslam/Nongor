@@ -52,7 +52,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import org.nongor.app.ui.shell.NongorShell
 import org.nongor.app.ui.shell.Tab
 import org.nongor.app.ui.shell.HomeTab
-import org.nongor.app.ui.shell.MoreTab
+import org.nongor.app.ui.shell.VolunteerTab
 import org.nongor.app.ui.shell.HomeUpdate
 import org.nongor.app.data.CommunityKinds
 import androidx.compose.runtime.remember
@@ -200,9 +200,9 @@ private fun NongorNavHost() {
                         peers = peers,
                         updates = updates,
                         onTranslate = { navController.navigate(Routes.TRANSLATE) },
-                        onShelter = { navController.navigate(Routes.GIS) },
                         onFirstAid = { navController.navigate(Routes.FIRSTAID) },
-                        onFamily = { navController.navigate(Routes.FAMILY) },
+                        onRadar = { navController.navigate(Routes.FAMILY) },
+                        onVolunteer = { tab = Tab.VOLUNTEER },
                         onBoard = { navController.navigate(Routes.COMMUNITY) },
                         onEmergency = { navController.navigate(Routes.EMERGENCY) },
                         onSettings = { navController.navigate(Routes.SETTINGS) },
@@ -216,14 +216,38 @@ private fun NongorNavHost() {
                         val vm: CommunityViewModel = viewModel(factory = appFactory())
                         CommunityScreen(viewModel = vm, onBack = null)
                     }
-                    Tab.MORE -> MoreTab(
-                        onTranslate = { navController.navigate(Routes.TRANSLATE) },
-                        onTriage = { navController.navigate(Routes.TRIAGE) },
-                        onSummary = { navController.navigate(Routes.SUMMARY) },
-                        onEmergency = { navController.navigate(Routes.EMERGENCY) },
-                        onGuide = { navController.navigate(Routes.GUIDE) },
-                        onSettings = { navController.navigate(Routes.SETTINGS) },
-                    )
+                    Tab.VOLUNTEER -> {
+                        val sharing by app.volunteerSharing.collectAsState()
+                        var busy by remember { mutableStateOf(false) }
+                        VolunteerTab(
+                            sharing = sharing,
+                            sharingBusy = busy,
+                            onShareLocation = {
+                                // Posts "rescue available" with this phone's position onto the
+                                // same signed mesh the board already uses, so it reaches a
+                                // stranger's Radar without inventing a second transport.
+                                busy = true
+                                scope.launch {
+                                    runCatching {
+                                        app.meshHub.sendReport(
+                                            "rescue_here",
+                                            "Volunteer available here",
+                                        )
+                                    }
+                                    app.volunteerSharing.value = true
+                                    busy = false
+                                }
+                            },
+                            onStopSharing = { app.volunteerSharing.value = false },
+                            onTranslate = { navController.navigate(Routes.TRANSLATE) },
+                            onRadar = { navController.navigate(Routes.FAMILY) },
+                            onTriage = { navController.navigate(Routes.TRIAGE) },
+                            onSummary = { navController.navigate(Routes.SUMMARY) },
+                            onEmergency = { navController.navigate(Routes.EMERGENCY) },
+                            onGuide = { navController.navigate(Routes.GUIDE) },
+                            onSettings = { navController.navigate(Routes.SETTINGS) },
+                        )
+                    }
                 }
             }
         }

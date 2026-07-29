@@ -60,6 +60,8 @@ import org.nongor.app.ui.theme.ShapePill
 import kotlin.math.cos
 import kotlin.math.ln
 import kotlin.math.sin
+import org.nongor.app.ui.theme.ErrorRed
+import org.nongor.app.ui.theme.SafeGreen
 
 /**
  * Where your family is, as a picture.
@@ -100,6 +102,8 @@ fun FamilyRadar(
     members: List<SeenMember>,
     listening: Boolean,
     modifier: Modifier = Modifier,
+    sosBlips: List<RadarBlip> = emptyList(),
+    volunteerBlips: List<RadarBlip> = emptyList(),
     onSelect: (SeenMember) -> Unit = {},
 ) {
     val bangla = LocalBangla.current
@@ -204,10 +208,11 @@ fun FamilyRadar(
                 }
             }
 
-            // Everyone we have a real fix for.
-            placed.forEach { seen ->
-                MemberBlip(seen, radius, bangla, onSelect)
-            }
+            // Everyone we have a real fix for. Drawn worst-first so an SOS is never hidden
+            // under a volunteer marker sitting at the same bearing.
+            volunteerBlips.filter { it.hasFix }.forEach { OtherBlip(it, radius, SafeGreen) }
+            placed.forEach { seen -> MemberBlip(seen, radius, bangla, onSelect) }
+            sosBlips.filter { it.hasFix }.forEach { OtherBlip(it, radius, ErrorRed) }
 
             if (members.isEmpty()) {
                 // Sits just under the centre dot rather than at the bottom edge, where it
@@ -377,5 +382,43 @@ private fun RingKey(label: String) {
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+    }
+}
+
+/**
+ * A blip that is not family: someone calling for help, or someone offering it.
+ *
+ * Smaller and unlabelled by name, because the useful fact here is the *direction* and the
+ * colour - red means somebody there needs help, green means help is standing there.
+ */
+@Composable
+private fun BoxScope.OtherBlip(blip: RadarBlip, radius: Dp, colour: Color) {
+    val distance = blip.distanceM ?: return
+    val bearing = blip.bearingDeg ?: return
+    val r = radiusFraction(distance)
+    val rad = Math.toRadians(bearing.toDouble())
+    val fx = (sin(rad) * r).toFloat()
+    val fy = (-cos(rad) * r).toFloat()
+
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.offset(x = radius * fx, y = radius * fy),
+        ) {
+            Box(
+                Modifier
+                    .size(20.dp)
+                    .clip(CircleShape)
+                    .background(colour)
+                    .border(2.dp, Color.White.copy(alpha = 0.85f), CircleShape),
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                blip.name.take(8),
+                color = Color.White.copy(alpha = 0.85f),
+                fontSize = 8.sp,
+                fontWeight = FontWeight.SemiBold,
+            )
+        }
     }
 }

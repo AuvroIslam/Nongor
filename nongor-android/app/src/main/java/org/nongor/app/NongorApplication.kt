@@ -45,6 +45,15 @@ class NongorApplication : Application() {
      */
     var pendingSosDraft: String? = null
 
+    /**
+     * Whether this phone is currently advertising itself as a volunteer.
+     *
+     * Application-scoped for the same reason the SOS session is: a volunteer who switched
+     * this on and put the phone in their pocket is still a volunteer, and the switch must
+     * survive leaving the screen. It is off by default and never turns itself on.
+     */
+    val volunteerSharing = kotlinx.coroutines.flow.MutableStateFlow(false)
+
     override fun onCreate() {
         super.onCreate()
         chatRepository = ChatRepository(this)
