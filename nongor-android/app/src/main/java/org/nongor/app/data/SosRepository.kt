@@ -20,6 +20,10 @@ data class SosEntry(
 private data class PersistedSos(
     val entries: List<SosEntry> = emptyList(),
     val quarantine: List<SosEntry> = emptyList(),
+    // Nullable and defaulted: Gson populates fields reflectively without running the Kotlin
+    // constructor, so a file written before this field existed leaves it null, not empty.
+    val seenBy: Map<String, List<String>>? = null,
+    val acked: List<String>? = null,
 )
 
 /**
@@ -50,6 +54,25 @@ class SosRepository(private val persistFile: File? = null) {
     private val _quarantine = MutableStateFlow<List<SosEntry>>(emptyList())
     val quarantine: StateFlow<List<SosEntry>> = _quarantine
 
+    /**
+     * Who has confirmed seeing each SOS we sent, keyed by the message id.
+     *
+     * This is the read receipt. It says a copy of the message reached a phone and was put in
+     * front of a person - nothing more. It is deliberately NOT evidence that anyone is coming,
+     * and the UI that renders it has to say so, because a person on a roof reading "seen by 3"
+     * will otherwise stop looking for another way out.
+     */
+    private val _seenBy = MutableStateFlow<Map<String, Set<String>>>(emptyMap())
+    val seenBy: StateFlow<Map<String, Set<String>>> = _seenBy
+
+    /**
+     * SOS ids this device has already acknowledged.
+     *
+     * Persisted, so a restart mid-incident does not re-acknowledge everything still in the
+     * store and hand the sender a pile of duplicate receipts from one phone.
+     */
+    private val _acked = MutableStateFlow<Set<String>>(emptySet())
+
     private var lastBriefedCount = 0
 
     init {
@@ -60,6 +83,8 @@ class SosRepository(private val persistFile: File? = null) {
             }.getOrNull()?.let { saved ->
                 _entries.value = saved.entries
                 _quarantine.value = saved.quarantine
+                _seenBy.value = saved.seenBy?.mapValues { (_, v) -> v.toSet() } ?: emptyMap()
+                _acked.value = saved.acked?.toSet() ?: emptySet()
             }
         }
     }
@@ -80,9 +105,45 @@ class SosRepository(private val persistFile: File? = null) {
     fun clear() {
         _entries.value = emptyList()
         _quarantine.value = emptyList()
+        _seenBy.value = emptyMap()
+        _acked.value = emptySet()
         lastBriefedCount = 0
         persist()
     }
+
+    /**
+     * Record that [by] has seen the SOS with id [msgId].
+     *
+     * A set, not a counter: the same phone re-broadcasting its acknowledgement after a relay
+     * hop must not inflate the number. Returns true only when this is genuinely new, so the
+     * caller can decide whether anything on screen needs to change.
+     */
+    fun recordSeen(msgId: String, by: String): Boolean {
+        if (msgId.isBlank() || by.isBlank()) return false
+        val current = _seenBy.value[msgId].orEmpty()
+        if (by in current) return false
+        _seenBy.value = _seenBy.value + (msgId to (current + by))
+        persist()
+        return true
+    }
+
+    /** Everyone known to have seen this SOS. */
+    fun seenBy(msgId: String): Set<String> = _seenBy.value[msgId].orEmpty()
+
+    /**
+     * Claim the right to acknowledge [msgId], exactly once on this device.
+     *
+     * Returns true the first time and false forever after, so the ack is sent on the first
+     * viewing and never again - including across restarts.
+     */
+    fun claimAck(msgId: String): Boolean {
+        if (msgId.isBlank() || msgId in _acked.value) return false
+        _acked.value = _acked.value + msgId
+        persist()
+        return true
+    }
+
+    fun hasAcked(msgId: String): Boolean = msgId in _acked.value
 
     /** How many reports arrived since the last briefing was generated. */
     fun newSince(): Int = (_entries.value.size - lastBriefedCount).coerceAtLeast(0)
@@ -99,7 +160,16 @@ class SosRepository(private val persistFile: File? = null) {
         runCatching {
             // Drill data is a practice scaffold — never let it survive a restart as "real" data.
             val real = _entries.value.filter { it.source != "drill" }
-            f.writeText(gson.toJson(PersistedSos(real, _quarantine.value)))
+            f.writeText(
+                gson.toJson(
+                    PersistedSos(
+                        real,
+                        _quarantine.value,
+                        _seenBy.value.mapValues { (_, v) -> v.toList() },
+                        _acked.value.toList(),
+                    ),
+                ),
+            )
         }
     }
 }

@@ -188,15 +188,24 @@ class MeshManager(
 
     fun peers(): Int = synchronized(peerLock) { peerCountLocked() }
 
-    /** Compose + broadcast a signed SOS. Returns the envelope so the UI can show it locally. */
-    fun sendSos(text: String, lat: Double?, lon: Double?): SignedEnvelope {
+    /**
+     * Compose + broadcast a signed SOS. Returns the envelope so the UI can show it locally.
+     *
+     * [msgId] lets a held-down SOS reuse one id for every repeat of the same call for help.
+     * Receivers dedupe on the id, so a phone already holding it ignores the repeat while a
+     * phone that only comes into range on the fourth attempt still gets it - which is the
+     * behaviour a store-and-forward mesh is for. Minting a fresh id each time instead turned
+     * one person shouting into five separate reports of five separate emergencies.
+     */
+    fun sendSos(text: String, lat: Double?, lon: Double?, msgId: String? = null): SignedEnvelope {
         clock += 1
         val payload = mapOf(
             "text" to text,
             "lat" to (lat?.toString() ?: ""),
             "lon" to (lon?.toString() ?: ""),
         )
-        val env = SignedEnvelope.create(signer, payload, UUID.randomUUID().toString(), clock, ttl = 4)
+        val env = SignedEnvelope.create(
+            signer, payload, msgId ?: UUID.randomUUID().toString(), clock, ttl = 4)
         seen.add(env.msgId)
         broadcast(env)
         val n = peers()
@@ -222,6 +231,24 @@ class MeshManager(
         val n = peers()
         onStatus(if (n == 0) "No peers yet — report queued (${outbox.size()} waiting to send)"
         else "Report shared with $n peer(s)")
+        return env
+    }
+
+    /**
+     * Acknowledge that a received SOS was actually put in front of a human (type = "seen").
+     *
+     * The payload is only the id of the message being acknowledged - no text, no location, no
+     * new claim about the world. It rides the same relay as everything else, so an ack can
+     * find its way back over two hops even though the two phones were never in range of each
+     * other at the same moment.
+     */
+    fun sendSeen(forMsgId: String): SignedEnvelope {
+        clock += 1
+        val env = SignedEnvelope.create(
+            signer, mapOf("for" to forMsgId), UUID.randomUUID().toString(), clock,
+            ttl = 4, type = "seen")
+        seen.add(env.msgId)
+        broadcast(env)
         return env
     }
 

@@ -48,6 +48,15 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import org.nongor.app.ui.theme.TileMeshFg
 import org.nongor.app.ui.components.PriorityDot
+import androidx.compose.foundation.background
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.layout.size
+import compose.icons.feathericons.CheckCircle
+import compose.icons.feathericons.Clock
+import org.nongor.app.ui.theme.SafeGreen
+import org.nongor.app.ui.theme.ShapeSm
+import org.nongor.app.ui.theme.TextSecondary
+import org.nongor.app.ui.i18n.localiseDigits
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -169,14 +178,30 @@ fun MeshScreen(viewModel: MeshViewModel, onBack: () -> Unit, prefill: String = "
                 style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(6.dp))
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                ui.messages.reversed().forEach { m -> MeshRow(m) }
+                ui.messages.reversed().forEach { m ->
+                    MeshRow(m, ui.seenBy[m.msgId].orEmpty(), onSeen = { viewModel.markSeen(it) })
+                }
             }
         }
     }
 }
 
+/**
+ * One message on the mesh log, and its read receipt.
+ *
+ * Messages you sent show who has confirmed seeing them. Messages from other people send that
+ * confirmation, once, when this row is first composed - the receipt is only worth anything if
+ * it means a human looked at the screen, so it fires on display rather than on delivery.
+ */
 @Composable
-private fun MeshRow(m: org.nongor.app.mesh.MeshMsg) {
+private fun MeshRow(
+    m: org.nongor.app.mesh.MeshMsg,
+    seenBy: Set<String>,
+    onSeen: (String) -> Unit,
+) {
+    if (!m.mine && m.verified && m.msgId.isNotBlank()) {
+        LaunchedEffect(m.msgId) { onSeen(m.msgId) }
+    }
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -199,6 +224,75 @@ private fun MeshRow(m: org.nongor.app.mesh.MeshMsg) {
             }
             Spacer(Modifier.height(4.dp))
             Text(m.text, style = MaterialTheme.typography.bodyMedium)
+
+            if (m.mine) {
+                Spacer(Modifier.height(10.dp))
+                SeenReceipt(seenBy)
+            }
+        }
+    }
+}
+
+/**
+ * "Seen by N phones" - and, immediately, what that does not mean.
+ *
+ * The caveat is not boilerplate. Someone on a roof who reads "seen by 3" and takes it as
+ * "three people are coming" may stop shouting, stop looking for another way out, and wait.
+ * The receipt is real and worth having: it is the difference between shouting into the dark
+ * and knowing the message left the building. But it is a delivery confirmation, not a rescue,
+ * and the screen has to say which one it is in the same breath.
+ */
+@Composable
+private fun SeenReceipt(seenBy: Set<String>) {
+    val n = seenBy.size
+    val bangla = LocalBangla.current
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(ShapeSm)
+            .background(
+                if (n == 0) TextSecondary.copy(alpha = 0.08f) else SafeGreen.copy(alpha = 0.12f),
+            )
+            .padding(horizontal = 11.dp, vertical = 9.dp),
+        verticalAlignment = Alignment.Top,
+    ) {
+        Icon(
+            if (n == 0) FeatherIcons.Clock else FeatherIcons.CheckCircle,
+            contentDescription = null,
+            tint = if (n == 0) TextSecondary else SafeGreen,
+            modifier = Modifier.size(15.dp).padding(top = 1.dp),
+        )
+        Spacer(Modifier.width(9.dp))
+        Column {
+            Text(
+                if (n == 0) {
+                    tr("Not seen yet", "এখনও কেউ দেখেনি")
+                } else {
+                    localiseDigits(
+                        if (n == 1) tr("Seen on 1 phone", "১টি ফোনে দেখা হয়েছে")
+                        else tr("Seen on ${n} phones", "${n}টি ফোনে দেখা হয়েছে"),
+                        bangla,
+                    )
+                },
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.labelLarge,
+                color = if (n == 0) TextSecondary else SafeGreen,
+            )
+            Text(
+                if (n == 0) {
+                    tr(
+                        "It keeps going out until a phone picks it up.",
+                        "কোনো ফোন না পাওয়া পর্যন্ত এটি যেতেই থাকবে।",
+                    )
+                } else {
+                    tr(
+                        "Your message got through. That is not a promise that help is on the way — keep trying other ways too.",
+                        "আপনার বার্তা পৌঁছেছে। এর মানে এই নয় যে সাহায্য আসছে — অন্য ভাবেও চেষ্টা চালিয়ে যান।",
+                    )
+                },
+                style = MaterialTheme.typography.bodySmall,
+                color = TextSecondary,
+            )
         }
     }
 }

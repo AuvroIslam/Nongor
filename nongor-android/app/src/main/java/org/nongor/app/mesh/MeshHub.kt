@@ -34,6 +34,8 @@ data class MeshMsg(
     val priority: String,
     val color: String,
     val mine: Boolean,
+    /** The envelope id, so acknowledgements coming back can be matched to this line. */
+    val msgId: String = "",
 )
 
 /**
@@ -122,19 +124,26 @@ class MeshHub(
     /** Messages composed with no peer in range, still waiting for one. */
     fun pendingCount(): Int = outbox.size()
 
-    suspend fun sendSos(text: String) {
+    suspend fun sendSos(text: String, msgId: String? = null) {
         val t = text.trim(); if (t.isEmpty()) return
         val m = mgr ?: return
         val loc = location.current()
         val region = Regions.byId(prefs.activeRegion.value)
         val lat = loc?.first ?: region.centerLat
         val lon = loc?.second ?: region.centerLon
-        m.sendSos(t, lat, lon)
-        val sos = SosReport(text = t, lat = lat, lon = lon, reporterRole = "volunteer")
+        val env = m.sendSos(t, lat, lon, msgId)
+        // A repeat of a call already on the log is the same call, not a new one. Without this
+        // a two-minute hold on the SOS button left five identical cases in the store, and the
+        // coordinator briefing counted all five.
+        if (_sosMessages.value.any { it.msgId == env.msgId }) return
+        // The envelope id is carried into the stored report so an acknowledgement arriving two
+        // hops later can be matched back to the exact message it is answering.
+        val sos = SosReport(
+            msgId = env.msgId, text = t, lat = lat, lon = lon, reporterRole = "volunteer")
         val tr = Triage.fallbackTriage(sos)
         sosRepo.add(SosEntry(sos, tr, source = "mesh_sent"))
         _sosMessages.value = _sosMessages.value +
-            MeshMsg(t, localName, true, 0, tr.priority, tr.color, mine = true)
+            MeshMsg(t, localName, true, 0, tr.priority, tr.color, mine = true, msgId = env.msgId)
     }
 
     suspend fun sendReport(kind: String, note: String) {
@@ -161,6 +170,21 @@ class MeshHub(
         m.sendPresence(FamilyCrypto.tag(code), FamilyCrypto.seal(code, name), loc?.first, loc?.second)
     }
 
+    /**
+     * Tell the sender their SOS reached a human.
+     *
+     * Called when a received SOS is actually on screen, not when it arrives - the whole value
+     * of the receipt is that it means a person looked, so acknowledging on delivery would make
+     * it a lie. Sent at most once per message per device, and never for our own messages or
+     * for ones that failed their signature check.
+     */
+    fun markSeen(msgId: String) {
+        val m = mgr ?: return
+        if (msgId.isBlank()) return
+        if (!sosRepo.claimAck(msgId)) return
+        runCatching { m.sendSeen(msgId) }
+    }
+
     /** Our own current position, for working out how far away a family member was last seen. */
     suspend fun myLocation(): Pair<Double, Double>? = location.current()
 
@@ -170,6 +194,10 @@ class MeshHub(
         return if (loc != null) BdGeo.nearestDistrict(app, loc.first, loc.second).name
         else Regions.byId(prefs.activeRegion.value).nameEn
     }
+
+    /** Bumped whenever a new acknowledgement lands, so collectors recompose. */
+    private val _seenTick = MutableStateFlow(0)
+    val seenTick: StateFlow<Int> = _seenTick
 
     private fun onReceived(env: SignedEnvelope, ok: Boolean, hops: Int) {
         when (env.type) {
@@ -192,6 +220,17 @@ class MeshHub(
                     ),
                 )
             }
+            "seen" -> {
+                // Someone had our SOS on their screen. Record it against the original message.
+                // Unverified envelopes are dropped: a forged receipt would tell a person in
+                // danger that help has their message when nobody does, which is worse than
+                // showing nothing at all.
+                if (!ok) return
+                val forId = env.payload["for"] as? String ?: return
+                if (sosRepo.recordSeen(forId, env.sender)) {
+                    _seenTick.value = _seenTick.value + 1
+                }
+            }
             "community" -> {
                 val r = CommunityReport(
                     id = env.msgId,
@@ -208,12 +247,15 @@ class MeshHub(
                 val text = env.payload["text"] as? String ?: ""
                 val lat = (env.payload["lat"] as? String)?.toDoubleOrNull()
                 val lon = (env.payload["lon"] as? String)?.toDoubleOrNull()
-                val sos = SosReport(text = text, lat = lat, lon = lon, hops = hops)
+                val sos = SosReport(msgId = env.msgId, text = text, lat = lat, lon = lon, hops = hops)
                 val tr = Triage.fallbackTriage(sos)
                 val entry = SosEntry(sos, tr, source = "mesh_recv", verified = ok, hops = hops)
                 if (ok) sosRepo.add(entry) else sosRepo.addQuarantined(entry)
                 _sosMessages.value = _sosMessages.value +
-                    MeshMsg(text, env.sender, ok, hops, tr.priority, tr.color, mine = false)
+                    MeshMsg(
+                        text, env.sender, ok, hops, tr.priority, tr.color,
+                        mine = false, msgId = env.msgId,
+                    )
             }
         }
     }

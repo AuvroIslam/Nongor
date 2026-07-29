@@ -21,6 +21,8 @@ data class MeshUiState(
     /** A one-press SOS is being re-broadcast on a timer. */
     val sosActive: Boolean = false,
     val sirenOn: Boolean = false,
+    /** Message id -> the phones that have confirmed seeing it. */
+    val seenBy: Map<String, Set<String>> = emptyMap(),
 )
 
 /** Thin wrapper over the app-scoped [org.nongor.app.mesh.MeshHub] shared with Community. */
@@ -38,6 +40,14 @@ class MeshViewModel(application: Application) : AndroidViewModel(application) {
     private val _ui = MutableStateFlow(MeshUiState())
     val ui: StateFlow<MeshUiState> = _ui
 
+    /**
+     * Tell the sender that their SOS is on our screen.
+     *
+     * Driven by the row appearing, not by the message arriving, because the receipt only
+     * means anything if a person actually looked. Idempotent - the hub drops repeats.
+     */
+    fun markSeen(msgId: String) = hub.markSeen(msgId)
+
     init {
         // Mirror the shared hub's state into this screen's UI. Atomic update{} — these collectors
         // run concurrently, so a plain read-modify-write would clobber each other.
@@ -45,6 +55,9 @@ class MeshViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch { hub.status.collect { v -> _ui.update { it.copy(status = v) } } }
         viewModelScope.launch { hub.peers.collect { v -> _ui.update { it.copy(peers = v) } } }
         viewModelScope.launch { hub.sosMessages.collect { v -> _ui.update { it.copy(messages = v) } } }
+        viewModelScope.launch {
+            app.sosRepository.seenBy.collect { v -> _ui.update { it.copy(seenBy = v) } }
+        }
         viewModelScope.launch { app.sosSession.active.collect { v -> _ui.update { it.copy(sosActive = v) } } }
         viewModelScope.launch { app.sosSession.sirenOn.collect { v -> _ui.update { it.copy(sirenOn = v) } } }
     }
@@ -92,7 +105,12 @@ class MeshViewModel(application: Application) : AndroidViewModel(application) {
 
     private val sos = app.sosSession
 
-    fun pressSos(text: String) = sos.start(text) { hub.sendSos(it) }
+    fun pressSos(text: String) {
+        // One id for the whole session, so every repeat is understood as the same call for
+        // help rather than a new emergency each time the timer fires.
+        val id = java.util.UUID.randomUUID().toString()
+        sos.start(text) { hub.sendSos(it, id) }
+    }
 
     fun stopSos() = sos.stop()
 
