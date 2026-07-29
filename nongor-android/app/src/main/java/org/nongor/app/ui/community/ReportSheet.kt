@@ -130,20 +130,38 @@ fun ReportSheet(
                 }
             }
 
+            // The note is required. A board full of bare tags — "danger", "danger", "danger" —
+            // tells a rescuer nothing they can act on; the sentence is the report.
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
                 value = note,
                 onValueChange = { note = it },
                 modifier = Modifier.fillMaxWidth(),
                 shape = ShapeMd,
-                singleLine = true,
-                label = { Text(tr("Which road, which shelter?", "কোন রাস্তা, কোন আশ্রয়?")) },
+                minLines = 3,
+                label = { Text(tr("What is happening?", "কী ঘটছে?")) },
+                placeholder = {
+                    Text(
+                        tr(
+                            "Which road, which shelter, how many people",
+                            "কোন রাস্তা, কোন আশ্রয়, কতজন মানুষ",
+                        ),
+                    )
+                },
+                supportingText = {
+                    Text(
+                        tr(
+                            "Needed — one sentence a stranger could act on.",
+                            "লাগবেই — এমন একটি বাক্য যাতে অচেনা কেউ কাজ করতে পারে।",
+                        ),
+                    )
+                },
             )
 
             Spacer(Modifier.height(16.dp))
             Button(
                 onClick = { onPost(selected, note); note = "" },
-                enabled = canPost,
+                enabled = canPost && note.isNotBlank(),
                 modifier = Modifier.fillMaxWidth().height(52.dp),
                 shape = ShapeMd,
             ) {
@@ -157,6 +175,16 @@ fun ReportSheet(
                     tr(
                         "Waiting for the mesh radio to start…",
                         "মেশ রেডিও চালু হওয়ার অপেক্ষায়…",
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextSecondary,
+                )
+            } else if (note.isBlank()) {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    tr(
+                        "Write what you can see before sharing.",
+                        "শেয়ার করার আগে যা দেখছেন তা লিখুন।",
                     ),
                     style = MaterialTheme.typography.bodySmall,
                     color = TextSecondary,

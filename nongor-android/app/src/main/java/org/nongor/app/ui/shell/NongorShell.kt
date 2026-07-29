@@ -159,34 +159,48 @@ private fun BarItem(
 ) {
     val selected = tab == current
     val tint = if (selected) BrandTeal else TextSecondary
-    Column(
+    // The pill wraps its contents and is then centred in the cell, rather than filling the
+    // cell and centring the contents inside it. Stretching it meant the glyph sat hard against
+    // the top edge while the label's line box padded the bottom — symmetric in the layout,
+    // visibly lopsided on screen.
+    Box(
         modifier
             .fillMaxSize()
-            .padding(vertical = 6.dp, horizontal = 3.dp)
-            .clip(ShapeMd)
-            .background(if (selected) BrandTeal.copy(alpha = 0.12f) else Color.Transparent)
             .clickable { onSelect(tab) },
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        contentAlignment = Alignment.Center,
     ) {
-        when (tab) {
-            Tab.HOME -> Icon(FeatherIcons.Home, null, tint = tint, modifier = Modifier.size(19.dp))
-            Tab.MAP -> Icon(FeatherIcons.Map, null, tint = tint, modifier = Modifier.size(19.dp))
-            Tab.ALERTS -> Icon(FeatherIcons.Bell, null, tint = tint, modifier = Modifier.size(19.dp))
-            // A raised hand: the icon for offering help, not for a menu.
-            Tab.VOLUNTEER -> Icon(
-                painterResource(R.drawable.ic_volunteer),
-                contentDescription = null,
-                tint = tint,
-                modifier = Modifier.size(19.dp),
+        Column(
+            Modifier
+                .clip(ShapeMd)
+                .background(if (selected) BrandTeal.copy(alpha = 0.12f) else Color.Transparent)
+                .padding(horizontal = 7.dp, vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            when (tab) {
+                Tab.HOME -> Icon(FeatherIcons.Home, null, tint = tint, modifier = Modifier.size(19.dp))
+                Tab.MAP -> Icon(FeatherIcons.Map, null, tint = tint, modifier = Modifier.size(19.dp))
+                Tab.ALERTS -> Icon(FeatherIcons.Bell, null, tint = tint, modifier = Modifier.size(19.dp))
+                // A raised hand: the icon for offering help, not for a menu.
+                Tab.VOLUNTEER -> Icon(
+                    painterResource(R.drawable.ic_volunteer),
+                    contentDescription = null,
+                    tint = tint,
+                    modifier = Modifier.size(19.dp),
+                )
+            }
+            Spacer(Modifier.height(4.dp))
+            Text(
+                tab.label(),
+                color = tint,
+                fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Medium,
+                fontSize = 10.sp,
+                lineHeight = 11.sp,
+                // The cell is a fifth of the screen; "Volunteer" was breaking across two lines
+                // on a narrow phone, which reads as a rendering fault rather than a label.
+                maxLines = 1,
+                softWrap = false,
             )
         }
-        Spacer(Modifier.height(3.dp))
-        Text(
-            tab.label(),
-            color = tint,
-            fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Medium,
-            fontSize = 10.sp,
-        )
     }
 }

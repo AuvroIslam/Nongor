@@ -116,19 +116,69 @@ fun VolunteerTab(
         )
 
         // ---- Do the work ----
+        // Two tiles side by side rather than two full-width rows. With only two of them a
+        // stacked list left the screen looking half-finished, and these are the two questions
+        // a volunteer asks in order — who first, then what overall — so sitting them next to
+        // each other reads as a pair rather than the start of a longer list.
         Spacer(Modifier.height(18.dp))
-        VolunteerRow(
-            icon = FeatherIcons.AlertTriangle, tint = CautionAmber,
-            title = tr("Who needs help first", "আগে কার সাহায্য দরকার"),
-            subtitle = tr("Rank every case logged on this phone", "এই ফোনের সব কেস অগ্রাধিকার অনুযায়ী"),
-            onClick = onTriage,
+        Row(Modifier.fillMaxWidth()) {
+            VolunteerTile(
+                icon = FeatherIcons.AlertTriangle, tint = CautionAmber,
+                title = tr("Who needs help first", "আগে কার সাহায্য দরকার"),
+                subtitle = tr("Every case on this phone, ranked", "এই ফোনের সব কেস, অগ্রাধিকার অনুযায়ী"),
+                onClick = onTriage,
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(Modifier.width(12.dp))
+            VolunteerTile(
+                icon = FeatherIcons.BarChart2, tint = BrandTealDeep,
+                title = tr("Situation briefing", "পরিস্থিতির সারসংক্ষেপ"),
+                subtitle = tr("Counts, worst cases, shelter pressure", "সংখ্যা, খারাপ কেস, আশ্রয়ের চাপ"),
+                onClick = onSummary,
+                modifier = Modifier.weight(1f),
+            )
+        }
+    }
+}
+
+/**
+ * One square in the volunteer grid.
+ *
+ * Taller than it is busy: a big target, a colour you can aim at, and enough room for the
+ * subtitle to say what the tool actually returns rather than trailing off.
+ */
+@Composable
+private fun VolunteerTile(
+    icon: ImageVector,
+    tint: Color,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier
+            .height(152.dp)
+            .clip(ShapeMd)
+            .background(BgCard)
+            .clickable(onClick = onClick)
+            .padding(15.dp),
+    ) {
+        Box(
+            Modifier.size(46.dp).clip(CircleShape).background(tint.copy(alpha = 0.14f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(icon, null, tint = tint, modifier = Modifier.size(23.dp))
+        }
+        Spacer(Modifier.weight(1f))
+        Text(
+            title,
+            fontWeight = FontWeight.ExtraBold,
+            style = MaterialTheme.typography.titleSmall,
+            color = TextPrimary,
         )
-        VolunteerRow(
-            icon = FeatherIcons.BarChart2, tint = BrandTealDeep,
-            title = tr("Situation briefing", "পরিস্থিতির সারসংক্ষেপ"),
-            subtitle = tr("Counts, worst cases, shelter pressure", "সংখ্যা, খারাপ কেস, আশ্রয়ের চাপ"),
-            onClick = onSummary,
-        )
+        Spacer(Modifier.height(3.dp))
+        Text(subtitle, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
     }
 }
 
@@ -220,52 +270,5 @@ private fun ShareCard(sharing: Boolean, busy: Boolean, onShare: () -> Unit, onSt
                 fontSize = 14.sp,
             )
         }
-    }
-}
-
-@Composable
-private fun VolunteerRow(
-    icon: ImageVector? = null,
-    painter: Int? = null,
-    tint: Color,
-    title: String,
-    subtitle: String,
-    onClick: () -> Unit,
-) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(vertical = 3.dp)
-            .clip(ShapeMd)
-            .background(BgCard)
-            .clickable(onClick = onClick)
-            .padding(14.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(
-            Modifier.size(38.dp).clip(CircleShape).background(tint.copy(alpha = 0.13f)),
-            contentAlignment = Alignment.Center,
-        ) {
-            when {
-                painter != null -> Icon(
-                    painterResource(painter),
-                    contentDescription = null,
-                    tint = tint,
-                    modifier = Modifier.size(18.dp),
-                )
-                icon != null -> Icon(icon, null, tint = tint, modifier = Modifier.size(18.dp))
-            }
-        }
-        Spacer(Modifier.width(13.dp))
-        Column(Modifier.weight(1f)) {
-            Text(
-                title,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleSmall,
-                color = TextPrimary,
-            )
-            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
-        }
-        Icon(FeatherIcons.ChevronRight, null, tint = TextSecondary)
     }
 }

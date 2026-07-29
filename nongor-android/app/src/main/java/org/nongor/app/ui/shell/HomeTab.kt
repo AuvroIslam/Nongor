@@ -264,7 +264,7 @@ fun HomeTab(
                 Spacer(Modifier.height(8.dp))
                 ActionRow(
                     painter = R.drawable.ic_firstaid,
-                    tint = SafeGreen,
+                    tint = ErrorRed,
                     title = tr("First Aid", "\u09aa\u09cd\u09b0\u09be\u09a5\u09ae\u09bf\u0995"),
                     title2 = tr("Information", "\u099a\u09bf\u0995\u09bf\u09ce\u09b8\u09be"),
                     onClick = onFirstAid,
@@ -272,7 +272,7 @@ fun HomeTab(
                 Spacer(Modifier.height(8.dp))
                 ActionRow(
                     painter = R.drawable.ic_compass,
-                    tint = Color(0xFF3C5A78),
+                    tint = CautionAmber,
                     title = tr("Radar", "\u09b0\u09be\u09a1\u09be\u09b0"),
                     title2 = tr("Family & help nearby", "\u09aa\u09b0\u09bf\u09ac\u09be\u09b0 \u0993 \u0995\u09be\u099b\u09c7\u09b0 \u09b8\u09be\u09b9\u09be\u09af\u09cd\u09af"),
                     onClick = onRadar,
@@ -370,42 +370,55 @@ private fun RoundIcon(icon: ImageVector, onClick: () -> Unit) {
  */
 @Composable
 private fun StatusCard(modelReady: Boolean, peers: Int, bangla: Boolean) {
-    // Deliberately a thin strip rather than a card. It is reassurance, not an action, and it
-    // was taking the vertical space that the things you actually tap needed.
+    // Two lines with room to breathe, not one squeezed sentence. It still has to stay short \u2014
+    // the things you actually tap live below it \u2014 but a status you cannot read at a glance is
+    // not reassurance, it is noise.
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(ShapePill)
-            .background(SafeGreen.copy(alpha = 0.12f))
-            .padding(horizontal = 12.dp, vertical = 8.dp),
+            .clip(ShapeMd)
+            .background(SafeGreen.copy(alpha = 0.11f))
+            .padding(horizontal = 14.dp, vertical = 13.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(FeatherIcons.WifiOff, null, tint = SafeGreen, modifier = Modifier.size(15.dp))
-        Spacer(Modifier.width(8.dp))
-        Text(
-            tr("Offline", "\u0985\u09ab\u09b2\u09be\u0987\u09a8"),
-            color = SafeGreen,
-            fontWeight = FontWeight.ExtraBold,
-            style = MaterialTheme.typography.labelLarge,
-        )
-        Spacer(Modifier.width(7.dp))
-        Text(
-            buildString {
-                append(
-                    if (modelReady) {
-                        tr("everything and the AI ready on this phone", "\u09b8\u09ac \u0993 \u098f\u0986\u0987 \u098f\u0987 \u09ab\u09cb\u09a8\u09c7 \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4")
-                    } else {
-                        tr("everything ready on this phone", "\u09b8\u09ac \u098f\u0987 \u09ab\u09cb\u09a8\u09c7 \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4")
-                    },
-                )
-                if (peers > 0) {
-                    append(localiseDigits(tr(" \u00b7 $peers nearby", " \u00b7 \u0995\u09be\u099b\u09c7 $peers"), bangla))
-                }
-            },
-            color = TextSecondary,
-            style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.weight(1f),
-        )
+        Box(
+            Modifier.size(34.dp).clip(CircleShape).background(SafeGreen.copy(alpha = 0.20f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(FeatherIcons.WifiOff, null, tint = SafeGreen, modifier = Modifier.size(17.dp))
+        }
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                tr("Working offline", "\u0985\u09ab\u09b2\u09be\u0987\u09a8\u09c7 \u099a\u09b2\u099b\u09c7"),
+                color = BrandTealDeep,
+                fontWeight = FontWeight.ExtraBold,
+                style = MaterialTheme.typography.titleSmall,
+            )
+            Spacer(Modifier.height(1.dp))
+            Text(
+                if (modelReady) {
+                    tr("Maps, first aid and the AI are on this phone", "\u09ae\u09cd\u09af\u09be\u09aa, \u09aa\u09cd\u09b0\u09be\u09a5\u09ae\u09bf\u0995 \u099a\u09bf\u0995\u09bf\u09ce\u09b8\u09be \u0993 \u098f\u0986\u0987 \u098f\u0987 \u09ab\u09cb\u09a8\u09c7\u0987 \u0986\u099b\u09c7")
+                } else {
+                    tr("Maps and first aid are on this phone", "\u09ae\u09cd\u09af\u09be\u09aa \u0993 \u09aa\u09cd\u09b0\u09be\u09a5\u09ae\u09bf\u0995 \u099a\u09bf\u0995\u09bf\u09ce\u09b8\u09be \u098f\u0987 \u09ab\u09cb\u09a8\u09c7\u0987 \u0986\u099b\u09c7")
+                },
+                color = TextSecondary,
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        if (peers > 0) {
+            Spacer(Modifier.width(10.dp))
+            Text(
+                localiseDigits(tr("$peers nearby", "\u0995\u09be\u099b\u09c7 $peers"), bangla),
+                color = SafeGreen,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier
+                    .clip(ShapePill)
+                    .background(SafeGreen.copy(alpha = 0.18f))
+                    .padding(horizontal = 9.dp, vertical = 4.dp),
+            )
+        }
     }
 }
 

@@ -72,8 +72,12 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import org.nongor.app.ui.theme.ShapeSm
 import org.nongor.app.ui.theme.TileShelterFg
+import org.nongor.app.ui.theme.CautionAmber
 import org.nongor.app.ui.theme.ErrorRed
 import org.nongor.app.ui.theme.GlassBorder
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 
 private val FLOOD = Color(0xFF2196F3)
 private val ROAD = Color(0xFF9E9E9E)
@@ -82,7 +86,7 @@ private val ROUTE = Color(0xFFFF9800)
 private val SHELTER = Color(0xFF43A047)
 private val USER = Color(0xFF1B1030)
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun GisScreen(viewModel: GisViewModel, onBack: (() -> Unit)? = null) {
     val ui by viewModel.ui.collectAsState()
@@ -147,6 +151,7 @@ fun GisScreen(viewModel: GisViewModel, onBack: (() -> Unit)? = null) {
                 granted = locationPerm.status.isGranted,
                 locating = ui.locating,
                 hasLocation = ui.hasLocation,
+                manualPin = ui.manualPin,
                 gpsFailed = ui.gpsFailed,
                 onEnable = { locationPerm.launchPermissionRequest() },
                 onLocate = { viewModel.findNearestShelter() },
@@ -325,6 +330,7 @@ fun GisScreen(viewModel: GisViewModel, onBack: (() -> Unit)? = null) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun MapAssistantCard(ui: GisUiState, onAsk: (String) -> Unit) {
     var q by remember { mutableStateOf("") }
@@ -333,8 +339,11 @@ private fun MapAssistantCard(ui: GisUiState, onAsk: (String) -> Unit) {
             Text(tr("Ask about your area", "আপনার এলাকা নিয়ে জিজ্ঞেস করুন"),
                 style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Text(
-                tr("Gemma reads your question and answers from the offline map data — on your phone.",
-                    "Gemma আপনার প্রশ্ন পড়ে অফলাইন ম্যাপ ডেটা থেকে উত্তর দেয় — আপনার ফোনেই।"),
+                tr(
+                    "Gemma answers from the offline map and from what your neighbours have " +
+                        "reported on the board — all on your phone.",
+                    "Gemma অফলাইন ম্যাপ ও প্রতিবেশীরা বোর্ডে যা জানিয়েছেন তা থেকে উত্তর দেয় — সবই আপনার ফোনে।",
+                ),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.height(8.dp))
@@ -350,10 +359,15 @@ private fun MapAssistantCard(ui: GisUiState, onAsk: (String) -> Unit) {
                 }
             }
             Spacer(Modifier.height(8.dp))
-            Row {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
                 AssistExample(tr("Nearest hospital", "নিকটতম হাসপাতাল")) { q = it; onAsk(it) }
-                Spacer(Modifier.width(8.dp))
                 AssistExample(tr("Safe route to shelter", "আশ্রয়ে নিরাপদ পথ")) { q = it; onAsk(it) }
+                AssistExample(
+                    tr("What are neighbours reporting?", "প্রতিবেশীরা কী জানাচ্ছেন?"),
+                ) { q = it; onAsk(it) }
             }
 
             if (ui.assistantBusy) {
@@ -662,11 +676,15 @@ private fun LocationCard(
     granted: Boolean,
     locating: Boolean,
     hasLocation: Boolean,
+    manualPin: Boolean,
     gpsFailed: Boolean,
     onEnable: () -> Unit,
     onLocate: () -> Unit,
 ) {
     val tint = when {
+        // A pin you dropped is a real location, but it is not GPS - amber, not green, so the
+        // card never claims the phone found you when in fact you told it where you were.
+        manualPin -> CautionAmber
         hasLocation -> SHELTER
         !granted || gpsFailed -> ErrorRed
         else -> TileShelterFg
@@ -689,7 +707,8 @@ private fun LocationCard(
             Text(
                 when {
                     locating -> tr("Finding you…", "আপনাকে খোঁজা হচ্ছে…")
-                    hasLocation -> tr("Using your location", "আপনার অবস্থান ব্যবহার হচ্ছে")
+                    manualPin -> tr("Using the pin you placed", "আপনার দেওয়া পিন ব্যবহার হচ্ছে")
+                    hasLocation -> tr("Using your GPS location", "আপনার জিপিএস অবস্থান ব্যবহার হচ্ছে")
                     !granted -> tr("Location is off", "লোকেশন বন্ধ")
                     gpsFailed -> tr("No GPS fix yet", "এখনও জিপিএস পাওয়া যায়নি")
                     else -> tr("Location is on", "লোকেশন চালু")
@@ -699,6 +718,7 @@ private fun LocationCard(
             )
             Text(
                 when {
+                    manualPin -> tr("Distances are measured from that pin, not from GPS. Tap the map to move it.", "দূরত্ব সেই পিন থেকে মাপা হচ্ছে, জিপিএস থেকে নয়। সরাতে ম্যাপে চাপ দিন।")
                     hasLocation -> tr("Shelters and routes are measured from you.", "আশ্রয় ও পথ আপনার অবস্থান থেকে মাপা হচ্ছে।")
                     !granted -> tr("Turn it on and the map opens where you actually are.", "চালু করলে ম্যাপ আপনি যেখানে আছেন সেখানে খুলবে।")
                     gpsFailed -> tr("Step outside, or tap the map to place yourself.", "বাইরে যান, অথবা ম্যাপে চাপ দিয়ে নিজের জায়গা দিন।")
@@ -717,6 +737,7 @@ private fun LocationCard(
             Text(
                 when {
                     !granted -> tr("Turn on", "চালু করুন")
+                    manualPin -> tr("Use GPS", "জিপিএস দিন")
                     hasLocation -> tr("Update", "হালনাগাদ")
                     else -> tr("Locate me", "আমাকে খুঁজুন")
                 },

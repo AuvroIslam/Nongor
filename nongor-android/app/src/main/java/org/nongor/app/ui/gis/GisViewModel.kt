@@ -9,6 +9,7 @@ import org.nongor.app.core.Prompts
 import org.nongor.app.core.Safety
 import org.nongor.app.core.Shelter
 import org.nongor.app.data.BdGeo
+import org.nongor.app.data.CommunityKinds
 import org.nongor.app.data.PublicShelterHit
 import org.nongor.app.data.PublicShelters
 import org.nongor.app.data.RegionAssets
@@ -292,6 +293,41 @@ class GisViewModel(application: Application) : AndroidViewModel(application) {
             c.nearbyPublic.take(4).forEach {
                 append("Shelter (school/college): ${it.shelter.name}, ${dist(it.distM)}.\n")
             }
+        }
+
+        // ---- What the neighbours have said ----
+        // The shipped map knows where roads and shelters are; only the board knows which of
+        // them are under water or already full an hour ago. Feeding it in is what lets the
+        // assistant answer "is that route safe" rather than just "that route exists". They are
+        // eyewitness claims, not survey data, so they are labelled as such and attributed —
+        // the model is told to pass that uncertainty on rather than launder it into fact.
+        val board = app.communityRepository.entries.value
+        if (board.isNotEmpty()) {
+            append("\nNEIGHBOUR REPORTS — eyewitness accounts posted to the community board on ")
+            append("this phone, newest first. They are unverified. If you use one, say who ")
+            append("reported it and how long ago, and never state it as confirmed fact:\n")
+            board.sortedByDescending { it.ts }.take(10).forEach { r ->
+                val kind = CommunityKinds.byId(r.kind).en
+                val where = if (r.lat != null && r.lon != null) {
+                    ", ${dist(Gis.haversineM(lat, lon, r.lat, r.lon).toInt())} from the user"
+                } else {
+                    ", position not recorded"
+                }
+                val who = if (r.mine) "the user themselves" else r.sender.ifBlank { "a neighbour" }
+                append("- $kind$where, ${ageLabel(r.ts)}, reported by $who")
+                append(if (r.note.isBlank()) ".\n" else ": ${Safety.wrapAsData(r.note)}\n")
+            }
+        }
+    }
+
+    /** How long ago, in words the model can repeat verbatim. */
+    private fun ageLabel(ts: Long): String {
+        val mins = ((System.currentTimeMillis() - ts) / 60_000L).coerceAtLeast(0)
+        return when {
+            mins < 1 -> "just now"
+            mins < 60 -> "$mins minutes ago"
+            mins < 60 * 24 -> "${mins / 60} hours ago"
+            else -> "${mins / (60 * 24)} days ago"
         }
     }
 
