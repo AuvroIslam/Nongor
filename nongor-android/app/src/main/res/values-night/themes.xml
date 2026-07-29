@@ -2,13 +2,13 @@
     <!-- Nongor uses a single light palette (no dark UI), so the splash stays light in night mode too
          to match the app that loads right after it. -->
     <style name="Theme.Nongor" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#7B5CF0</item>
+        <item name="windowSplashScreenBackground">#064A3F</item>
         <item name="windowSplashScreenAnimatedIcon">@android:color/transparent</item>
         <item name="postSplashScreenTheme">@style/Theme.Nongor.Main</item>
     </style>
     <style name="Theme.Nongor.Main" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#F5F3FB</item>
-        <item name="android:navigationBarColor">#F5F3FB</item>
+        <item name="android:statusBarColor">#F7F6F2</item>
+        <item name="android:navigationBarColor">#F7F6F2</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
     </style>

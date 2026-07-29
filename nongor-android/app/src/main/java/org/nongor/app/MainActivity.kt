@@ -59,6 +59,8 @@ import androidx.compose.runtime.remember
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Radio
 import org.nongor.app.ui.community.kindStyle
+import org.nongor.app.ui.chat.ChatScreen
+import org.nongor.app.ui.chat.ChatViewModel
 
 private object Routes {
     const val SPLASH = "splash"
@@ -75,6 +77,7 @@ private object Routes {
     const val COMMUNITY = "community"
     const val FAMILY = "family"
     const val TRANSLATE = "translate"
+    const val CHAT = "chat"
 }
 
 class MainActivity : ComponentActivity() {
@@ -202,7 +205,7 @@ private fun NongorNavHost() {
                         onTranslate = { navController.navigate(Routes.TRANSLATE) },
                         onFirstAid = { navController.navigate(Routes.FIRSTAID) },
                         onRadar = { navController.navigate(Routes.FAMILY) },
-                        onVolunteer = { tab = Tab.VOLUNTEER },
+                        onAskAi = { navController.navigate(Routes.CHAT) },
                         onBoard = { navController.navigate(Routes.COMMUNITY) },
                         onEmergency = { navController.navigate(Routes.EMERGENCY) },
                         onSettings = { navController.navigate(Routes.SETTINGS) },
@@ -239,8 +242,6 @@ private fun NongorNavHost() {
                                 }
                             },
                             onStopSharing = { app.volunteerSharing.value = false },
-                            onTranslate = { navController.navigate(Routes.TRANSLATE) },
-                            onRadar = { navController.navigate(Routes.FAMILY) },
                             onTriage = { navController.navigate(Routes.TRIAGE) },
                             onSummary = { navController.navigate(Routes.SUMMARY) },
                             onEmergency = { navController.navigate(Routes.EMERGENCY) },
@@ -319,6 +320,18 @@ private fun NongorNavHost() {
         composable(Routes.FAMILY) {
             val vm: FamilyViewModel = viewModel(factory = appFactory())
             FamilyScreen(viewModel = vm, onBack = { navController.popBackStack() })
+        }
+        composable(Routes.CHAT) {
+            val vm: ChatViewModel = viewModel(factory = appFactory())
+            ChatScreen(
+                viewModel = vm,
+                onOpenSettings = { navController.navigate(Routes.SETTINGS) },
+                onNeedModel = {
+                    navController.navigate(Routes.ONBOARDING) {
+                        popUpTo(Routes.CHAT) { inclusive = true }
+                    }
+                },
+            )
         }
         composable(Routes.SETTINGS) {
             val vm: SettingsViewModel = viewModel(factory = appFactory())

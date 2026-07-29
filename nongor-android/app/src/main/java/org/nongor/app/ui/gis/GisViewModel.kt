@@ -37,7 +37,8 @@ data class GisUiState(
     val nearbyPublic: List<PublicShelterHit> = emptyList(),
     val route: Gis.Route? = null,
     val naiveCrossesFlood: Boolean = false,
-    val elderly: Boolean = false,
+    /** True when we asked the GPS and it could not answer — indoors, no signal, radio off. */
+    val gpsFailed: Boolean = false,
     val computed: Boolean = false,
     val selectedShelterId: String? = null,   // detailed-region selection
     val selectedPublicIdx: Int? = null,      // nationwide selection
@@ -73,9 +74,12 @@ class GisViewModel(application: Application) : AndroidViewModel(application) {
             // Chattogram's shelters with no hint that the map was not about them. The overview
             // is a placeholder, not an answer, so it should be replaced the moment we can.
             if (app.locationProvider.hasPermission()) {
+                _ui.value = _ui.value.copy(locating = true)
                 val here = runCatching { app.locationProvider.current() }.getOrNull()
                 if (here != null && !_ui.value.hasLocation) {
                     located(here.first, here.second, usedGps = true, manual = false)
+                } else {
+                    _ui.value = _ui.value.copy(locating = false, gpsFailed = here == null)
                 }
             }
         }
@@ -86,10 +90,6 @@ class GisViewModel(application: Application) : AndroidViewModel(application) {
                 if (model.exists()) app.engineHolder.loadModel(model)
             }
         }
-    }
-
-    fun setElderly(v: Boolean) {
-        _ui.value = _ui.value.copy(elderly = v)
     }
 
     /** The 3 detailed regions offered in the area picker. */
@@ -107,7 +107,7 @@ class GisViewModel(application: Application) : AndroidViewModel(application) {
             _ui.value = _ui.value.copy(locating = true)
             val loc = app.locationProvider.current()
             if (loc != null) located(loc.first, loc.second, usedGps = true, manual = false)
-            else loadOverview(_ui.value.overviewRegion.ifEmpty { app.prefs.activeRegion.value })
+            else _ui.value = _ui.value.copy(locating = false, gpsFailed = true)
         }
     }
 
@@ -128,7 +128,7 @@ class GisViewModel(application: Application) : AndroidViewModel(application) {
         val graph = runCatching { RegionAssets.loadGraph(ctx, regionId) }.getOrNull()
         _ui.value = _ui.value.copy(
             userLat = region.centerLat, userLon = region.centerLon,   // framing centre only, not "you"
-            usingGps = false, hasLocation = false, manualPin = false, locating = false,
+            usingGps = false, hasLocation = false, manualPin = false, locating = false, gpsFailed = false,
             districtEn = region.nameEn, districtBn = region.nameBn, detailed = true,
             shelters = shelters, floodPolys = flood, graph = graph,
             ranked = emptyList(), nearbyPublic = emptyList(),
@@ -142,7 +142,7 @@ class GisViewModel(application: Application) : AndroidViewModel(application) {
         val c = computeCore(lat, lon)
         _ui.value = _ui.value.copy(
             userLat = lat, userLon = lon, usingGps = usedGps, hasLocation = true,
-            manualPin = manual, locating = false,
+            manualPin = manual, locating = false, gpsFailed = false,
             districtEn = c.districtEn, districtBn = c.districtBn, detailed = c.detailed,
             shelters = c.shelters, floodPolys = c.flood, graph = c.graph,
             ranked = c.ranked, nearbyPublic = c.nearbyPublic,
@@ -161,12 +161,11 @@ class GisViewModel(application: Application) : AndroidViewModel(application) {
         val district = BdGeo.nearestDistrict(ctx, lat, lon)
         val (pack, distToPack) = BdGeo.nearestPack(lat, lon)
         val detailed = distToPack <= DETAIL_RADIUS_M
-        val profile = if (_ui.value.elderly) listOf("elderly") else emptyList()
         return if (detailed) {
             val shelters = RegionAssets.loadShelters(ctx, pack.id)
             val flood = RegionAssets.loadFloodPolys(ctx, pack.id)
             val graph = RegionAssets.loadGraph(ctx, pack.id)
-            val ranked = Gis.findNearestShelter(lat, lon, shelters, profile)
+            val ranked = Gis.findNearestShelter(lat, lon, shelters, emptyList())
             val top = ranked.firstOrNull()
             val route = top?.let { Gis.safeRoute(lat, lon, it.lat, it.lon, graph, flood) }
             val naive = top?.let {

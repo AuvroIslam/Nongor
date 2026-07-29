@@ -142,31 +142,15 @@ fun GisScreen(viewModel: GisViewModel, onBack: (() -> Unit)? = null) {
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary,
             )
 
-            Spacer(Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Switch(
-                    checked = ui.elderly,
-                    onCheckedChange = { viewModel.setElderly(it) },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
-                        checkedTrackColor = MaterialTheme.colorScheme.primary,
-                        uncheckedThumbColor = Color.White,
-                        uncheckedTrackColor = GlassBorder,
-                        uncheckedBorderColor = GlassBorder,
-                    ),
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(tr("Elderly / needs accessible shelter", "বয়স্ক / সুবিধাজনক আশ্রয় প্রয়োজন"),
-                    style = MaterialTheme.typography.bodyMedium)
-            }
-            Spacer(Modifier.height(8.dp))
-            Button(onClick = {
-                if (locationPerm.status.isGranted) viewModel.findNearestShelter()
-                else locationPerm.launchPermissionRequest()
-            }) {
-                Text(if (ui.locating) tr("Locating…", "অবস্থান নেওয়া হচ্ছে…")
-                    else tr("Find nearest safe shelter", "নিকটতম নিরাপদ আশ্রয় খুঁজুন"))
-            }
+            Spacer(Modifier.height(10.dp))
+            LocationCard(
+                granted = locationPerm.status.isGranted,
+                locating = ui.locating,
+                hasLocation = ui.hasLocation,
+                gpsFailed = ui.gpsFailed,
+                onEnable = { locationPerm.launchPermissionRequest() },
+                onLocate = { viewModel.findNearestShelter() },
+            )
 
             // ---- Map Assistant: ask in natural language; Gemma picks a tool, code runs it ----
             Spacer(Modifier.height(12.dp))
@@ -197,12 +181,30 @@ fun GisScreen(viewModel: GisViewModel, onBack: (() -> Unit)? = null) {
             }
 
             // ---- area picker (over the map) ---- //
+            // Only three districts ship with detailed road and flood data, so the picker can
+            // only ever name one of those three. Standing in Khulna it would have sat there
+            // saying "Chattogram" — which reads as the map being wrong about where you are.
+            // Once we know you are outside the detailed packs, say what coverage you have
+            // instead of offering a choice that does not describe you.
             Spacer(Modifier.height(12.dp))
-            AreaPicker(
-                regions = viewModel.regions(),
-                currentId = ui.overviewRegion,
-                onPick = { viewModel.setRegion(it) },
-            )
+            if (ui.hasLocation && !ui.detailed) {
+                Text(
+                    tr(
+                        "Detailed routing covers three districts so far. Here you get the nearest " +
+                            "known shelters and straight-line distances.",
+                        "বিস্তারিত পথনির্দেশ এখন পর্যন্ত তিনটি জেলায় আছে। এখানে নিকটতম পরিচিত আশ্রয় ও " +
+                            "সরলরেখার দূরত্ব দেখানো হচ্ছে।",
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            } else {
+                AreaPicker(
+                    regions = viewModel.regions(),
+                    currentId = ui.overviewRegion,
+                    onPick = { viewModel.setRegion(it) },
+                )
+            }
 
             // ---- mini map — tap to set your location ---- //
             Spacer(Modifier.height(8.dp))
@@ -644,5 +646,82 @@ private fun DrawScope.drawShelterMap(ui: GisUiState, bbox: DoubleArray) {
     if (ui.hasLocation) {
         val uc = Offset(ox(ui.userLon), oy(ui.userLat))
         drawCircle(Color.White, 14f, uc); drawCircle(USER, 10f, uc)
+    }
+}
+
+/**
+ * Where the map thinks you are, and the one control that changes it.
+ *
+ * This replaced a bare "Find nearest safe shelter" button that failed silently: with the
+ * permission denied, or a GPS that never answers indoors, nothing on screen changed and the
+ * map quietly kept showing whichever district was last stored. Every one of those states now
+ * says what happened and offers the next tap.
+ */
+@Composable
+private fun LocationCard(
+    granted: Boolean,
+    locating: Boolean,
+    hasLocation: Boolean,
+    gpsFailed: Boolean,
+    onEnable: () -> Unit,
+    onLocate: () -> Unit,
+) {
+    val tint = when {
+        hasLocation -> SHELTER
+        !granted || gpsFailed -> ErrorRed
+        else -> TileShelterFg
+    }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(ShapeSm)
+            .background(tint.copy(alpha = 0.10f))
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (locating) {
+            CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = tint)
+        } else {
+            Icon(FeatherIcons.MapPin, null, tint = tint, modifier = Modifier.size(18.dp))
+        }
+        Spacer(Modifier.width(10.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                when {
+                    locating -> tr("Finding you…", "আপনাকে খোঁজা হচ্ছে…")
+                    hasLocation -> tr("Using your location", "আপনার অবস্থান ব্যবহার হচ্ছে")
+                    !granted -> tr("Location is off", "লোকেশন বন্ধ")
+                    gpsFailed -> tr("No GPS fix yet", "এখনও জিপিএস পাওয়া যায়নি")
+                    else -> tr("Location is on", "লোকেশন চালু")
+                },
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleSmall,
+            )
+            Text(
+                when {
+                    hasLocation -> tr("Shelters and routes are measured from you.", "আশ্রয় ও পথ আপনার অবস্থান থেকে মাপা হচ্ছে।")
+                    !granted -> tr("Turn it on and the map opens where you actually are.", "চালু করলে ম্যাপ আপনি যেখানে আছেন সেখানে খুলবে।")
+                    gpsFailed -> tr("Step outside, or tap the map to place yourself.", "বাইরে যান, অথবা ম্যাপে চাপ দিয়ে নিজের জায়গা দিন।")
+                    else -> tr("Tap to point the map at you.", "ম্যাপ আপনার দিকে আনতে চাপ দিন।")
+                },
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        Spacer(Modifier.width(10.dp))
+        Button(
+            onClick = { if (granted) onLocate() else onEnable() },
+            enabled = !locating,
+            shape = ShapeSm,
+        ) {
+            Text(
+                when {
+                    !granted -> tr("Turn on", "চালু করুন")
+                    hasLocation -> tr("Update", "হালনাগাদ")
+                    else -> tr("Locate me", "আমাকে খুঁজুন")
+                },
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
     }
 }

@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Launcher foreground. The adaptive-icon safe zone is the middle 72 of 108, so the mark is
      drawn well inside that: launchers mask this to a circle, squircle or teardrop and anything
-     near the edge gets clipped. -->
+     near the edge gets clipped.
+
+     The anchor geometry below is authored at roughly the full safe-zone width, which reads as
+     cramped once a launcher masks it — so the whole thing is scaled down about a third around
+     the canvas centre, matching the breathing room the mark has in the app itself. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+  <group
+      android:pivotX="54"
+      android:pivotY="54"
+      android:scaleX="0.66"
+      android:scaleY="0.66">
 
     <!-- ring -->
     <path
@@ -42,4 +51,5 @@
     <path
         android:fillColor="#C9A227"
         android:pathData="M84,58 L70,60 L77,71 Z" />
+  </group>
 </vector>

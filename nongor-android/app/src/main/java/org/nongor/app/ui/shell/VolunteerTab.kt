@@ -64,8 +64,6 @@ fun VolunteerTab(
     sharingBusy: Boolean,
     onShareLocation: () -> Unit,
     onStopSharing: () -> Unit,
-    onTranslate: () -> Unit,
-    onRadar: () -> Unit,
     onTriage: () -> Unit,
     onSummary: () -> Unit,
     onEmergency: () -> Unit,
@@ -120,24 +118,6 @@ fun VolunteerTab(
         // ---- Do the work ----
         Spacer(Modifier.height(18.dp))
         VolunteerRow(
-            painter = R.drawable.ic_translate, tint = BrandTeal,
-            title = tr("Talk to anyone", "যে কারও সাথে কথা বলুন"),
-            subtitle = tr(
-                "Chakma · Marma · Rohingya · Kokborok · Santali · Garo · sign",
-                "চাকমা · মারমা · রোহিঙ্গা · ককবরক · সাঁওতালি · গারো · ইশারা",
-            ),
-            onClick = onTranslate,
-        )
-        VolunteerRow(
-            painter = R.drawable.ic_radar, tint = Color(0xFF3C5A78),
-            title = tr("Radar", "রাডার"),
-            subtitle = tr(
-                "Family, SOS calls and other volunteers around you",
-                "আপনার আশেপাশে পরিবার, এসওএস ও অন্য স্বয়ংসেবক",
-            ),
-            onClick = onRadar,
-        )
-        VolunteerRow(
             icon = FeatherIcons.AlertTriangle, tint = CautionAmber,
             title = tr("Who needs help first", "আগে কার সাহায্য দরকার"),
             subtitle = tr("Rank every case logged on this phone", "এই ফোনের সব কেস অগ্রাধিকার অনুযায়ী"),
@@ -148,27 +128,6 @@ fun VolunteerTab(
             title = tr("Situation briefing", "পরিস্থিতির সারসংক্ষেপ"),
             subtitle = tr("Counts, worst cases, shelter pressure", "সংখ্যা, খারাপ কেস, আশ্রয়ের চাপ"),
             onClick = onSummary,
-        )
-
-        // ---- Reference ----
-        Spacer(Modifier.height(18.dp))
-        VolunteerRow(
-            icon = FeatherIcons.PhoneCall, tint = ErrorRed,
-            title = tr("All emergency numbers", "সব জরুরি নম্বর"),
-            subtitle = tr("999, flood warning, Coast Guard and more", "৯৯৯, বন্যা সতর্কতা, কোস্ট গার্ড ও আরও"),
-            onClick = onEmergency,
-        )
-        VolunteerRow(
-            icon = FeatherIcons.HelpCircle, tint = BrandTeal,
-            title = tr("How to use Nongor", "নোঙর যেভাবে ব্যবহার করবেন"),
-            subtitle = tr("What each tool does, and a flood drill", "প্রতিটি টুল কী করে, ও একটি মহড়া"),
-            onClick = onGuide,
-        )
-        VolunteerRow(
-            icon = FeatherIcons.Settings, tint = TextSecondary,
-            title = tr("Settings", "সেটিংস"),
-            subtitle = tr("Language, your name, the optional AI model", "ভাষা, আপনার নাম, ঐচ্ছিক এআই মডেল"),
-            onClick = onSettings,
         )
     }
 }

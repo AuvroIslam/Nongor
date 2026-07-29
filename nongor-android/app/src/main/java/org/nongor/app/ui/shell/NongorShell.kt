@@ -43,6 +43,7 @@ import org.nongor.app.ui.theme.ShapeLg
 import org.nongor.app.ui.theme.TextSecondary
 import androidx.compose.foundation.layout.offset
 import compose.icons.feathericons.Radio
+import org.nongor.app.ui.theme.ShapeMd
 
 /**
  * Nongor's four resting places, plus the one thing that is never more than a thumb away.
@@ -78,7 +79,7 @@ fun NongorShell(
 ) {
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         // Content runs under the bar; screens add their own bottom padding.
-        Box(Modifier.fillMaxSize().padding(bottom = 74.dp)) { content() }
+        Box(Modifier.fillMaxSize().padding(bottom = 96.dp)) { content() }
 
         Box(
             Modifier
@@ -161,7 +162,9 @@ private fun BarItem(
     Column(
         modifier
             .fillMaxSize()
-            .clip(ShapeLg)
+            .padding(vertical = 6.dp, horizontal = 3.dp)
+            .clip(ShapeMd)
+            .background(if (selected) BrandTeal.copy(alpha = 0.12f) else Color.Transparent)
             .clickable { onSelect(tab) },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -181,8 +184,8 @@ private fun BarItem(
         Spacer(Modifier.height(3.dp))
         Text(
             tab.label(),
-            color = if (selected) BrandTeal else TextSecondary,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+            color = tint,
+            fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Medium,
             fontSize = 10.sp,
         )
     }

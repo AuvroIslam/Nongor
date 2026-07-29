@@ -91,7 +91,7 @@ fun HomeTab(
     onTranslate: () -> Unit,
     onFirstAid: () -> Unit,
     onRadar: () -> Unit,
-    onVolunteer: () -> Unit,
+    onAskAi: () -> Unit,
     onBoard: () -> Unit,
     onEmergency: () -> Unit,
     onSettings: () -> Unit,
@@ -190,53 +190,6 @@ fun HomeTab(
             // ---- Status: the honest one-liner ----
             StatusCard(modelReady = modelReady, peers = peers, bangla = bangla)
 
-            // ---- What you can do ----
-            // A single tinted panel holding white rows, rather than a scatter of tiles: the
-            // panel says "these belong together", and a full-width row leaves space for a
-            // real label instead of one clipped word. Shelter and the board are not here on
-            // purpose - they have their own places in the bar below, and repeating them would
-            // just be two ways to reach the same screen.
-            Spacer(Modifier.height(18.dp))
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .clip(ShapeLg)
-                    .background(BrandTealDeep)
-                    .padding(12.dp),
-            ) {
-                ActionRow(
-                    painter = R.drawable.ic_translate,
-                    tint = BrandTeal,
-                    title = tr("Emergency", "\u099c\u09b0\u09c1\u09b0\u09bf"),
-                    title2 = tr("Translation", "\u0985\u09a8\u09c1\u09ac\u09be\u09a6"),
-                    onClick = onTranslate,
-                )
-                Spacer(Modifier.height(8.dp))
-                ActionRow(
-                    painter = R.drawable.ic_firstaid,
-                    tint = SafeGreen,
-                    title = tr("First Aid", "\u09aa\u09cd\u09b0\u09be\u09a5\u09ae\u09bf\u0995"),
-                    title2 = tr("Information", "\u099a\u09bf\u0995\u09bf\u09ce\u09b8\u09be"),
-                    onClick = onFirstAid,
-                )
-                Spacer(Modifier.height(8.dp))
-                ActionRow(
-                    painter = R.drawable.ic_radar,
-                    tint = Color(0xFF3C5A78),
-                    title = tr("Radar", "\u09b0\u09be\u09a1\u09be\u09b0"),
-                    title2 = tr("Family & help nearby", "\u09aa\u09b0\u09bf\u09ac\u09be\u09b0 \u0993 \u0995\u09be\u099b\u09c7\u09b0 \u09b8\u09be\u09b9\u09be\u09af\u09cd\u09af"),
-                    onClick = onRadar,
-                )
-                Spacer(Modifier.height(8.dp))
-                ActionRow(
-                    painter = R.drawable.ic_volunteer,
-                    tint = CautionAmber,
-                    title = tr("Volunteer", "\u09b8\u09cd\u09ac\u09df\u0982\u09b8\u09c7\u09ac\u0995"),
-                    title2 = tr("Share where you are", "\u0986\u09aa\u09a8\u09bf \u0995\u09cb\u09a5\u09be\u09df \u099c\u09be\u09a8\u09be\u09a8"),
-                    onClick = onVolunteer,
-                )
-            }
-
             // ---- Emergency call ----
             Spacer(Modifier.height(18.dp))
             Row(
@@ -285,6 +238,56 @@ fun HomeTab(
                         fontSize = 14.sp,
                     )
                 }
+            }
+
+            // ---- What you can do ----
+            // A single tinted panel holding white rows, rather than a scatter of tiles: the
+            // panel says "these belong together", and a full-width row leaves space for a
+            // real label instead of one clipped word. Shelter and the board are not here on
+            // purpose - they have their own places in the bar below, and repeating them would
+            // just be two ways to reach the same screen.
+            Spacer(Modifier.height(18.dp))
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(ShapeLg)
+                    .background(BrandTealDeep)
+                    .padding(12.dp),
+            ) {
+                ActionRow(
+                    painter = R.drawable.ic_translate,
+                    tint = BrandTeal,
+                    title = tr("Emergency", "\u099c\u09b0\u09c1\u09b0\u09bf"),
+                    title2 = tr("Translation", "\u0985\u09a8\u09c1\u09ac\u09be\u09a6"),
+                    onClick = onTranslate,
+                )
+                Spacer(Modifier.height(8.dp))
+                ActionRow(
+                    painter = R.drawable.ic_firstaid,
+                    tint = SafeGreen,
+                    title = tr("First Aid", "\u09aa\u09cd\u09b0\u09be\u09a5\u09ae\u09bf\u0995"),
+                    title2 = tr("Information", "\u099a\u09bf\u0995\u09bf\u09ce\u09b8\u09be"),
+                    onClick = onFirstAid,
+                )
+                Spacer(Modifier.height(8.dp))
+                ActionRow(
+                    painter = R.drawable.ic_compass,
+                    tint = Color(0xFF3C5A78),
+                    title = tr("Radar", "\u09b0\u09be\u09a1\u09be\u09b0"),
+                    title2 = tr("Family & help nearby", "\u09aa\u09b0\u09bf\u09ac\u09be\u09b0 \u0993 \u0995\u09be\u099b\u09c7\u09b0 \u09b8\u09be\u09b9\u09be\u09af\u09cd\u09af"),
+                    onClick = onRadar,
+                )
+                Spacer(Modifier.height(8.dp))
+                ActionRow(
+                    painter = R.drawable.ic_gemma,
+                    // The Gemma mark is a full-colour logo, so it is drawn as-is rather than
+                    // tinted flat like the line icons beside it.
+                    tint = Color(0xFF2F6BF0),
+                    tintIcon = false,
+                    title = tr("Offline AI", "\u0985\u09ab\u09b2\u09be\u0987\u09a8 \u098f\u0986\u0987"),
+                    title2 = tr("Ask anything, no internet", "\u09af\u09be \u0996\u09c1\u09b6\u09bf \u099c\u09bf\u099c\u09cd\u099e\u09be\u09b8\u09be \u0995\u09b0\u09c1\u09a8"),
+                    onClick = onAskAi,
+                )
             }
 
             // ---- What is happening ----
@@ -367,59 +370,42 @@ private fun RoundIcon(icon: ImageVector, onClick: () -> Unit) {
  */
 @Composable
 private fun StatusCard(modelReady: Boolean, peers: Int, bangla: Boolean) {
+    // Deliberately a thin strip rather than a card. It is reassurance, not an action, and it
+    // was taking the vertical space that the things you actually tap needed.
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(ShapeMd)
-            .background(BgCard)
-            .padding(14.dp),
+            .clip(ShapePill)
+            .background(SafeGreen.copy(alpha = 0.12f))
+            .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
-            Modifier.size(40.dp).clip(CircleShape).background(SafeGreen.copy(alpha = 0.13f)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(FeatherIcons.WifiOff, null, tint = SafeGreen, modifier = Modifier.size(19.dp))
-        }
-        Spacer(Modifier.width(12.dp))
-        Column(Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    tr("You are ", "আপনি এখন "),
-                    color = TextPrimary,
-                    style = MaterialTheme.typography.titleSmall,
+        Icon(FeatherIcons.WifiOff, null, tint = SafeGreen, modifier = Modifier.size(15.dp))
+        Spacer(Modifier.width(8.dp))
+        Text(
+            tr("Offline", "\u0985\u09ab\u09b2\u09be\u0987\u09a8"),
+            color = SafeGreen,
+            fontWeight = FontWeight.ExtraBold,
+            style = MaterialTheme.typography.labelLarge,
+        )
+        Spacer(Modifier.width(7.dp))
+        Text(
+            buildString {
+                append(
+                    if (modelReady) {
+                        tr("everything and the AI ready on this phone", "\u09b8\u09ac \u0993 \u098f\u0986\u0987 \u098f\u0987 \u09ab\u09cb\u09a8\u09c7 \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4")
+                    } else {
+                        tr("everything ready on this phone", "\u09b8\u09ac \u098f\u0987 \u09ab\u09cb\u09a8\u09c7 \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4")
+                    },
                 )
-                Text(
-                    tr("OFFLINE", "অফলাইনে"),
-                    color = SafeGreen,
-                    fontWeight = FontWeight.ExtraBold,
-                    style = MaterialTheme.typography.titleSmall,
-                )
-                Spacer(Modifier.width(6.dp))
-                Box(Modifier.size(7.dp).clip(CircleShape).background(SafeGreen))
-            }
-            Text(
-                buildString {
-                    append(
-                        if (modelReady) {
-                            tr("Every feature and the AI are ready on this phone", "সব সুবিধা ও এআই এই ফোনেই প্রস্তুত")
-                        } else {
-                            tr("Every feature is ready on this phone", "সব সুবিধা এই ফোনেই প্রস্তুত")
-                        },
-                    )
-                    if (peers > 0) {
-                        append(
-                            localiseDigits(
-                                tr(" · $peers phone(s) in range", " · কাছে $peers টি ফোন"),
-                                bangla,
-                            ),
-                        )
-                    }
-                },
-                style = MaterialTheme.typography.bodySmall,
-                color = TextSecondary,
-            )
-        }
+                if (peers > 0) {
+                    append(localiseDigits(tr(" \u00b7 $peers nearby", " \u00b7 \u0995\u09be\u099b\u09c7 $peers"), bangla))
+                }
+            },
+            color = TextSecondary,
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier.weight(1f),
+        )
     }
 }
 
@@ -437,6 +423,7 @@ private fun ActionRow(
     title: String,
     title2: String,
     onClick: () -> Unit,
+    tintIcon: Boolean = true,
 ) {
     Row(
         Modifier
@@ -448,15 +435,23 @@ private fun ActionRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            Modifier.size(40.dp).clip(CircleShape).background(tint.copy(alpha = 0.13f)),
+            Modifier.size(50.dp).clip(CircleShape).background(tint.copy(alpha = 0.13f)),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(
-                painterResource(painter),
-                contentDescription = null,
-                tint = tint,
-                modifier = Modifier.size(21.dp),
-            )
+            if (tintIcon) {
+                Icon(
+                    painterResource(painter),
+                    contentDescription = null,
+                    tint = tint,
+                    modifier = Modifier.size(28.dp),
+                )
+            } else {
+                Image(
+                    painterResource(painter),
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp),
+                )
+            }
         }
         Spacer(Modifier.width(14.dp))
         Column(Modifier.weight(1f)) {
