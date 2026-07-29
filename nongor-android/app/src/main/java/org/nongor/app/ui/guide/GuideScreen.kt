@@ -53,6 +53,7 @@ import org.nongor.app.ui.demo.Actions
 import org.nongor.app.ui.demo.DemoDialog
 import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.tr
+import org.nongor.app.ui.theme.AidRose
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.BrandTeal
 import org.nongor.app.ui.theme.BrandTealDeep
@@ -101,7 +102,7 @@ private val FEATURES = listOf(
         painter = R.drawable.ic_translate,
     ),
     Feature(
-        ErrorRed, "First Aid", "প্রাথমিক চিকিৎসা",
+        AidRose, "First Aid", "প্রাথমিক চিকিৎসা",
         "Describe an injury and get clear first aid in Bangla or English, with the source " +
             "shown for every step.",
         "আঘাতের কথা বলুন, বাংলা বা ইংরেজিতে স্পষ্ট প্রাথমিক চিকিৎসা পান — প্রতিটি ধাপের উৎসসহ।",

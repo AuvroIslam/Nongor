@@ -42,6 +42,9 @@ val TextMuted     = Color(0xFF93A09B)
 val ErrorRed      = Color(0xFFC62828)   // life-threatening only
 val CautionAmber  = Color(0xFFE08600)   // unverified, degraded, warn
 val SafeGreen     = Color(0xFF1B8F62)   // confirmed, signed, delivered
+// First aid. Deliberately not ErrorRed: that one is reserved for life-threatening, and a
+// permanent red row on Home would spend the alarm colour on a menu item.
+val AidRose       = Color(0xFFB32B62)
 
 // ---- Aliases so every screen reaches for the same few names ----
 val BrandBlue     = BrandTeal           // former primary name, kept to avoid a churn diff

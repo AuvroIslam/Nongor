@@ -51,6 +51,7 @@ import org.nongor.app.ui.emergency.dialNumber
 import org.nongor.app.ui.i18n.LocalBangla
 import org.nongor.app.ui.i18n.localiseDigits
 import org.nongor.app.ui.i18n.tr
+import org.nongor.app.ui.theme.AidRose
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.BrandTeal
 import org.nongor.app.ui.theme.BrandTealDeep
@@ -264,7 +265,7 @@ fun HomeTab(
                 Spacer(Modifier.height(8.dp))
                 ActionRow(
                     painter = R.drawable.ic_firstaid,
-                    tint = ErrorRed,
+                    tint = AidRose,
                     title = tr("First Aid", "\u09aa\u09cd\u09b0\u09be\u09a5\u09ae\u09bf\u0995"),
                     title2 = tr("Information", "\u099a\u09bf\u0995\u09bf\u09ce\u09b8\u09be"),
                     onClick = onFirstAid,
