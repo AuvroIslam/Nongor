@@ -72,10 +72,15 @@ val UserBubble    = BrandTeal
  * reads as one family rather than a bag of sweets. Triage keeps the alarm red because that
  * tile genuinely is about life-threatening cases.
  */
-val TileTriageBg    = Color(0xFFFBEAE7); val TileTriageFg    = ErrorRed
+// Triage is amber, not red: red is reserved for a case that is actually critical, and
+// every case on the triage screen wearing it would leave nothing to escalate to.
+val TileTriageBg    = Color(0xFFFDF2E0); val TileTriageFg    = CautionAmber
 val TileAidBg       = Color(0xFFE3F3EA); val TileAidFg       = SafeGreen
-val TileShelterBg   = Color(0xFFE4EFF2); val TileShelterFg   = Color(0xFF1F6D82)
+// Shelter is green, matching the shelter dots on the map itself.
+val TileShelterBg   = Color(0xFFE3F1E7); val TileShelterFg   = Color(0xFF2E7D4F)
 val TileSummaryBg   = Color(0xFFE6F0EC); val TileSummaryFg   = BrandTealDeep
+// The situation briefing: a reading colour, distinct from the tools around it.
+val BriefBlue       = Color(0xFF1F62B0)
 // Mesh SOS is the calling-for-help tool, so it carries the alarm red rather than a warm
 // accent. Triage is red too, but that one is about *reading* danger; this is about
 // signalling it. Nothing else in the grid is allowed near this hue.

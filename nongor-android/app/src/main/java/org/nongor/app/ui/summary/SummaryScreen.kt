@@ -48,6 +48,9 @@ import org.nongor.app.ui.theme.BrandTeal
 import org.nongor.app.ui.theme.ShapeMd
 import org.nongor.app.ui.theme.ShapePill
 import org.nongor.app.ui.theme.TextPrimary
+import org.nongor.app.ui.components.HeroBanner
+import org.nongor.app.ui.theme.BriefBlue
+import compose.icons.feathericons.BarChart2
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -70,6 +73,13 @@ fun SummaryScreen(viewModel: SummaryViewModel, onBack: () -> Unit) {
         Column(
             Modifier.padding(pad).padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState()),
         ) {
+            HeroBanner(
+                FeatherIcons.BarChart2,
+                tint = BriefBlue,
+                title = tr("Situation briefing", "পরিস্থিতির সারসংক্ষেপ"),
+                subtitle = tr("Counts, worst cases, shelter pressure", "সংখ্যা, খারাপ কেস, আশ্রয়ের চাপ"),
+            )
+            Spacer(Modifier.height(12.dp))
             Text(
                 tr("Aggregates the field reports on this device. Counts are computed on-device " +
                     "(never hallucinated); Gemma 4 writes the briefing.",

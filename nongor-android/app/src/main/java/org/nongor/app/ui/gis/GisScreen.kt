@@ -78,6 +78,12 @@ import org.nongor.app.ui.theme.GlassBorder
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.unit.sp
 
 private val FLOOD = Color(0xFF2196F3)
 private val ROAD = Color(0xFF9E9E9E)
@@ -93,6 +99,10 @@ fun GisScreen(viewModel: GisViewModel, onBack: (() -> Unit)? = null) {
     val locationPerm = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION) {
         viewModel.findNearestShelter()
     }
+    // Canvas cannot reach a Composable scope, so the text engine and the one translated string
+    // the drawing needs are hoisted out here and handed down.
+    val measurer = rememberTextMeasurer()
+    val youLabel = tr("You", "আপনি")
 
     // Frame the map on what matters — you, the route and the shelters — not the whole road
     // extract, so the default view is readable.
@@ -227,7 +237,7 @@ fun GisScreen(viewModel: GisViewModel, onBack: (() -> Unit)? = null) {
                                     lat.coerceIn(bbox[0], bbox[1]), lon.coerceIn(bbox[2], bbox[3]))
                             }
                         },
-                    ) { drawShelterMap(ui, bbox) }
+                    ) { drawShelterMap(ui, bbox, measurer, youLabel) }
                     if (!ui.hasLocation) {
                         Row(
                             Modifier.align(Alignment.BottomCenter).padding(8.dp)
@@ -562,11 +572,19 @@ private fun MapLegend(detailed: Boolean) {
 
 @Composable
 private fun LegendDot(color: Color, ring: Boolean = false) {
-    Box(
-        Modifier.size(10.dp).clip(CircleShape)
-            .background(if (ring) Color.White else color)
-            .let { if (ring) it.border(1.5.dp, color, CircleShape) else it },
-    )
+    // The map draws every marker as a solid dot inside a white halo. The legend used to draw
+    // the "you" swatch the other way round — white centre, coloured ring — so the key did not
+    // match the thing it was a key for.
+    if (ring) {
+        Box(
+            Modifier.size(13.dp).clip(CircleShape).background(Color.White).padding(1.5.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Box(Modifier.fillMaxSize().clip(CircleShape).background(color))
+        }
+    } else {
+        Box(Modifier.size(10.dp).clip(CircleShape).background(color))
+    }
 }
 
 @Composable
@@ -588,7 +606,12 @@ private fun LegendSwatch(color: Color) {
 }
 
 /** Renderer for the shelter mini-map preview. */
-private fun DrawScope.drawShelterMap(ui: GisUiState, bbox: DoubleArray) {
+private fun DrawScope.drawShelterMap(
+    ui: GisUiState,
+    bbox: DoubleArray,
+    measurer: TextMeasurer,
+    youLabel: String,
+) {
     val w = size.width; val h = size.height; val p = 14f
     val minLat = bbox[0]; val maxLat = bbox[1]; val minLon = bbox[2]; val maxLon = bbox[3]
     val dLat = (maxLat - minLat).let { if (it == 0.0) 1e-6 else it }
@@ -636,7 +659,10 @@ private fun DrawScope.drawShelterMap(ui: GisUiState, bbox: DoubleArray) {
             }
         }
     }
-    // Shelter markers (highlight the selected one).
+    // Shelter markers (highlight the selected one), each captioned like a real map. Without a
+    // name a dot only says "something is here"; the whole point of the map is knowing which
+    // shelter you would be walking to before you commit to walking there.
+    val labels = ArrayList<Pair<Offset, String>>()
     if (ui.detailed) {
         ui.shelters.forEach { s ->
             val c = Offset(ox(s.lon), oy(s.lat))
@@ -645,6 +671,7 @@ private fun DrawScope.drawShelterMap(ui: GisUiState, bbox: DoubleArray) {
             } else {
                 drawCircle(Color.White, 12f, c); drawCircle(SHELTER, 8.5f, c)
             }
+            labels += c to shortLabel(s.name)
         }
     } else {
         ui.nearbyPublic.forEachIndexed { i, hit ->
@@ -654,14 +681,64 @@ private fun DrawScope.drawShelterMap(ui: GisUiState, bbox: DoubleArray) {
             } else {
                 drawCircle(Color.White, 12f, c); drawCircle(SHELTER, 8.5f, c)
             }
+            labels += c to shortLabel(hit.shelter.name)
         }
     }
     // "You" marker only when we actually have a location.
     if (ui.hasLocation) {
         val uc = Offset(ox(ui.userLon), oy(ui.userLat))
         drawCircle(Color.White, 14f, uc); drawCircle(USER, 10f, uc)
+        labels += uc to youLabel
+    }
+
+    // Captions last, so a name is never painted over by a marker drawn after it. Skipped
+    // entirely once the map is crowded — twenty overlapping names is less readable than none.
+    if (labels.size <= MAX_LABELS) {
+        labels.forEach { (c, text) -> drawMapLabel(measurer, c, text) }
     }
 }
+
+/**
+ * A caption sitting just above a marker, on its own pale plate.
+ *
+ * The plate matters: road lines and the flood polygon run underneath, and dark text straight
+ * onto them is unreadable exactly where the map is busiest.
+ */
+private fun DrawScope.drawMapLabel(measurer: TextMeasurer, at: Offset, text: String) {
+    if (text.isBlank()) return
+    val laid = measurer.measure(
+        AnnotatedString(text),
+        style = TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+    )
+    val w = laid.size.width.toFloat()
+    val h = laid.size.height.toFloat()
+    val x = (at.x - w / 2f).coerceIn(2f, (size.width - w - 2f).coerceAtLeast(2f))
+    val y = (at.y - 18f - h).coerceAtLeast(2f)
+    drawRoundRect(
+        color = Color.White.copy(alpha = 0.82f),
+        topLeft = Offset(x - 3f, y - 1f),
+        size = androidx.compose.ui.geometry.Size(w + 6f, h + 2f),
+        cornerRadius = androidx.compose.ui.geometry.CornerRadius(4f, 4f),
+    )
+    drawText(laid, color = LABEL_INK, topLeft = Offset(x, y))
+}
+
+/**
+ * A shelter name cut down to something that fits over a dot.
+ *
+ * Names in the packs run long — "Chattogram Govt. Muslim High School" — and the marker is
+ * eight pixels across. The full name is one tap away in the ranked list below the map, so the
+ * caption only has to be enough to tell two nearby dots apart.
+ */
+private fun shortLabel(name: String): String {
+    val cleaned = name.substringBefore(",").trim()
+    return if (cleaned.length <= LABEL_CHARS) cleaned
+    else cleaned.take(LABEL_CHARS).trimEnd() + "…"
+}
+
+private const val LABEL_CHARS = 14
+private const val MAX_LABELS = 14
+private val LABEL_INK = Color(0xFF1B2A25)
 
 /**
  * Where the map thinks you are, and the one control that changes it.

@@ -57,6 +57,8 @@ import org.nongor.app.ui.theme.AidRose
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.BrandTeal
 import org.nongor.app.ui.theme.BrandTealDeep
+import org.nongor.app.ui.theme.BriefBlue
+import org.nongor.app.ui.theme.TileShelterFg as ShelterGreen
 import org.nongor.app.ui.theme.CautionAmber
 import org.nongor.app.ui.theme.ErrorRed
 import org.nongor.app.ui.theme.GlassBorder
@@ -109,7 +111,7 @@ private val FEATURES = listOf(
         painter = R.drawable.ic_firstaid,
     ),
     Feature(
-        BrandTealDeep, "Safe Shelter", "নিরাপদ আশ্রয়",
+        ShelterGreen, "Safe Shelter", "নিরাপদ আশ্রয়",
         "The Map tab. Finds the nearest shelter on high ground and a walking route that avoids " +
             "the flood zone. Turn location on, or tap the map to place yourself.",
         "ম্যাপ ট্যাব। উঁচু জায়গার নিকটতম আশ্রয় ও বন্যা এড়িয়ে হেঁটে যাওয়ার পথ দেখায়। লোকেশন চালু " +
@@ -149,7 +151,7 @@ private val FEATURES = listOf(
         icon = FeatherIcons.AlertTriangle,
     ),
     Feature(
-        BrandTealDeep, "Situation briefing", "পরিস্থিতির সারসংক্ষেপ",
+        BriefBlue, "Situation briefing", "পরিস্থিতির সারসংক্ষেপ",
         "Turns every report on this phone into one short briefing: counts, the worst cases, " +
             "and where shelter is under pressure.",
         "এই ফোনের সব রিপোর্টকে একটি ছোট ব্রিফিংয়ে পরিণত করে: সংখ্যা, সবচেয়ে খারাপ কেস, আর " +

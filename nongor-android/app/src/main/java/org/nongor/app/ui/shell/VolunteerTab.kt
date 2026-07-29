@@ -41,6 +41,7 @@ import org.nongor.app.R
 import org.nongor.app.ui.i18n.tr
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.BrandTeal
+import org.nongor.app.ui.theme.BriefBlue
 import org.nongor.app.ui.theme.BrandTealDeep
 import org.nongor.app.ui.theme.CautionAmber
 import org.nongor.app.ui.theme.ErrorRed
@@ -137,7 +138,7 @@ fun VolunteerTab(
             )
             Spacer(Modifier.height(8.dp))
             VolunteerRow(
-                icon = FeatherIcons.BarChart2, tint = BrandTeal,
+                icon = FeatherIcons.BarChart2, tint = BriefBlue,
                 title = tr("Situation briefing", "পরিস্থিতির সারসংক্ষেপ"),
                 subtitle = tr("Counts, worst cases, shelter pressure", "সংখ্যা, খারাপ কেস, আশ্রয়ের চাপ"),
                 onClick = onSummary,
