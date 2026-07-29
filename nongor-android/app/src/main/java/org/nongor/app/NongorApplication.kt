@@ -1,6 +1,7 @@
 package org.nongor.app
 
 import android.app.Application
+import org.nongor.app.core.SosSession
 import org.nongor.app.data.AppPrefs
 import org.nongor.app.data.ChatRepository
 import org.nongor.app.data.CommunityRepository
@@ -32,6 +33,8 @@ class NongorApplication : Application() {
         private set
     lateinit var meshHub: MeshHub
         private set
+    lateinit var sosSession: SosSession
+        private set
 
     /**
      * A handover note composed on the translation screen, waiting to be sent as an SOS.
@@ -54,5 +57,6 @@ class NongorApplication : Application() {
         locationProvider = LocationProvider(this)
         meshHub = MeshHub(this, sosRepository, communityRepository, familyRepository,
             locationProvider, prefs)
+        sosSession = SosSession(this)
     }
 }

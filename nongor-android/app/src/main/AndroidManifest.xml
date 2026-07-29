@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!-- Offline mesh (Nearby Connections: Bluetooth + Wi-Fi Direct) -->
+    <!-- The SOS siren vibrates as well as sounds, for a phone in a pocket or under rubble. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
