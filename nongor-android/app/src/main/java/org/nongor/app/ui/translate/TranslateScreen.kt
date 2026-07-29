@@ -65,6 +65,8 @@ import org.nongor.app.ui.theme.NongorColors
 import org.nongor.app.ui.theme.ShapeMd
 import org.nongor.app.ui.theme.ShapePill
 import org.nongor.app.ui.theme.ShapeSm
+import compose.icons.feathericons.HelpCircle
+import compose.icons.feathericons.Settings
 
 /**
  * Emergency translation.
@@ -80,7 +82,11 @@ import org.nongor.app.ui.theme.ShapeSm
 @Composable
 fun TranslateScreen(
     viewModel: TranslateViewModel,
-    onBack: () -> Unit,
+    // Null when shown as a tab, which is the normal case — a root destination has nothing
+    // to go back to, and a dead back arrow is worse than no arrow.
+    onBack: (() -> Unit)? = null,
+    onOpenGuide: () -> Unit = {},
+    onOpenSettings: () -> Unit = {},
     onSendAsSos: (String) -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
@@ -94,10 +100,12 @@ fun TranslateScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(tr("Emergency Translation", "জরুরি অনুবাদ")) },
+                title = { Text(tr("Talk", "কথা বলুন"), fontWeight = FontWeight.ExtraBold) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(FeatherIcons.ArrowLeft, contentDescription = "Back")
+                    if (onBack != null) {
+                        IconButton(onClick = onBack) {
+                            Icon(FeatherIcons.ArrowLeft, contentDescription = "Back")
+                        }
                     }
                 },
                 actions = {
@@ -108,6 +116,12 @@ fun TranslateScreen(
                                 contentDescription = tr("Start over", "নতুন করে শুরু"),
                             )
                         }
+                    }
+                    IconButton(onClick = onOpenGuide) {
+                        Icon(FeatherIcons.HelpCircle, contentDescription = tr("Guide", "গাইড"))
+                    }
+                    IconButton(onClick = onOpenSettings) {
+                        Icon(FeatherIcons.Settings, contentDescription = tr("Settings", "সেটিংস"))
                     }
                 },
             )

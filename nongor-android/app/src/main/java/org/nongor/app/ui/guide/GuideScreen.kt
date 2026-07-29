@@ -24,7 +24,6 @@ import compose.icons.feathericons.AlertTriangle
 import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.BarChart2
 import compose.icons.feathericons.MapPin
-import compose.icons.feathericons.MessageCircle
 import compose.icons.feathericons.MessageSquare
 import compose.icons.feathericons.Radio
 import compose.icons.feathericons.Send
@@ -122,10 +121,6 @@ private val FEATURES = listOf(
             "button phone, and can be pasted back into Nongor at the other end.",
         "কাছে কোনো ফোন নেই? এসওএসকে একটি ছোট এসএমএসে পরিণত করুন — যেকোনো ফোনে, এমনকি বাটন ফোনেও " +
             "চলে, আর অন্য প্রান্তে নোঙরে পেস্ট করা যায়।"),
-    Feature(FeatherIcons.MessageCircle, TileChatBg, TileChatFg,
-        "AI Assistant", "এআই সহকারী",
-        "Ask me anything about flood safety or first aid, answered right on your phone.",
-        "বন্যা নিরাপত্তা বা প্রাথমিক চিকিৎসা নিয়ে যা খুশি জিজ্ঞেস করুন, উত্তর মিলবে আপনার ফোনেই।"),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)

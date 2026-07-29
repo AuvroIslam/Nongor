@@ -19,8 +19,6 @@ import org.nongor.app.data.RegionAssets
 import org.nongor.app.data.SosEntry
 import org.nongor.app.data.download.HfDownloadRepository
 import org.nongor.app.ui.i18n.LocalBangla
-import org.nongor.app.ui.chat.ChatScreen
-import org.nongor.app.ui.chat.ChatViewModel
 import org.nongor.app.ui.community.CommunityScreen
 import org.nongor.app.ui.community.CommunityViewModel
 import org.nongor.app.ui.emergency.EmergencyScreen
@@ -32,7 +30,6 @@ import org.nongor.app.ui.gis.GisScreen
 import org.nongor.app.ui.gis.GisViewModel
 import org.nongor.app.ui.demo.Actions
 import org.nongor.app.ui.guide.GuideScreen
-import org.nongor.app.ui.home.NongorHomeScreen
 import org.nongor.app.ui.mesh.MeshScreen
 import org.nongor.app.ui.mesh.MeshViewModel
 import org.nongor.app.ui.onboarding.OnboardingScreen
@@ -49,6 +46,14 @@ import org.nongor.app.ui.triage.TriageScreen
 import org.nongor.app.ui.triage.TriageViewModel
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import org.nongor.app.ui.shell.NongorShell
+import org.nongor.app.ui.shell.Tab
+import org.nongor.app.ui.shell.HelpTab
+import org.nongor.app.ui.shell.MoveTab
+import org.nongor.app.ui.shell.AreaTab
 
 private object Routes {
     const val SPLASH = "splash"
@@ -60,7 +65,6 @@ private object Routes {
     const val SUMMARY = "summary"
     const val MESH = "mesh"
     const val GUIDE = "guide"
-    const val CHAT = "chat"
     const val SETTINGS = "settings"
     const val EMERGENCY = "emergency"
     const val COMMUNITY = "community"
@@ -144,29 +148,47 @@ private fun NongorNavHost() {
             OnboardingScreen(viewModel = vm, onFinished = toHome, onSkip = toHome)
         }
         composable(Routes.HOME) {
-            val coachSeen by app.prefs.coachSeen.collectAsState()
+            // The tabbed shell replaces what used to be a ten-tile grid. Nongor opens on
+            // Talk because the gap it exists to close is that the person in front of you
+            // cannot tell you what is wrong.
+            var tab by rememberSaveable { mutableStateOf(Tab.TALK) }
             val sosActive by app.sosSession.active.collectAsState()
             val sirenOn by app.sosSession.sirenOn.collectAsState()
-            NongorHomeScreen(
-                sosActive = sosActive,
-                sirenOn = sirenOn,
-                onStopSos = { app.sosSession.stop() },
-                modelReady = HfDownloadRepository.modelFile(context).exists(),
-                showCoach = !coachSeen,
-                onCoachDismiss = { app.prefs.markCoachSeen() },
-                onTriage = { navController.navigate(Routes.TRIAGE) },
-                onFirstAid = { navController.navigate(Routes.FIRSTAID) },
-                onGis = { navController.navigate(Routes.GIS) },
-                onSummary = { navController.navigate(Routes.SUMMARY) },
-                onMesh = { navController.navigate(Routes.MESH) },
-                onChat = { navController.navigate(Routes.CHAT) },
-                onGuide = { navController.navigate(Routes.GUIDE) },
-                onSettings = { navController.navigate(Routes.SETTINGS) },
-                onEmergency = { navController.navigate(Routes.EMERGENCY) },
-                onCommunity = { navController.navigate(Routes.COMMUNITY) },
-                onFamily = { navController.navigate(Routes.FAMILY) },
-                onTranslate = { navController.navigate(Routes.TRANSLATE) },
-            )
+
+            NongorShell(current = tab, onSelect = { tab = it }) {
+                when (tab) {
+                    Tab.TALK -> {
+                        val vm: TranslateViewModel = viewModel(factory = appFactory())
+                        TranslateScreen(
+                            viewModel = vm,
+                            onBack = null,
+                            onOpenGuide = { navController.navigate(Routes.GUIDE) },
+                            onOpenSettings = { navController.navigate(Routes.SETTINGS) },
+                            onSendAsSos = { note ->
+                                app.pendingSosDraft = note
+                                navController.navigate(Routes.MESH)
+                            },
+                        )
+                    }
+                    Tab.HELP -> HelpTab(
+                        sosActive = sosActive,
+                        sirenOn = sirenOn,
+                        onStopSos = { app.sosSession.stop() },
+                        onMesh = { navController.navigate(Routes.MESH) },
+                        onEmergency = { navController.navigate(Routes.EMERGENCY) },
+                        onFirstAid = { navController.navigate(Routes.FIRSTAID) },
+                        onTriage = { navController.navigate(Routes.TRIAGE) },
+                    )
+                    Tab.MOVE -> MoveTab(
+                        onShelter = { navController.navigate(Routes.GIS) },
+                        onFamily = { navController.navigate(Routes.FAMILY) },
+                    )
+                    Tab.AREA -> AreaTab(
+                        onBoard = { navController.navigate(Routes.COMMUNITY) },
+                        onSummary = { navController.navigate(Routes.SUMMARY) },
+                    )
+                }
+            }
         }
         composable(Routes.TRIAGE) {
             val vm: TriageViewModel = viewModel(factory = appFactory())
@@ -234,18 +256,6 @@ private fun NongorNavHost() {
         composable(Routes.FAMILY) {
             val vm: FamilyViewModel = viewModel(factory = appFactory())
             FamilyScreen(viewModel = vm, onBack = { navController.popBackStack() })
-        }
-        composable(Routes.CHAT) {
-            val vm: ChatViewModel = viewModel(factory = appFactory())
-            ChatScreen(
-                viewModel = vm,
-                onOpenSettings = { navController.navigate(Routes.SETTINGS) },
-                onNeedModel = {
-                    navController.navigate(Routes.ONBOARDING) {
-                        popUpTo(Routes.CHAT) { inclusive = true }
-                    }
-                },
-            )
         }
         composable(Routes.SETTINGS) {
             val vm: SettingsViewModel = viewModel(factory = appFactory())

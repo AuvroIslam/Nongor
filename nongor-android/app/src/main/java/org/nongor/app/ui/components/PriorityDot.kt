@@ -49,23 +49,16 @@ fun PriorityDot(priority: String, size: Dp = 10.dp, modifier: Modifier = Modifie
     )
 }
 
-/** A dot and a count, for the summary chips. */
+/** A dot and a count. Built on [StatPill] so it matches every other pill in the row. */
 @Composable
 fun PriorityCount(priority: String, count: Int, label: String) {
-    Row(
-        Modifier
-            .clip(ShapePill)
-            .background(colourFor(priority).copy(alpha = 0.13f))
-            .padding(horizontal = 11.dp, vertical = 7.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        PriorityDot(priority, 8.dp)
-        Spacer(Modifier.width(7.dp))
-        Text(
-            "$label $count",
-            style = MaterialTheme.typography.labelLarge,
-            color = colourFor(priority),
-            fontWeight = FontWeight.Bold,
-        )
-    }
+    StatPill(
+        label = label,
+        value = count,
+        tint = colourFor(priority),
+        leading = { PriorityDot(priority, 8.dp) },
+    )
 }
+
+/** Exposed so screens can tint other things (a card, a rule) to match a priority. */
+fun priorityColour(priority: String): Color = colourFor(priority)
