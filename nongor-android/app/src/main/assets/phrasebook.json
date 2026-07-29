@@ -1,435 +1,1297 @@
 {
   "version": "2026-07-28",
-  "note": "Bangla and English lines are authored content. Minority-language lines are an unverified community seed and are always shown with an unverified mark; the pictogram and the yes/no protocol never depend on them.",
+  "note": "Bangla and English lines are authored. Minority-language lines come either from a published parallel corpus (v=corpus, with the source and the English the line was translated from recorded on each entry) or from an unverified community seed (v=unverified). Neither is presented as verified; the pictogram and the yes/no protocol never depend on any of them.",
   "languages": [
-    { "code": "bn", "name": "Bangla", "native": "বাংলা", "status": "authored" },
-    { "code": "en", "name": "English", "native": "English", "status": "authored" },
-    { "code": "ccp", "name": "Chakma", "native": "চাঙমা", "status": "seed", "region": "Chittagong Hill Tracts" },
-    { "code": "rhg", "name": "Rohingya", "native": "Ruáingga", "status": "seed", "region": "Cox's Bazar" },
-    { "code": "mrh", "name": "Marma", "native": "মারমা", "status": "empty", "region": "Chittagong Hill Tracts" },
-    { "code": "trp", "name": "Kokborok", "native": "ককবরক", "status": "empty", "region": "Tripura communities" },
-    { "code": "sat", "name": "Santali", "native": "সাঁওতালি", "status": "empty", "region": "Rajshahi, Rangpur" },
-    { "code": "grt", "name": "Garo", "native": "আ·চিক", "status": "empty", "region": "Mymensingh" },
-    { "code": "bdsl", "name": "Sign (BdSL)", "native": "ইশারা ভাষা", "status": "gesture", "region": "Deaf community" }
+    {
+      "code": "bn",
+      "name": "Bangla",
+      "native": "বাংলা",
+      "status": "authored"
+    },
+    {
+      "code": "en",
+      "name": "English",
+      "native": "English",
+      "status": "authored"
+    },
+    {
+      "code": "ccp",
+      "name": "Chakma",
+      "native": "চাঙমা",
+      "status": "seed",
+      "region": "Chittagong Hill Tracts"
+    },
+    {
+      "code": "rhg",
+      "name": "Rohingya",
+      "native": "Ruáingga",
+      "status": "seed",
+      "region": "Cox's Bazar"
+    },
+    {
+      "code": "mrh",
+      "name": "Marma",
+      "native": "মারমা",
+      "status": "seed",
+      "region": "Chittagong Hill Tracts"
+    },
+    {
+      "code": "trp",
+      "name": "Kokborok",
+      "native": "ককবরক",
+      "status": "empty",
+      "region": "Tripura communities"
+    },
+    {
+      "code": "sat",
+      "name": "Santali",
+      "native": "সাঁওতালি",
+      "status": "empty",
+      "region": "Rajshahi, Rangpur"
+    },
+    {
+      "code": "grt",
+      "name": "Garo",
+      "native": "আ·চিক",
+      "status": "seed",
+      "region": "Mymensingh"
+    },
+    {
+      "code": "bdsl",
+      "name": "Sign (BdSL)",
+      "native": "ইশারা ভাষা",
+      "status": "gesture",
+      "region": "Deaf community"
+    }
   ],
   "categories": [
-    { "id": "first_contact", "en": "First contact", "bn": "প্রথম কথা", "icon": "hand" },
-    { "id": "medical", "en": "Medical", "bn": "চিকিৎসা", "icon": "healing" },
-    { "id": "rescue", "en": "Rescue", "bn": "উদ্ধার", "icon": "rescue" },
-    { "id": "water_food", "en": "Water & food", "bn": "পানি ও খাবার", "icon": "water" },
-    { "id": "shelter", "en": "Shelter", "bn": "আশ্রয়", "icon": "home" },
-    { "id": "family", "en": "Family", "bn": "পরিবার", "icon": "family" },
-    { "id": "danger", "en": "Danger", "bn": "বিপদ", "icon": "danger" },
-    { "id": "direction", "en": "Directions", "bn": "পথ", "icon": "place" },
-    { "id": "words", "en": "Single words", "bn": "একক শব্দ", "icon": "translate" }
+    {
+      "id": "first_contact",
+      "en": "First contact",
+      "bn": "প্রথম কথা",
+      "icon": "hand"
+    },
+    {
+      "id": "medical",
+      "en": "Medical",
+      "bn": "চিকিৎসা",
+      "icon": "healing"
+    },
+    {
+      "id": "rescue",
+      "en": "Rescue",
+      "bn": "উদ্ধার",
+      "icon": "rescue"
+    },
+    {
+      "id": "water_food",
+      "en": "Water & food",
+      "bn": "পানি ও খাবার",
+      "icon": "water"
+    },
+    {
+      "id": "shelter",
+      "en": "Shelter",
+      "bn": "আশ্রয়",
+      "icon": "home"
+    },
+    {
+      "id": "family",
+      "en": "Family",
+      "bn": "পরিবার",
+      "icon": "family"
+    },
+    {
+      "id": "danger",
+      "en": "Danger",
+      "bn": "বিপদ",
+      "icon": "danger"
+    },
+    {
+      "id": "direction",
+      "en": "Directions",
+      "bn": "পথ",
+      "icon": "place"
+    },
+    {
+      "id": "words",
+      "en": "Single words",
+      "bn": "একক শব্দ",
+      "icon": "translate"
+    }
   ],
   "phrases": [
     {
-      "id": "help_need", "cat": "first_contact", "icon": "help", "reply": "yesno",
-      "en": "Do you need help?", "bn": "আপনার কি সাহায্য দরকার?",
-      "tags": ["help", "assist", "সাহায্য", "দরকার"],
-      "sign_bn": "দুই হাত সামনে খোলা রেখে নিজের দিকে টানুন, ভ্রু তুলে প্রশ্নের ভাব করুন।"
+      "id": "help_need",
+      "cat": "first_contact",
+      "icon": "help",
+      "reply": "yesno",
+      "en": "Do you need help?",
+      "bn": "আপনার কি সাহায্য দরকার?",
+      "tags": [
+        "help",
+        "assist",
+        "সাহায্য",
+        "দরকার"
+      ],
+      "sign_bn": "দুই হাত সামনে খোলা রেখে নিজের দিকে টানুন, ভ্রু তুলে প্রশ্নের ভাব করুন।",
+      "t": {
+        "ccp": {
+          "beng": "মুই সাহায্য গুরি পারিম?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can I help you?"
+        },
+        "mrh": {
+          "beng": "ঙা কুহু নুইং হোলঃ?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can I help you?"
+        }
+      }
     },
     {
-      "id": "safe_now", "cat": "first_contact", "icon": "shield", "reply": "ack",
-      "en": "You are safe now. I am here to help you.", "bn": "আপনি এখন নিরাপদ। আমি আপনাকে সাহায্য করতে এসেছি।",
-      "tags": ["safe", "calm", "নিরাপদ"],
+      "id": "safe_now",
+      "cat": "first_contact",
+      "icon": "shield",
+      "reply": "ack",
+      "en": "You are safe now. I am here to help you.",
+      "bn": "আপনি এখন নিরাপদ। আমি আপনাকে সাহায্য করতে এসেছি।",
+      "tags": [
+        "safe",
+        "calm",
+        "নিরাপদ"
+      ],
       "sign_bn": "খোলা হাতের তালু বুকে রেখে ধীরে নিচে নামান, মাথা নেড়ে আশ্বাস দিন।"
     },
     {
-      "id": "your_name", "cat": "first_contact", "icon": "badge", "reply": "text",
-      "en": "What is your name?", "bn": "আপনার নাম কী?",
-      "tags": ["name", "who", "নাম"],
-      "sign_bn": "নিজের বুকে আঙুল রেখে তারপর তার দিকে দেখিয়ে প্রশ্নের ভাব করুন।"
+      "id": "your_name",
+      "cat": "first_contact",
+      "icon": "badge",
+      "reply": "text",
+      "en": "What is your name?",
+      "bn": "আপনার নাম কী?",
+      "tags": [
+        "name",
+        "who",
+        "নাম"
+      ],
+      "sign_bn": "নিজের বুকে আঙুল রেখে তারপর তার দিকে দেখিয়ে প্রশ্নের ভাব করুন।",
+      "t": {
+        "ccp": {
+          "beng": "ত নাঙান হি?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "What is your name?"
+        }
+      }
     },
     {
-      "id": "understand", "cat": "first_contact", "icon": "hearing", "reply": "yesno",
-      "en": "Do you understand me?", "bn": "আপনি কি আমার কথা বুঝতে পারছেন?",
-      "tags": ["understand", "hear", "বুঝ"],
-      "sign_bn": "কপালের পাশে তর্জনী ঠেকিয়ে প্রশ্নের ভাব করুন।"
+      "id": "understand",
+      "cat": "first_contact",
+      "icon": "hearing",
+      "reply": "yesno",
+      "en": "Do you understand me?",
+      "bn": "আপনি কি আমার কথা বুঝতে পারছেন?",
+      "tags": [
+        "understand",
+        "hear",
+        "বুঝ"
+      ],
+      "sign_bn": "কপালের পাশে তর্জনী ঠেকিয়ে প্রশ্নের ভাব করুন।",
+      "t": {
+        "ccp": {
+          "beng": "তুই হি বুজি পাজ্জোস",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Do you understand?"
+        },
+        "mrh": {
+          "beng": "নালেরি ল নাং?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Do you understand?"
+        },
+        "grt": {
+          "beng": "না্আ কি হাইনা মানজক?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Do you understand?"
+        }
+      }
     },
     {
-      "id": "point_lang", "cat": "first_contact", "icon": "translate", "reply": "ack",
-      "en": "Point to the language you speak.", "bn": "আপনি যে ভাষায় কথা বলেন সেটিতে আঙুল দিন।",
-      "tags": ["language", "speak", "ভাষা"],
+      "id": "point_lang",
+      "cat": "first_contact",
+      "icon": "translate",
+      "reply": "ack",
+      "en": "Point to the language you speak.",
+      "bn": "আপনি যে ভাষায় কথা বলেন সেটিতে আঙুল দিন।",
+      "tags": [
+        "language",
+        "speak",
+        "ভাষা"
+      ],
       "sign_bn": "ফোনের পর্দা তার দিকে ঘুরিয়ে ভাষার তালিকায় আঙুল দিতে ইশারা করুন।"
     },
-
     {
-      "id": "injured", "cat": "medical", "icon": "healing", "reply": "yesno",
-      "en": "Are you injured?", "bn": "আপনি কি আঘাত পেয়েছেন?",
-      "tags": ["injury", "hurt", "wound", "আঘাত", "ব্যথা"],
+      "id": "injured",
+      "cat": "medical",
+      "icon": "healing",
+      "reply": "yesno",
+      "en": "Are you injured?",
+      "bn": "আপনি কি আঘাত পেয়েছেন?",
+      "tags": [
+        "injury",
+        "hurt",
+        "wound",
+        "আঘাত",
+        "ব্যথা"
+      ],
       "sign_bn": "দুই তর্জনী মুখোমুখি এনে ঠেকান, তারপর তার শরীরের দিকে দেখান।"
     },
     {
-      "id": "where_pain", "cat": "medical", "icon": "person_pin", "reply": "bodypart",
-      "en": "Where does it hurt? Point with your finger.", "bn": "কোথায় ব্যথা করছে? আঙুল দিয়ে দেখান।",
-      "tags": ["pain", "where", "ব্যথা", "কোথায়"],
-      "sign_bn": "নিজের শরীরে আঙুল ছুঁইয়ে দেখান, তারপর তার দিকে দেখিয়ে প্রশ্ন করুন।"
+      "id": "where_pain",
+      "cat": "medical",
+      "icon": "person_pin",
+      "reply": "bodypart",
+      "en": "Where does it hurt? Point with your finger.",
+      "bn": "কোথায় ব্যথা করছে? আঙুল দিয়ে দেখান।",
+      "tags": [
+        "pain",
+        "where",
+        "ব্যথা",
+        "কোথায়"
+      ],
+      "sign_bn": "নিজের শরীরে আঙুল ছুঁইয়ে দেখান, তারপর তার দিকে দেখিয়ে প্রশ্ন করুন।",
+      "t": {
+        "ccp": {
+          "beng": "ইয়াান হুবোত পিরি গরে?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Where does it hurt?"
+        },
+        "mrh": {
+          "beng": "জা আড়া মা নাড়ে লে?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Where does it hurt?"
+        },
+        "grt": {
+          "beng": "বানো সাদিকঙা?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Where does it hurt?"
+        }
+      }
     },
     {
-      "id": "bleeding", "cat": "medical", "icon": "blood", "reply": "yesno",
-      "en": "Are you bleeding?", "bn": "আপনার কি রক্তপাত হচ্ছে?",
-      "tags": ["blood", "bleeding", "রক্ত"],
+      "id": "bleeding",
+      "cat": "medical",
+      "icon": "blood",
+      "reply": "yesno",
+      "en": "Are you bleeding?",
+      "bn": "আপনার কি রক্তপাত হচ্ছে?",
+      "tags": [
+        "blood",
+        "bleeding",
+        "রক্ত"
+      ],
       "sign_bn": "আঙুল দিয়ে হাত বেয়ে নিচে গড়িয়ে পড়ার ইশারা করুন।"
     },
     {
-      "id": "breathe", "cat": "medical", "icon": "air", "reply": "yesno",
-      "en": "Can you breathe normally?", "bn": "আপনি কি স্বাভাবিকভাবে শ্বাস নিতে পারছেন?",
-      "tags": ["breath", "breathing", "শ্বাস"],
+      "id": "breathe",
+      "cat": "medical",
+      "icon": "air",
+      "reply": "yesno",
+      "en": "Can you breathe normally?",
+      "bn": "আপনি কি স্বাভাবিকভাবে শ্বাস নিতে পারছেন?",
+      "tags": [
+        "breath",
+        "breathing",
+        "শ্বাস"
+      ],
       "sign_bn": "খোলা হাত বুকে রেখে দুইবার উপরে-নিচে করুন।"
     },
     {
-      "id": "move_limbs", "cat": "medical", "icon": "accessible", "reply": "yesno",
-      "en": "Can you move your arms and legs?", "bn": "আপনি কি হাত-পা নাড়াতে পারছেন?",
-      "tags": ["move", "paralysis", "হাত", "পা"],
+      "id": "move_limbs",
+      "cat": "medical",
+      "icon": "accessible",
+      "reply": "yesno",
+      "en": "Can you move your arms and legs?",
+      "bn": "আপনি কি হাত-পা নাড়াতে পারছেন?",
+      "tags": [
+        "move",
+        "paralysis",
+        "হাত",
+        "পা"
+      ],
       "sign_bn": "নিজের হাত ও পা নাড়িয়ে দেখান, তারপর প্রশ্নের ভাব করুন।"
     },
     {
-      "id": "unconscious", "cat": "medical", "icon": "mood", "reply": "yesno",
-      "en": "Did you lose consciousness?", "bn": "আপনি কি জ্ঞান হারিয়েছিলেন?",
-      "tags": ["faint", "unconscious", "জ্ঞান"],
+      "id": "unconscious",
+      "cat": "medical",
+      "icon": "mood",
+      "reply": "yesno",
+      "en": "Did you lose consciousness?",
+      "bn": "আপনি কি জ্ঞান হারিয়েছিলেন?",
+      "tags": [
+        "faint",
+        "unconscious",
+        "জ্ঞান"
+      ],
       "sign_bn": "চোখ বন্ধ করে মাথা একপাশে হেলিয়ে দেখান।"
     },
     {
-      "id": "pain_scale", "cat": "medical", "icon": "scale", "reply": "scale",
-      "en": "How bad is the pain?", "bn": "ব্যথা কতটা তীব্র?",
-      "tags": ["pain", "severity", "ব্যথা"],
+      "id": "pain_scale",
+      "cat": "medical",
+      "icon": "scale",
+      "reply": "scale",
+      "en": "How bad is the pain?",
+      "bn": "ব্যথা কতটা তীব্র?",
+      "tags": [
+        "pain",
+        "severity",
+        "ব্যথা"
+      ],
       "sign_bn": "হাত নিচ থেকে উপরে তুলে মাত্রা বোঝান, মুখে কষ্টের ভাব আনুন।"
     },
     {
-      "id": "pregnant", "cat": "medical", "icon": "pregnant", "reply": "yesno",
-      "en": "Are you pregnant?", "bn": "আপনি কি গর্ভবতী?",
-      "tags": ["pregnant", "গর্ভবতী"],
+      "id": "pregnant",
+      "cat": "medical",
+      "icon": "pregnant",
+      "reply": "yesno",
+      "en": "Are you pregnant?",
+      "bn": "আপনি কি গর্ভবতী?",
+      "tags": [
+        "pregnant",
+        "গর্ভবতী"
+      ],
       "sign_bn": "পেটের সামনে হাত গোল করে বাইরের দিকে আনুন।"
     },
     {
-      "id": "medicine", "cat": "medical", "icon": "medication", "reply": "yesno",
-      "en": "Do you take medicine every day?", "bn": "আপনি কি প্রতিদিন ওষুধ খান?",
-      "tags": ["medicine", "insulin", "ওষুধ"],
+      "id": "medicine",
+      "cat": "medical",
+      "icon": "medication",
+      "reply": "yesno",
+      "en": "Do you take medicine every day?",
+      "bn": "আপনি কি প্রতিদিন ওষুধ খান?",
+      "tags": [
+        "medicine",
+        "insulin",
+        "ওষুধ"
+      ],
       "sign_bn": "আঙুল দিয়ে ছোট বড়ি মুখে দেওয়ার ইশারা করুন।"
     },
     {
-      "id": "animal_bite", "cat": "medical", "icon": "pets", "reply": "yesno",
-      "en": "Did a snake or animal bite you?", "bn": "সাপ বা কোনো প্রাণী কি কামড়েছে?",
-      "tags": ["snake", "bite", "সাপ", "কামড়"],
+      "id": "animal_bite",
+      "cat": "medical",
+      "icon": "pets",
+      "reply": "yesno",
+      "en": "Did a snake or animal bite you?",
+      "bn": "সাপ বা কোনো প্রাণী কি কামড়েছে?",
+      "tags": [
+        "snake",
+        "bite",
+        "সাপ",
+        "কামড়"
+      ],
       "sign_bn": "দুই আঙুল দিয়ে কামড়ের ইশারা করে হাতে ছোঁয়ান।"
     },
-
     {
-      "id": "how_many", "cat": "rescue", "icon": "groups", "reply": "number",
-      "en": "How many people are with you?", "bn": "আপনার সাথে কতজন মানুষ আছে?",
-      "tags": ["people", "count", "কতজন"],
+      "id": "how_many",
+      "cat": "rescue",
+      "icon": "groups",
+      "reply": "number",
+      "en": "How many people are with you?",
+      "bn": "আপনার সাথে কতজন মানুষ আছে?",
+      "tags": [
+        "people",
+        "count",
+        "কতজন"
+      ],
       "sign_bn": "আঙুল গুনে দেখান, তারপর চারপাশে হাত ঘুরিয়ে প্রশ্ন করুন।"
     },
     {
-      "id": "trapped", "cat": "rescue", "icon": "trapped", "reply": "yesno",
-      "en": "Is anyone trapped or buried?", "bn": "কেউ কি আটকে আছে বা চাপা পড়েছে?",
-      "tags": ["trapped", "buried", "আটকে", "চাপা"],
+      "id": "trapped",
+      "cat": "rescue",
+      "icon": "trapped",
+      "reply": "yesno",
+      "en": "Is anyone trapped or buried?",
+      "bn": "কেউ কি আটকে আছে বা চাপা পড়েছে?",
+      "tags": [
+        "trapped",
+        "buried",
+        "আটকে",
+        "চাপা"
+      ],
       "sign_bn": "এক হাত অন্য হাতের নিচে চেপে ধরে বের হতে না পারার ইশারা করুন।"
     },
     {
-      "id": "can_walk", "cat": "rescue", "icon": "walk", "reply": "yesno",
-      "en": "Can you walk?", "bn": "আপনি কি হাঁটতে পারবেন?",
-      "tags": ["walk", "mobile", "হাঁট"],
+      "id": "can_walk",
+      "cat": "rescue",
+      "icon": "walk",
+      "reply": "yesno",
+      "en": "Can you walk?",
+      "bn": "আপনি কি হাঁটতে পারবেন?",
+      "tags": [
+        "walk",
+        "mobile",
+        "হাঁট"
+      ],
       "sign_bn": "দুই আঙুল দিয়ে হাঁটার ইশারা করুন।"
     },
     {
-      "id": "vulnerable", "cat": "rescue", "icon": "family", "reply": "yesno",
-      "en": "Are there children, elderly or disabled people?", "bn": "সাথে কি শিশু, বয়স্ক বা প্রতিবন্ধী কেউ আছে?",
-      "tags": ["child", "elderly", "disabled", "শিশু", "বয়স্ক"],
+      "id": "vulnerable",
+      "cat": "rescue",
+      "icon": "family",
+      "reply": "yesno",
+      "en": "Are there children, elderly or disabled people?",
+      "bn": "সাথে কি শিশু, বয়স্ক বা প্রতিবন্ধী কেউ আছে?",
+      "tags": [
+        "child",
+        "elderly",
+        "disabled",
+        "শিশু",
+        "বয়স্ক"
+      ],
       "sign_bn": "হাত নিচে নামিয়ে ছোট উচ্চতা দেখান, তারপর লাঠি ধরার ইশারা করুন।"
     },
     {
-      "id": "come_with", "cat": "rescue", "icon": "arrow", "reply": "ack",
-      "en": "Come with me. I will take you to safety.", "bn": "আমার সাথে আসুন। আমি আপনাকে নিরাপদ জায়গায় নিয়ে যাব।",
-      "tags": ["come", "follow", "আসুন"],
+      "id": "come_with",
+      "cat": "rescue",
+      "icon": "arrow",
+      "reply": "ack",
+      "en": "Come with me. I will take you to safety.",
+      "bn": "আমার সাথে আসুন। আমি আপনাকে নিরাপদ জায়গায় নিয়ে যাব।",
+      "tags": [
+        "come",
+        "follow",
+        "আসুন"
+      ],
       "sign_bn": "হাত দিয়ে নিজের দিকে ডাকুন, তারপর নিরাপদ দিকে দেখান।"
     },
     {
-      "id": "wait_here", "cat": "rescue", "icon": "timer", "reply": "ack",
-      "en": "Wait here. I am coming back for you.", "bn": "এখানে অপেক্ষা করুন। আমি আপনার জন্য ফিরে আসব।",
-      "tags": ["wait", "stay", "অপেক্ষা"],
-      "sign_bn": "খোলা হাতের তালু সামনে ধরে থামান, তারপর নিজের দিকে ফিরে আসার ইশারা করুন।"
+      "id": "wait_here",
+      "cat": "rescue",
+      "icon": "timer",
+      "reply": "ack",
+      "en": "Wait here. I am coming back for you.",
+      "bn": "এখানে অপেক্ষা করুন। আমি আপনার জন্য ফিরে আসব।",
+      "tags": [
+        "wait",
+        "stay",
+        "অপেক্ষা"
+      ],
+      "sign_bn": "খোলা হাতের তালু সামনে ধরে থামান, তারপর নিজের দিকে ফিরে আসার ইশারা করুন।",
+      "t": {
+        "ccp": {
+          "beng": "হচ্ত গুরি মরে এক্কা ইওদ বাচ্চে তাক",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Please wait here for me."
+        }
+      }
     },
-
     {
-      "id": "need_water", "cat": "water_food", "icon": "water", "reply": "yesno",
-      "en": "Do you need drinking water?", "bn": "আপনার কি খাবার পানি দরকার?",
-      "tags": ["water", "thirsty", "পানি"],
+      "id": "need_water",
+      "cat": "water_food",
+      "icon": "water",
+      "reply": "yesno",
+      "en": "Do you need drinking water?",
+      "bn": "আপনার কি খাবার পানি দরকার?",
+      "tags": [
+        "water",
+        "thirsty",
+        "পানি"
+      ],
       "sign_bn": "হাত মুঠো করে বুড়ো আঙুল মুখের দিকে হেলিয়ে পান করার ইশারা করুন।"
     },
     {
-      "id": "need_food", "cat": "water_food", "icon": "food", "reply": "yesno",
-      "en": "Do you need food?", "bn": "আপনার কি খাবার দরকার?",
-      "tags": ["food", "hungry", "খাবার"],
-      "sign_bn": "আঙুল একত্র করে মুখের দিকে নিন।"
+      "id": "need_food",
+      "cat": "water_food",
+      "icon": "food",
+      "reply": "yesno",
+      "en": "Do you need food?",
+      "bn": "আপনার কি খাবার দরকার?",
+      "tags": [
+        "food",
+        "hungry",
+        "খাবার"
+      ],
+      "sign_bn": "আঙুল একত্র করে মুখের দিকে নিন।",
+      "t": {
+        "ccp": {
+          "beng": "তর পেট পুরের?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Are you hungry?"
+        },
+        "mrh": {
+          "beng": "ঙা মওয়ে্প ল?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Are you hungry?"
+        },
+        "grt": {
+          "beng": "না্আ কি অখ্রীঙজক?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Are you hungry?"
+        }
+      }
     },
     {
-      "id": "boil_water", "cat": "water_food", "icon": "boil", "reply": "ack",
-      "en": "Boil the water before you drink it.", "bn": "পানি ফুটিয়ে ঠান্ডা করে তারপর পান করুন।",
-      "tags": ["boil", "purify", "safe water", "ফুটিয়ে"],
+      "id": "boil_water",
+      "cat": "water_food",
+      "icon": "boil",
+      "reply": "ack",
+      "en": "Boil the water before you drink it.",
+      "bn": "পানি ফুটিয়ে ঠান্ডা করে তারপর পান করুন।",
+      "tags": [
+        "boil",
+        "purify",
+        "safe water",
+        "ফুটিয়ে"
+      ],
       "sign_bn": "নিচে আগুনের ইশারা করে উপরে হাত নেড়ে বুদবুদ দেখান।"
     },
     {
-      "id": "last_ate", "cat": "water_food", "icon": "clock", "reply": "hours",
-      "en": "When did you last eat or drink?", "bn": "শেষ কখন খেয়েছেন বা পানি পান করেছেন?",
-      "tags": ["ate", "when", "কখন"],
+      "id": "last_ate",
+      "cat": "water_food",
+      "icon": "clock",
+      "reply": "hours",
+      "en": "When did you last eat or drink?",
+      "bn": "শেষ কখন খেয়েছেন বা পানি পান করেছেন?",
+      "tags": [
+        "ate",
+        "when",
+        "কখন"
+      ],
       "sign_bn": "খাওয়ার ইশারা করে তারপর কব্জিতে ঘড়ি দেখানোর মতো টোকা দিন।"
     },
     {
-      "id": "baby_food", "cat": "water_food", "icon": "baby", "reply": "yesno",
-      "en": "Do you need baby food or milk?", "bn": "শিশুর খাবার বা দুধ দরকার?",
-      "tags": ["baby", "milk", "শিশু", "দুধ"],
+      "id": "baby_food",
+      "cat": "water_food",
+      "icon": "baby",
+      "reply": "yesno",
+      "en": "Do you need baby food or milk?",
+      "bn": "শিশুর খাবার বা দুধ দরকার?",
+      "tags": [
+        "baby",
+        "milk",
+        "শিশু",
+        "দুধ"
+      ],
       "sign_bn": "দুই হাত ভাঁজ করে শিশু কোলে নেওয়ার ইশারা করুন।"
     },
-
     {
-      "id": "shelter_here", "cat": "shelter", "icon": "home", "reply": "ack",
-      "en": "There is a shelter this way.", "bn": "এই দিকে একটি আশ্রয়কেন্দ্র আছে।",
-      "tags": ["shelter", "camp", "আশ্রয়"],
+      "id": "shelter_here",
+      "cat": "shelter",
+      "icon": "home",
+      "reply": "ack",
+      "en": "There is a shelter this way.",
+      "bn": "এই দিকে একটি আশ্রয়কেন্দ্র আছে।",
+      "tags": [
+        "shelter",
+        "camp",
+        "আশ্রয়"
+      ],
       "sign_bn": "দুই হাত মাথার উপরে ছাদের মতো করে ধরুন, তারপর দিক দেখান।"
     },
     {
-      "id": "house_safe", "cat": "shelter", "icon": "house", "reply": "yesno",
-      "en": "Is your house still safe?", "bn": "আপনার ঘর কি এখনো নিরাপদ?",
-      "tags": ["house", "damage", "ঘর"],
-      "sign_bn": "ছাদের ইশারা করে তারপর বুড়ো আঙুল উপরে-নিচে করে প্রশ্ন করুন।"
+      "id": "house_safe",
+      "cat": "shelter",
+      "icon": "house",
+      "reply": "yesno",
+      "en": "Is your house still safe?",
+      "bn": "আপনার ঘর কি এখনো নিরাপদ?",
+      "tags": [
+        "house",
+        "damage",
+        "ঘর"
+      ],
+      "sign_bn": "ছাদের ইশারা করে তারপর বুড়ো আঙুল উপরে-নিচে করে প্রশ্ন করুন।",
+      "t": {
+        "ccp": {
+          "beng": "ত ঘরান হুদু",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Where is your house?"
+        }
+      }
     },
     {
-      "id": "stay_tonight", "cat": "shelter", "icon": "night", "reply": "text",
-      "en": "Where will you stay tonight?", "bn": "আজ রাতে আপনি কোথায় থাকবেন?",
-      "tags": ["tonight", "stay", "রাত"],
+      "id": "stay_tonight",
+      "cat": "shelter",
+      "icon": "night",
+      "reply": "text",
+      "en": "Where will you stay tonight?",
+      "bn": "আজ রাতে আপনি কোথায় থাকবেন?",
+      "tags": [
+        "tonight",
+        "stay",
+        "রাত"
+      ],
       "sign_bn": "হাতের তালুতে মাথা রেখে ঘুমানোর ইশারা করে প্রশ্ন করুন।"
     },
     {
-      "id": "dry_clothes", "cat": "shelter", "icon": "clothes", "reply": "yesno",
-      "en": "Do you need a blanket or dry clothes?", "bn": "কম্বল বা শুকনো কাপড় দরকার?",
-      "tags": ["blanket", "clothes", "cold", "কম্বল", "কাপড়"],
+      "id": "dry_clothes",
+      "cat": "shelter",
+      "icon": "clothes",
+      "reply": "yesno",
+      "en": "Do you need a blanket or dry clothes?",
+      "bn": "কম্বল বা শুকনো কাপড় দরকার?",
+      "tags": [
+        "blanket",
+        "clothes",
+        "cold",
+        "কম্বল",
+        "কাপড়"
+      ],
       "sign_bn": "দুই হাত দিয়ে নিজেকে জড়িয়ে ধরে শীতের ইশারা করুন।"
     },
     {
-      "id": "toilet_where", "cat": "shelter", "icon": "toilet", "reply": "ack",
-      "en": "The toilet is that way.", "bn": "শৌচাগার ওই দিকে।",
-      "tags": ["toilet", "latrine", "শৌচাগার"],
+      "id": "toilet_where",
+      "cat": "shelter",
+      "icon": "toilet",
+      "reply": "ack",
+      "en": "The toilet is that way.",
+      "bn": "শৌচাগার ওই দিকে।",
+      "tags": [
+        "toilet",
+        "latrine",
+        "শৌচাগার"
+      ],
       "sign_bn": "দিক নির্দেশ করে দেখান।"
     },
-
     {
-      "id": "family_missing", "cat": "family", "icon": "search", "reply": "yesno",
-      "en": "Is anyone in your family missing?", "bn": "আপনার পরিবারের কেউ কি নিখোঁজ?",
-      "tags": ["missing", "lost", "নিখোঁজ"],
+      "id": "family_missing",
+      "cat": "family",
+      "icon": "search",
+      "reply": "yesno",
+      "en": "Is anyone in your family missing?",
+      "bn": "আপনার পরিবারের কেউ কি নিখোঁজ?",
+      "tags": [
+        "missing",
+        "lost",
+        "নিখোঁজ"
+      ],
       "sign_bn": "চোখের সামনে হাত ঘুরিয়ে খোঁজার ইশারা করুন।"
     },
     {
-      "id": "missing_name", "cat": "family", "icon": "person", "reply": "text",
-      "en": "What is the missing person's name?", "bn": "নিখোঁজ ব্যক্তির নাম কী?",
-      "tags": ["name", "missing", "নাম"],
+      "id": "missing_name",
+      "cat": "family",
+      "icon": "person",
+      "reply": "text",
+      "en": "What is the missing person's name?",
+      "bn": "নিখোঁজ ব্যক্তির নাম কী?",
+      "tags": [
+        "name",
+        "missing",
+        "নাম"
+      ],
       "sign_bn": "খোঁজার ইশারা করে তারপর নাম লেখার ইশারা করুন।"
     },
     {
-      "id": "missing_age", "cat": "family", "icon": "cake", "reply": "number",
-      "en": "How old is that person?", "bn": "তার বয়স কত?",
-      "tags": ["age", "old", "বয়স"],
+      "id": "missing_age",
+      "cat": "family",
+      "icon": "cake",
+      "reply": "number",
+      "en": "How old is that person?",
+      "bn": "তার বয়স কত?",
+      "tags": [
+        "age",
+        "old",
+        "বয়স"
+      ],
       "sign_bn": "আঙুল দিয়ে সংখ্যা দেখাতে ইশারা করুন।"
     },
     {
-      "id": "last_seen", "cat": "family", "icon": "eye", "reply": "text",
-      "en": "Where did you last see them?", "bn": "তাকে শেষ কোথায় দেখেছেন?",
-      "tags": ["seen", "where", "কোথায়"],
+      "id": "last_seen",
+      "cat": "family",
+      "icon": "eye",
+      "reply": "text",
+      "en": "Where did you last see them?",
+      "bn": "তাকে শেষ কোথায় দেখেছেন?",
+      "tags": [
+        "seen",
+        "where",
+        "কোথায়"
+      ],
       "sign_bn": "দুই আঙুল চোখ থেকে সামনে নিয়ে দেখার ইশারা করে দিক জিজ্ঞাসা করুন।"
     },
     {
-      "id": "child_alone", "cat": "family", "icon": "child", "reply": "yesno",
-      "en": "Is this child alone?", "bn": "এই শিশুটি কি একা?",
-      "tags": ["child", "alone", "শিশু", "একা"],
+      "id": "child_alone",
+      "cat": "family",
+      "icon": "child",
+      "reply": "yesno",
+      "en": "Is this child alone?",
+      "bn": "এই শিশুটি কি একা?",
+      "tags": [
+        "child",
+        "alone",
+        "শিশু",
+        "একা"
+      ],
       "sign_bn": "শিশুর দিকে দেখিয়ে একটি আঙুল তুলে একা বোঝান।"
     },
-
     {
-      "id": "water_rising", "cat": "danger", "icon": "wave", "reply": "ack",
-      "en": "The water is rising. Move to higher ground now.", "bn": "পানি বাড়ছে। এখনই উঁচু জায়গায় সরে যান।",
-      "tags": ["flood", "rising", "পানি", "বন্যা"],
+      "id": "water_rising",
+      "cat": "danger",
+      "icon": "wave",
+      "reply": "ack",
+      "en": "The water is rising. Move to higher ground now.",
+      "bn": "পানি বাড়ছে। এখনই উঁচু জায়গায় সরে যান।",
+      "tags": [
+        "flood",
+        "rising",
+        "পানি",
+        "বন্যা"
+      ],
       "sign_bn": "হাত নিচ থেকে উপরে তুলে পানি বাড়া দেখান, তারপর উঁচু দিকে দেখান।"
     },
     {
-      "id": "live_wire", "cat": "danger", "icon": "bolt", "reply": "ack",
-      "en": "Do not touch the wire. It can kill you.", "bn": "তারে হাত দেবেন না। এতে মৃত্যু হতে পারে।",
-      "tags": ["electric", "wire", "বিদ্যুৎ", "তার"],
+      "id": "live_wire",
+      "cat": "danger",
+      "icon": "bolt",
+      "reply": "ack",
+      "en": "Do not touch the wire. It can kill you.",
+      "bn": "তারে হাত দেবেন না। এতে মৃত্যু হতে পারে।",
+      "tags": [
+        "electric",
+        "wire",
+        "বিদ্যুৎ",
+        "তার"
+      ],
       "sign_bn": "তারের দিকে দেখিয়ে দুই হাত আড়াআড়ি করে জোরে না বলুন।"
     },
     {
-      "id": "building_unsafe", "cat": "danger", "icon": "building", "reply": "ack",
-      "en": "Do not go inside. The building is not safe.", "bn": "ভিতরে যাবেন না। ভবনটি নিরাপদ নয়।",
-      "tags": ["collapse", "building", "ভবন", "ধস"],
+      "id": "building_unsafe",
+      "cat": "danger",
+      "icon": "building",
+      "reply": "ack",
+      "en": "Do not go inside. The building is not safe.",
+      "bn": "ভিতরে যাবেন না। ভবনটি নিরাপদ নয়।",
+      "tags": [
+        "collapse",
+        "building",
+        "ভবন",
+        "ধস"
+      ],
       "sign_bn": "ভবনের দিকে দেখিয়ে হাত আড়াআড়ি করে থামার ইশারা করুন।"
     },
     {
-      "id": "landslide", "cat": "danger", "icon": "hill", "reply": "ack",
-      "en": "The hill can slide. Leave the slope.", "bn": "পাহাড় ধসে পড়তে পারে। ঢাল ছেড়ে সরে যান।",
-      "tags": ["landslide", "hill", "পাহাড়", "ধস"],
+      "id": "landslide",
+      "cat": "danger",
+      "icon": "hill",
+      "reply": "ack",
+      "en": "The hill can slide. Leave the slope.",
+      "bn": "পাহাড় ধসে পড়তে পারে। ঢাল ছেড়ে সরে যান।",
+      "tags": [
+        "landslide",
+        "hill",
+        "পাহাড়",
+        "ধস"
+      ],
       "sign_bn": "এক হাত ঢালু করে অন্য হাত তার উপর দিয়ে নিচে গড়িয়ে দিন।"
     },
     {
-      "id": "keep_quiet", "cat": "danger", "icon": "quiet", "reply": "ack",
-      "en": "Please stay quiet so we can hear anyone trapped.", "bn": "দয়া করে চুপ থাকুন, যাতে আটকে পড়া কারও শব্দ শোনা যায়।",
-      "tags": ["quiet", "listen", "চুপ"],
+      "id": "keep_quiet",
+      "cat": "danger",
+      "icon": "quiet",
+      "reply": "ack",
+      "en": "Please stay quiet so we can hear anyone trapped.",
+      "bn": "দয়া করে চুপ থাকুন, যাতে আটকে পড়া কারও শব্দ শোনা যায়।",
+      "tags": [
+        "quiet",
+        "listen",
+        "চুপ"
+      ],
       "sign_bn": "ঠোঁটে আঙুল রাখুন, তারপর কানে হাত রেখে শোনার ইশারা করুন।"
     },
-
     {
-      "id": "where_from", "cat": "direction", "icon": "place", "reply": "text",
-      "en": "Which village or area are you from?", "bn": "আপনি কোন গ্রাম বা এলাকা থেকে এসেছেন?",
-      "tags": ["village", "area", "গ্রাম"],
-      "sign_bn": "দূরে হাত দেখিয়ে তারপর তার দিকে দেখিয়ে প্রশ্ন করুন।"
+      "id": "where_from",
+      "cat": "direction",
+      "icon": "place",
+      "reply": "text",
+      "en": "Which village or area are you from?",
+      "bn": "আপনি কোন গ্রাম বা এলাকা থেকে এসেছেন?",
+      "tags": [
+        "village",
+        "area",
+        "গ্রাম"
+      ],
+      "sign_bn": "দূরে হাত দেখিয়ে তারপর তার দিকে দেখিয়ে প্রশ্ন করুন।",
+      "t": {
+        "ccp": {
+          "beng": "তুই হট্টুন ইচ্ছোস?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Where are you from?"
+        },
+        "mrh": {
+          "beng": "নাং আ্চগা লেটে লে?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Where are you from?"
+        },
+        "grt": {
+          "beng": "না্আ বাচ্চানি হিবা",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Where are you from?"
+        }
+      }
     },
     {
-      "id": "show_way", "cat": "direction", "icon": "signpost", "reply": "ack",
-      "en": "Please show me the way.", "bn": "দয়া করে আমাকে পথ দেখান।",
-      "tags": ["way", "guide", "পথ"],
+      "id": "show_way",
+      "cat": "direction",
+      "icon": "signpost",
+      "reply": "ack",
+      "en": "Please show me the way.",
+      "bn": "দয়া করে আমাকে পথ দেখান।",
+      "tags": [
+        "way",
+        "guide",
+        "পথ"
+      ],
       "sign_bn": "নিজের চোখে আঙুল দিয়ে তারপর সামনে দেখানোর ইশারা করুন।"
     },
     {
-      "id": "how_far", "cat": "direction", "icon": "ruler", "reply": "distance",
-      "en": "How far is it?", "bn": "সেটা কতদূর?",
-      "tags": ["far", "distance", "কতদূর"],
+      "id": "how_far",
+      "cat": "direction",
+      "icon": "ruler",
+      "reply": "distance",
+      "en": "How far is it?",
+      "bn": "সেটা কতদূর?",
+      "tags": [
+        "far",
+        "distance",
+        "কতদূর"
+      ],
       "sign_bn": "দুই হাত কাছাকাছি থেকে দূরে সরিয়ে দূরত্ব বোঝান।"
     },
     {
-      "id": "boat_here", "cat": "direction", "icon": "boat", "reply": "yesno",
-      "en": "Is there a boat nearby?", "bn": "কাছাকাছি কোনো নৌকা আছে?",
-      "tags": ["boat", "নৌকা"],
+      "id": "boat_here",
+      "cat": "direction",
+      "icon": "boat",
+      "reply": "yesno",
+      "en": "Is there a boat nearby?",
+      "bn": "কাছাকাছি কোনো নৌকা আছে?",
+      "tags": [
+        "boat",
+        "নৌকা"
+      ],
       "sign_bn": "দুই হাত জোড়া করে নৌকার আকার দেখিয়ে দোলান।"
     },
     {
-      "id": "road_blocked", "cat": "direction", "icon": "block", "reply": "yesno",
-      "en": "Is the road blocked?", "bn": "রাস্তা কি বন্ধ?",
-      "tags": ["road", "blocked", "রাস্তা"],
+      "id": "road_blocked",
+      "cat": "direction",
+      "icon": "block",
+      "reply": "yesno",
+      "en": "Is the road blocked?",
+      "bn": "রাস্তা কি বন্ধ?",
+      "tags": [
+        "road",
+        "blocked",
+        "রাস্তা"
+      ],
       "sign_bn": "দুই হাত আড়াআড়ি করে বন্ধ বোঝান, তারপর রাস্তার দিকে দেখান।"
     },
-
     {
-      "id": "w_water", "cat": "words", "icon": "water", "reply": "none",
-      "en": "Water", "bn": "পানি", "tags": ["water", "পানি"],
+      "id": "w_water",
+      "cat": "words",
+      "icon": "water",
+      "reply": "none",
+      "en": "Water",
+      "bn": "পানি",
+      "tags": [
+        "water",
+        "পানি"
+      ],
       "sign_bn": "মুঠো করা হাতের বুড়ো আঙুল মুখের দিকে হেলান।",
       "t": {
-        "ccp": { "beng": "পানি", "latn": "paani", "v": "unverified" },
-        "rhg": { "beng": "ফানি", "latn": "faní", "v": "unverified" }
+        "ccp": {
+          "beng": "মুই হি এক গ্লাস পানি পেম?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can I get a glass of water?"
+        },
+        "rhg": {
+          "beng": "ফানি",
+          "latn": "faní",
+          "v": "unverified"
+        }
       }
     },
     {
-      "id": "w_food", "cat": "words", "icon": "food", "reply": "none",
-      "en": "Food", "bn": "খাবার", "tags": ["food", "খাবার"],
+      "id": "w_food",
+      "cat": "words",
+      "icon": "food",
+      "reply": "none",
+      "en": "Food",
+      "bn": "খাবার",
+      "tags": [
+        "food",
+        "খাবার"
+      ],
       "sign_bn": "আঙুল একত্র করে মুখের দিকে নিন।",
       "t": {
-        "ccp": { "beng": "খানা", "latn": "khana", "v": "unverified" },
-        "rhg": { "beng": "হানা", "latn": "hána", "v": "unverified" }
+        "ccp": {
+          "beng": "খানা",
+          "latn": "khana",
+          "v": "unverified"
+        },
+        "rhg": {
+          "beng": "হানা",
+          "latn": "hána",
+          "v": "unverified"
+        }
       }
     },
     {
-      "id": "w_help", "cat": "words", "icon": "help", "reply": "none",
-      "en": "Help", "bn": "সাহায্য", "tags": ["help", "সাহায্য"],
+      "id": "w_help",
+      "cat": "words",
+      "icon": "help",
+      "reply": "none",
+      "en": "Help",
+      "bn": "সাহায্য",
+      "tags": [
+        "help",
+        "সাহায্য"
+      ],
       "sign_bn": "দুই হাত সামনে খোলা রেখে নিজের দিকে টানুন।",
       "t": {
-        "ccp": { "beng": "সাহায্য", "latn": "shahajjo", "v": "unverified" },
-        "rhg": { "beng": "মদত", "latn": "modot", "v": "unverified" }
+        "ccp": {
+          "beng": "মুই সাহায্য গুরি পারিম?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can I help you?"
+        },
+        "rhg": {
+          "beng": "মদত",
+          "latn": "modot",
+          "v": "unverified"
+        },
+        "mrh": {
+          "beng": "ঙা কুহু নুইং হোলঃ?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can I help you?"
+        }
       }
     },
     {
-      "id": "w_yes", "cat": "words", "icon": "yes", "reply": "none",
-      "en": "Yes", "bn": "হ্যাঁ", "tags": ["yes", "হ্যাঁ"],
+      "id": "w_yes",
+      "cat": "words",
+      "icon": "yes",
+      "reply": "none",
+      "en": "Yes",
+      "bn": "হ্যাঁ",
+      "tags": [
+        "yes",
+        "হ্যাঁ"
+      ],
       "sign_bn": "মুঠো করা হাত সামনে-পেছনে নেড়ে মাথা নাড়ুন।",
       "t": {
-        "ccp": { "beng": "অয়", "latn": "oi", "v": "unverified" },
-        "rhg": { "beng": "ওই", "latn": "oóu", "v": "unverified" }
+        "ccp": {
+          "beng": "অয়",
+          "latn": "oi",
+          "v": "unverified"
+        },
+        "rhg": {
+          "beng": "ওই",
+          "latn": "oóu",
+          "v": "unverified"
+        }
       }
     },
     {
-      "id": "w_no", "cat": "words", "icon": "no", "reply": "none",
-      "en": "No", "bn": "না", "tags": ["no", "না"],
+      "id": "w_no",
+      "cat": "words",
+      "icon": "no",
+      "reply": "none",
+      "en": "No",
+      "bn": "না",
+      "tags": [
+        "no",
+        "না"
+      ],
       "sign_bn": "তর্জনী ও মধ্যমা বুড়ো আঙুলের সাথে বন্ধ করুন, মাথা নাড়ুন।",
       "t": {
-        "ccp": { "beng": "নয়", "latn": "noi", "v": "unverified" },
-        "rhg": { "beng": "নো", "latn": "noó", "v": "unverified" }
+        "ccp": {
+          "beng": "নয়",
+          "latn": "noi",
+          "v": "unverified"
+        },
+        "rhg": {
+          "beng": "নো",
+          "latn": "noó",
+          "v": "unverified"
+        }
       }
     },
     {
-      "id": "w_pain", "cat": "words", "icon": "healing", "reply": "none",
-      "en": "Pain", "bn": "ব্যথা", "tags": ["pain", "ব্যথা"],
+      "id": "w_pain",
+      "cat": "words",
+      "icon": "healing",
+      "reply": "none",
+      "en": "Pain",
+      "bn": "ব্যথা",
+      "tags": [
+        "pain",
+        "ব্যথা"
+      ],
       "sign_bn": "দুই তর্জনী মুখোমুখি এনে ঠেকান, মুখে কষ্টের ভাব আনুন।",
       "t": {
-        "ccp": { "beng": "বেদনা", "latn": "bedona", "v": "unverified" },
-        "rhg": { "beng": "বিশ", "latn": "bish", "v": "unverified" }
+        "ccp": {
+          "beng": "তর হুদু পিরি আগে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Where do you have pain?"
+        },
+        "rhg": {
+          "beng": "বিশ",
+          "latn": "bish",
+          "v": "unverified"
+        },
+        "mrh": {
+          "beng": "নাগ মা আডে নারেলে",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Where do you have pain?"
+        }
       }
     },
     {
-      "id": "w_doctor", "cat": "words", "icon": "medication", "reply": "none",
-      "en": "Doctor", "bn": "ডাক্তার", "tags": ["doctor", "ডাক্তার"],
+      "id": "w_doctor",
+      "cat": "words",
+      "icon": "medication",
+      "reply": "none",
+      "en": "Doctor",
+      "bn": "ডাক্তার",
+      "tags": [
+        "doctor",
+        "ডাক্তার"
+      ],
       "sign_bn": "কব্জিতে দুই আঙুল রেখে নাড়ি দেখার ইশারা করুন।",
       "t": {
-        "ccp": { "beng": "ডাক্তর", "latn": "daktor", "v": "unverified" },
-        "rhg": { "beng": "ডাক্তর", "latn": "daktor", "v": "unverified" }
+        "ccp": {
+          "beng": "মোর ইক্কু ডক্তর লাগিবু",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "I need a doctor"
+        },
+        "rhg": {
+          "beng": "ডাক্তর",
+          "latn": "daktor",
+          "v": "unverified"
+        }
       }
     },
     {
-      "id": "w_child", "cat": "words", "icon": "child", "reply": "none",
-      "en": "Child", "bn": "শিশু", "tags": ["child", "শিশু"],
+      "id": "w_child",
+      "cat": "words",
+      "icon": "child",
+      "reply": "none",
+      "en": "Child",
+      "bn": "শিশু",
+      "tags": [
+        "child",
+        "শিশু"
+      ],
       "sign_bn": "হাত নিচে নামিয়ে ছোট উচ্চতা দেখান।",
       "t": {
-        "ccp": { "beng": "পোয়া", "latn": "poa", "v": "unverified" },
-        "rhg": { "beng": "ফুয়া", "latn": "fua", "v": "unverified" }
+        "ccp": {
+          "beng": "পোয়া",
+          "latn": "poa",
+          "v": "unverified"
+        },
+        "rhg": {
+          "beng": "ফুয়া",
+          "latn": "fua",
+          "v": "unverified"
+        }
       }
     },
     {
-      "id": "w_come", "cat": "words", "icon": "arrow", "reply": "none",
-      "en": "Come", "bn": "আসুন", "tags": ["come", "আসুন"],
+      "id": "w_come",
+      "cat": "words",
+      "icon": "arrow",
+      "reply": "none",
+      "en": "Come",
+      "bn": "আসুন",
+      "tags": [
+        "come",
+        "আসুন"
+      ],
       "sign_bn": "হাত দিয়ে নিজের দিকে ডাকুন।",
       "t": {
-        "ccp": { "beng": "আয়", "latn": "aa", "v": "unverified" },
-        "rhg": { "beng": "আইয়ো", "latn": "aiyó", "v": "unverified" }
+        "ccp": {
+          "beng": "তুই এ পারিবি?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can you come?"
+        },
+        "rhg": {
+          "beng": "আইয়ো",
+          "latn": "aiyó",
+          "v": "unverified"
+        },
+        "mrh": {
+          "beng": "নাং লেনহেং হোলঃ?",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can you come?"
+        },
+        "grt": {
+          "beng": "না্আ কি হিবানা মান্ও",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Can you come?"
+        }
       }
     },
     {
-      "id": "w_danger", "cat": "words", "icon": "danger", "reply": "none",
-      "en": "Danger", "bn": "বিপদ", "tags": ["danger", "বিপদ"],
+      "id": "w_danger",
+      "cat": "words",
+      "icon": "danger",
+      "reply": "none",
+      "en": "Danger",
+      "bn": "বিপদ",
+      "tags": [
+        "danger",
+        "বিপদ"
+      ],
       "sign_bn": "দুই হাত আড়াআড়ি করে জোরে থামার ইশারা করুন।",
       "t": {
-        "ccp": { "beng": "বিপদ", "latn": "bipod", "v": "unverified" },
-        "rhg": { "beng": "খতরা", "latn": "hótora", "v": "unverified" }
+        "ccp": {
+          "beng": "বিপদ",
+          "latn": "bipod",
+          "v": "unverified"
+        },
+        "rhg": {
+          "beng": "খতরা",
+          "latn": "hótora",
+          "v": "unverified"
+        }
       }
     },
     {
-      "id": "w_home", "cat": "words", "icon": "home", "reply": "none",
-      "en": "House", "bn": "ঘর", "tags": ["house", "home", "ঘর"],
+      "id": "w_home",
+      "cat": "words",
+      "icon": "home",
+      "reply": "none",
+      "en": "House",
+      "bn": "ঘর",
+      "tags": [
+        "house",
+        "home",
+        "ঘর"
+      ],
       "sign_bn": "দুই হাত মাথার উপরে ছাদের মতো ধরুন।",
       "t": {
-        "ccp": { "beng": "ঘর", "latn": "ghor", "v": "unverified" },
-        "rhg": { "beng": "গর", "latn": "gór", "v": "unverified" }
+        "ccp": {
+          "beng": "ত ঘরান হুদু",
+          "v": "corpus",
+          "src": "MELD",
+          "src_en": "Where is your house?"
+        },
+        "rhg": {
+          "beng": "গর",
+          "latn": "gór",
+          "v": "unverified"
+        }
       }
     },
     {
-      "id": "w_boat", "cat": "words", "icon": "boat", "reply": "none",
-      "en": "Boat", "bn": "নৌকা", "tags": ["boat", "নৌকা"],
+      "id": "w_boat",
+      "cat": "words",
+      "icon": "boat",
+      "reply": "none",
+      "en": "Boat",
+      "bn": "নৌকা",
+      "tags": [
+        "boat",
+        "নৌকা"
+      ],
       "sign_bn": "দুই হাত জোড়া করে নৌকার আকার দেখিয়ে দোলান।",
       "t": {
-        "ccp": { "beng": "নাও", "latn": "nao", "v": "unverified" },
-        "rhg": { "beng": "নাও", "latn": "nao", "v": "unverified" }
+        "ccp": {
+          "beng": "নাও",
+          "latn": "nao",
+          "v": "unverified"
+        },
+        "rhg": {
+          "beng": "নাও",
+          "latn": "nao",
+          "v": "unverified"
+        }
       }
     }
   ],
   "body_parts": [
-    { "id": "head", "en": "Head", "bn": "মাথা" },
-    { "id": "neck", "en": "Neck", "bn": "ঘাড়" },
-    { "id": "chest", "en": "Chest", "bn": "বুক" },
-    { "id": "abdomen", "en": "Stomach", "bn": "পেট" },
-    { "id": "back", "en": "Back", "bn": "পিঠ" },
-    { "id": "arm", "en": "Arm", "bn": "হাত" },
-    { "id": "hand", "en": "Hand", "bn": "হাতের পাতা" },
-    { "id": "hip", "en": "Hip", "bn": "কোমর" },
-    { "id": "leg", "en": "Leg", "bn": "পা" },
-    { "id": "foot", "en": "Foot", "bn": "পায়ের পাতা" },
-    { "id": "eye", "en": "Eye", "bn": "চোখ" },
-    { "id": "ear", "en": "Ear", "bn": "কান" }
+    {
+      "id": "head",
+      "en": "Head",
+      "bn": "মাথা"
+    },
+    {
+      "id": "neck",
+      "en": "Neck",
+      "bn": "ঘাড়"
+    },
+    {
+      "id": "chest",
+      "en": "Chest",
+      "bn": "বুক"
+    },
+    {
+      "id": "abdomen",
+      "en": "Stomach",
+      "bn": "পেট"
+    },
+    {
+      "id": "back",
+      "en": "Back",
+      "bn": "পিঠ"
+    },
+    {
+      "id": "arm",
+      "en": "Arm",
+      "bn": "হাত"
+    },
+    {
+      "id": "hand",
+      "en": "Hand",
+      "bn": "হাতের পাতা"
+    },
+    {
+      "id": "hip",
+      "en": "Hip",
+      "bn": "কোমর"
+    },
+    {
+      "id": "leg",
+      "en": "Leg",
+      "bn": "পা"
+    },
+    {
+      "id": "foot",
+      "en": "Foot",
+      "bn": "পায়ের পাতা"
+    },
+    {
+      "id": "eye",
+      "en": "Eye",
+      "bn": "চোখ"
+    },
+    {
+      "id": "ear",
+      "en": "Ear",
+      "bn": "কান"
+    }
   ],
   "triage_flow": [
     "understand",
@@ -442,5 +1304,16 @@
     "how_many",
     "vulnerable",
     "need_water"
+  ],
+  "sources": [
+    {
+      "id": "MELD",
+      "title": "MELD: A multilingual ethnic dataset of Chakma, Garo, and Marma in Bengali script with English and standard Bengali translation",
+      "authors": "Mehraj Hossain Mahi, Anzir Rahman Khan, Mobashsher Hasan Anik, Mayen Uddin Mojumdar",
+      "institution": "Daffodil International University",
+      "url": "https://data.mendeley.com/datasets/dy5dyfygbp/4",
+      "licence": "CC BY 4.0",
+      "note": "Sentences collected from native Chakma, Garo and Marma speakers and transliterated into Bengali script. Lines are reproduced verbatim; src_en records the English the line was translated from, which may differ slightly from the phrase it is shown for."
+    }
   ]
 }

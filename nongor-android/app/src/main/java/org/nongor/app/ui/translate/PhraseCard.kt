@@ -322,7 +322,7 @@ private fun TheirLine(phrase: Phrase, translation: Translation?, target: LangInf
             }
             if (!translation.isVerified) {
                 Spacer(Modifier.height(6.dp))
-                UnverifiedBand()
+                ProvenanceBand(translation)
             }
             Spacer(Modifier.height(8.dp))
         }
@@ -353,24 +353,43 @@ private fun TheirLine(phrase: Phrase, translation: Translation?, target: LangInf
 }
 
 @Composable
-private fun UnverifiedBand() {
-    Surface(shape = ShapePill, color = NongorColors.Caution.copy(alpha = 0.20f)) {
-        Row(
-            Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                Icons.Filled.Warning,
-                contentDescription = null,
-                tint = NongorColors.Caution,
-                modifier = Modifier.size(13.dp),
-            )
-            Spacer(Modifier.size(5.dp))
+private fun ProvenanceBand(translation: Translation) {
+    val corpus = translation.isFromCorpus
+    val tint = if (corpus) NongorColors.Surf else NongorColors.Caution
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Surface(shape = ShapePill, color = tint.copy(alpha = 0.20f)) {
+            Row(
+                Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    Icons.Filled.Warning,
+                    contentDescription = null,
+                    tint = tint,
+                    modifier = Modifier.size(13.dp),
+                )
+                Spacer(Modifier.size(5.dp))
+                Text(
+                    if (corpus) {
+                        "ভাষা-কোষ থেকে · from " + (translation.src ?: "a corpus")
+                    } else {
+                        "যাচাই হয়নি · unverified"
+                    },
+                    style = MaterialTheme.typography.labelLarge,
+                    color = tint,
+                    fontSize = 11.sp,
+                )
+            }
+        }
+        // What the line literally says, when it is not exactly the question above it.
+        translation.srcEn?.takeIf { corpus }?.let {
+            Spacer(Modifier.height(3.dp))
             Text(
-                "যাচাই হয়নি · unverified",
+                "= “" + it + "”",
                 style = MaterialTheme.typography.labelLarge,
-                color = NongorColors.Caution,
+                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.62f),
                 fontSize = 11.sp,
+                textAlign = TextAlign.Center,
             )
         }
     }

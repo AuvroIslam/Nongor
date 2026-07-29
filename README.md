@@ -64,12 +64,27 @@ one child — which is triaged by the same rule engine the rest of the app uses 
 straight over the mesh as an SOS. A volunteer who speaks no Chakma still walks away holding a
 structured medical record.
 
-> **On the minority-language lines.** Bangla and English are authored content. The Chakma and
-> Rohingya word list is a small community seed and is marked **যাচাই হয়নি · unverified**
-> in the interface, every time it is shown. Nongor never presents an unchecked line as if it
-> were reliable, and the yes/no protocol never depends on one. Verification by native speakers
-> is the next step, not something we have quietly assumed — see
+> **On the minority-language lines.** Bangla and English are authored. Everything else is one
+> of two clearly-labelled things, and the app never flattens them into each other:
+>
+> - **From a corpus** — Chakma, Marma and Garo lines drawn from
+>   [MELD](https://data.mendeley.com/datasets/dy5dyfygbp/4) (CC BY 4.0), a published parallel
+>   corpus collected from native speakers at Daffodil International University. Each line
+>   carries the English sentence it was *actually* translated from, shown on screen — because
+>   the closest published line to "Do you need help?" is "Can I help you?", and the volunteer
+>   should see that rather than have it hidden.
+> - **Unverified seed** — a small Chakma and Rohingya word list, marked
+>   **যাচাই হয়নি · unverified** every time it appears.
+>
+> Neither is presented as verified, and the pictogram plus the yes/no protocol never depend on
+> either. Verification by native speakers is the next step, not something quietly assumed — see
 > [`docs/PHRASEBOOK.md`](docs/PHRASEBOOK.md).
+>
+> **Gemma is never used to translate these languages.** It has almost no training data for
+> them and would produce fluent, confident, wrong output — the one failure mode a rescue
+> phrasebook cannot have. Where the optional model *is* installed it does one narrow job:
+> reading a free-text description and picking which existing phrases to show. It selects ids;
+> it never writes a word of any language, and a hallucinated id is discarded.
 
 ---
 
@@ -171,6 +186,10 @@ JVM — the disaster logic is verifiable without a device and without the model.
 - **Roads & shelters** — © OpenStreetMap contributors (ODbL); road networks via Overpass,
   shelters via HOT-OSM `hotosm_bgd_education_facilities`.
 - **Districts** — [nuhil/bangladesh-geocode](https://github.com/nuhil/bangladesh-geocode) (gov.bd-sourced).
+- **Chakma, Marma & Garo phrases** — MELD: *A multilingual ethnic dataset of Chakma, Garo and
+  Marma in Bengali script with English and standard Bengali translation*, Mahi, Khan, Anik &
+  Mojumdar, Daffodil International University —
+  [Mendeley Data](https://data.mendeley.com/datasets/dy5dyfygbp/4), **CC BY 4.0**.
 - **First-aid content** — grounded in WHO / IFRC / Red Cross guidance.
 - **Emergency numbers** — official Government of Bangladesh short codes.
 - **Icons** — Feather (MIT) and Material Symbols (Apache-2.0).

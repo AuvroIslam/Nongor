@@ -30,15 +30,34 @@ data class Translation(
     val beng: String? = null,
     /** Roman transliteration. */
     val latn: String? = null,
-    /** verified · community · unverified. Nullable: see the note on [Phrase]. */
+    /** verified · corpus · community · unverified. Nullable: see the note on [Phrase]. */
     val v: String? = null,
+    /** Which published source this line came from, e.g. "MELD". */
+    val src: String? = null,
+    /**
+     * The English sentence this line was actually translated from.
+     *
+     * A corpus gives you a real sentence by a real speaker, but not necessarily *our*
+     * sentence — the closest line to "Do you need help?" may be "Can I help you?". Recording
+     * the original means the app can show the volunteer what the line literally says instead
+     * of quietly implying it matches the question above it.
+     */
+    @SerializedName("src_en") val srcEn: String? = null,
 ) {
     /**
-     * Anything that is not explicitly `verified` is treated as unverified — including a
-     * missing value. The safe default has to be the pessimistic one: this flag decides
-     * whether the app shows a life-critical line as trustworthy.
+     * Anything not explicitly `verified` is treated as unverified — including a missing
+     * value. The safe default has to be the pessimistic one: this flag decides whether the
+     * app shows a life-critical line as trustworthy.
      */
     val isVerified: Boolean get() = v == "verified"
+
+    /**
+     * From a published, citable parallel corpus collected from native speakers.
+     *
+     * Weaker than [isVerified] — nobody has confirmed this exact sentence is right for this
+     * exact emergency — but far stronger than a guess, and the app says which it is.
+     */
+    val isFromCorpus: Boolean get() = v == "corpus"
 }
 
 data class Category(val id: String, val en: String, val bn: String, val icon: String)

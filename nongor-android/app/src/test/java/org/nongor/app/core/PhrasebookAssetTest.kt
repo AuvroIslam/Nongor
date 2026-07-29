@@ -102,6 +102,57 @@ class PhrasebookAssetTest {
         }
     }
 
+    /**
+     * A corpus line must be traceable. Without the source and the sentence it was actually
+     * translated from, "from MELD" is just a nicer-looking way of saying "trust us".
+     */
+    @Test
+    fun `every corpus line cites its source and its original english`() {
+        val corpusLines = book.allPhrases.flatMap { p ->
+            p.translations.entries.filter { it.value.isFromCorpus }.map { p.id to it }
+        }
+        assertTrue("expected corpus-sourced lines", corpusLines.isNotEmpty())
+        corpusLines.forEach { (id, entry) ->
+            val line = entry.value
+            assertFalse("$id/${entry.key}: blank text", line.beng.isNullOrBlank())
+            assertFalse("$id/${entry.key}: no source", line.src.isNullOrBlank())
+            assertFalse("$id/${entry.key}: no original english", line.srcEn.isNullOrBlank())
+        }
+    }
+
+    /** Corpus is evidence, not verification. The two must never collapse into each other. */
+    @Test
+    fun `corpus lines are not reported as verified`() {
+        book.allPhrases.forEach { p ->
+            p.translations.values.filter { it.isFromCorpus }.forEach {
+                assertFalse(it.isVerified)
+            }
+        }
+    }
+
+    @Test
+    fun `the sources a line cites are declared in the asset`() {
+        val cited = book.allPhrases
+            .flatMap { it.translations.values }
+            .mapNotNull { it.src }
+            .toSet()
+        assertTrue("expected at least one cited source", cited.isNotEmpty())
+        // Every src on a line must correspond to a real entry in the file's sources block.
+        val declared = Gson()
+            .fromJson(File("src/main/assets/phrasebook.json").readText(), Map::class.java)
+            .let { (it["sources"] as? List<*>).orEmpty() }
+            .mapNotNull { ((it as? Map<*, *>)?.get("id") as? String) }
+            .toSet()
+        assertTrue("undeclared sources: ${cited - declared}", (cited - declared).isEmpty())
+    }
+
+    @Test
+    fun `the four seeded languages all have some coverage`() {
+        listOf("ccp", "mrh", "grt", "rhg").forEach {
+            assertTrue("$it has no lines at all", book.coverage(it) > 0)
+        }
+    }
+
     @Test
     fun `search over the real phrasebook finds the medical basics`() {
         fun firstId(q: String) = PhraseSearch.search(book.allPhrases, q).firstOrNull()?.id

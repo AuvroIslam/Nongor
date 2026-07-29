@@ -13,6 +13,13 @@ import org.nongor.app.core.PhraseSearch
 import org.nongor.app.core.PhrasebookData
 import org.nongor.app.core.Reply
 import org.nongor.app.data.PhrasebookRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import androidx.lifecycle.viewModelScope
+import org.nongor.app.core.PhraseFinder
 
 data class TranslateState(
     val query: String = "",
@@ -22,22 +29,57 @@ data class TranslateState(
     val replies: Map<String, Reply> = emptyMap(),
     /** Index into the guided triage flow, or null when browsing freely. */
     val guidedStep: Int? = null,
+    /** The on-device model is still refining the keyword results. */
+    val searching: Boolean = false,
+    /** The shown results came from the model rather than keyword matching. */
+    val usedModel: Boolean = false,
 )
 
 class TranslateViewModel(app: Application) : AndroidViewModel(app) {
 
+    private val app = app as org.nongor.app.NongorApplication
     val book: PhrasebookData = PhrasebookRepository.get(app)
+    private var findJob: Job? = null
     val speaker = Speaker(app)
 
     private val _state = MutableStateFlow(TranslateState())
     val state: StateFlow<TranslateState> = _state.asStateFlow()
 
+    /**
+     * Find the phrases that match what the volunteer just described.
+     *
+     * Runs the on-device model when it is installed and falls back to keyword search when it
+     * is not — the feature is not allowed to depend on the optional download. The model only
+     * ever picks ids from the bundled phrasebook; it is never asked to translate.
+     */
     fun setQuery(q: String) {
-        _state.value = _state.value.copy(
-            query = q,
-            results = if (q.isBlank()) emptyList() else PhraseSearch.search(book.allPhrases, q),
-        )
+        _state.value = _state.value.copy(query = q)
+        findJob?.cancel()
+        if (q.isBlank()) {
+            _state.value = _state.value.copy(results = emptyList(), searching = false, usedModel = false)
+            return
+        }
+        findJob = viewModelScope.launch {
+            // Keyword results appear instantly; the model refines them a moment later.
+            val quick = PhraseSearch.search(book.allPhrases, q)
+            _state.value = _state.value.copy(results = quick, searching = engineReady())
+
+            if (!engineReady()) return@launch
+            val found = withContext(Dispatchers.Default) {
+                PhraseFinder.find(book, q) { system, user ->
+                    runBlocking { app.engineHolder.generateWith(system, user, temperature = 0.1) }
+                }
+            }
+            if (_state.value.query != q) return@launch      // the user kept typing
+            _state.value = _state.value.copy(
+                results = found.phrases.ifEmpty { quick },
+                searching = false,
+                usedModel = found.source == PhraseFinder.Source.MODEL,
+            )
+        }
     }
+
+    private fun engineReady(): Boolean = app.engineHolder.isReady()
 
     fun setCategory(id: String?) {
         _state.value = _state.value.copy(category = id)

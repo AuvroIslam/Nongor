@@ -10,7 +10,20 @@ more than any programmer can.** This page explains how, and what we deliberately
 
 ## What we did not do
 
-We did not invent translations.
+We did not invent translations, and we did not ask a language model to.
+
+**On using Gemma for this.** The obvious idea is to let the on-device model translate. It
+cannot. Chakma, Marma, Kokborok, Santali, Garo and Rohingya are effectively absent from the
+training data of any general model this size, and a model asked to translate into a language
+it does not know will not refuse — it produces fluent, confident, wrong output. The sentences
+in this file include *"are you bleeding?"* and *"do not touch the wire, it can kill you"*.
+A plausible-looking wrong answer to either is worse than no answer, and nobody reviewing the
+screen could tell the difference.
+
+Where the optional model is installed it does exactly one job: read a rescuer's free-text
+description and pick which **existing** phrases to show. It returns ids, every id is checked
+against this file, and anything it invents is discarded. It never writes a word of any
+language. See `PhraseFinder` and its tests.
 
 It would have been easy to fill this file with plausible-looking lines for all six languages
 and demo beautifully. We did not, because the sentences in here are things like *"are you
@@ -81,8 +94,32 @@ Each entry looks like this:
 | Value | Use it when | How the app shows it |
 | --- | --- | --- |
 | `verified` | A native speaker checked this exact sentence **in this exact context** — that it means what the Bangla means, and that it is not rude, alarming or ambiguous to someone in distress. | Shown plainly. |
-| `community` | Contributed in good faith, not yet double-checked. | Shown with the unverified band. |
-| `unverified` | Anything else, including everything we seeded. | Shown with the unverified band. |
+| `corpus` | Taken verbatim from a published, citable parallel corpus collected from native speakers. Requires `src` and `src_en` as well. | Blue band naming the source, plus the English the line was actually translated from. |
+| `community` | Contributed in good faith, not yet double-checked. | Amber unverified band. |
+| `unverified` | Anything else, including everything we seeded by hand. | Amber unverified band. |
+
+### Corpus entries carry two extra fields
+
+```json
+"ccp": {
+  "beng": "ইয়াান হুবোত পিরি গরে?",
+  "v": "corpus",
+  "src": "MELD",
+  "src_en": "Where does it hurt?"
+}
+```
+
+`src` must match an entry in the file's top-level `sources` block — there is a test for that.
+`src_en` is the English the corpus line was translated from, and the app displays it under the
+phrase. This matters more than it looks: the closest published Chakma line to *"Do you need
+help?"* is *"Can I help you?"*, and a volunteer leaning the phone across a table deserves to
+know that rather than have the gap papered over.
+
+The Chakma, Marma and Garo lines currently shipped come from
+**[MELD](https://data.mendeley.com/datasets/dy5dyfygbp/4)** (CC BY 4.0) — Mahi, Khan, Anik &
+Mojumdar, Daffodil International University — a corpus built by interviewing native speakers
+and transliterating into Bengali script. Reuse is fine with attribution; the attribution lives
+in the `sources` block and in the README.
 
 Please do not mark something `verified` because it looks right. The band is not a failure
 state; it is the app being honest, and honesty is cheap compared to the alternative.
