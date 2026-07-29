@@ -28,6 +28,20 @@ private val LightColors = lightColorScheme(
     onSurface = TextPrimary,
     surfaceVariant = BgMid,
     onSurfaceVariant = TextSecondary,
+    // These must be set explicitly. Material derives any role left unspecified from its own
+    // baseline purple seed, which is how an untouched Card ends up lilac in a teal app —
+    // the roles you never name are the ones that give you away.
+    surfaceTint = BrandTeal,
+    surfaceBright = Color(0xFFFFFFFF),
+    surfaceDim = Color(0xFFE7E4DC),
+    surfaceContainerLowest = Color(0xFFFFFFFF),
+    surfaceContainerLow = Color(0xFFFBFAF6),
+    surfaceContainer = Color(0xFFF7F6F2),
+    surfaceContainerHigh = Color(0xFFF1EFE8),
+    surfaceContainerHighest = Color(0xFFEBE8DF),
+    inverseSurface = BrandTealDeep,
+    inverseOnSurface = Color(0xFFEFF5F2),
+    inversePrimary = BrandTealSoft,
     outline = GlassBorder,
     outlineVariant = GlassBorder,
     error = ErrorRed,
