@@ -55,6 +55,10 @@ fun SmsBridgeBody(
     reporterName: String?,
 ) {
     val context = LocalContext.current
+    // Seeded from whatever was typed in the compose sheet, then editable here. Before this,
+    // the sheet took its text from a draft in a *different* sheet: open "Send by SMS" on its
+    // own and the one button on the screen was permanently greyed out with no way to fix it.
+    var draft by remember(sosText) { mutableStateOf(sosText) }
     var code by remember { mutableStateOf("") }
     var pasted by remember { mutableStateOf("") }
 
@@ -93,11 +97,23 @@ fun SmsBridgeBody(
             Spacer(Modifier.height(14.dp))
 
             // ---- Outgoing ----
+            OutlinedTextField(
+                value = draft,
+                onValueChange = { draft = it },
+                modifier = Modifier.fillMaxWidth(),
+                minLines = 2,
+                maxLines = 4,
+                label = { Text(tr("What is happening?", "কী ঘটছে?")) },
+                placeholder = {
+                    Text(tr("4 of us on the roof, water rising", "ছাদে আমরা পাঁচজন, পানি বাড়ছে"))
+                },
+            )
+            Spacer(Modifier.height(10.dp))
             OutlinedButton(
                 onClick = {
-                    viewModel.buildSmsCode(sosText, reporterName) { code = it }
+                    viewModel.buildSmsCode(draft, reporterName) { code = it }
                 },
-                enabled = sosText.isNotBlank(),
+                enabled = draft.isNotBlank(),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(tr("Make an SMS code from my SOS", "আমার এসওএস থেকে এসএমএস কোড বানান"))

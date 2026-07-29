@@ -56,7 +56,10 @@ fun NongorGradientBackground(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color(0xFF2D5DDA), BgMid, BgDark),
+                    // The wash at the top of the chat. It was a strong cornflower blue, which made the
+                    // one screen with the most brand presence the one screen that did not look
+                    // like Nongor.
+                    colors = listOf(Color(0xFF11806A), BgMid, BgDark),
                 ),
             ),
     ) {
@@ -82,7 +85,7 @@ fun NongorGradientBackground(
             )
             drawCircle(
                 brush = Brush.radialGradient(
-                    listOf(Color(0xFF1E40AF).copy(alpha = 0.14f), Color.Transparent),
+                    listOf(Color(0xFF0B6E5F).copy(alpha = 0.14f), Color.Transparent),
                     center = Offset(size.width * (0.30f + 0.10f * driftC), size.height * (0.76f - 0.08f * driftA)),
                     radius = size.width * 0.50f,
                 ),

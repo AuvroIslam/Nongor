@@ -171,8 +171,42 @@ fun TranslateScreen(
                 onResume = { open = guidedPhrase },
             )
 
-            // 3 - or say what you can see, and let the phrase-finder do the looking
-            Spacer(Modifier.height(16.dp))
+            // 3 - the six you actually reach for, on the screen rather than behind a search
+            // box. In the first thirty seconds of meeting a stranger you do not yet know what
+            // to type, and a big tile is something you can hit while holding a torch.
+            val essentials = remember(book) { book.essentials() }
+            if (essentials.isNotEmpty()) {
+                Spacer(Modifier.height(18.dp))
+                Text(
+                    tr("Start with these", "এগুলো দিয়ে শুরু করুন"),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = TextPrimary,
+                )
+                Spacer(Modifier.height(9.dp))
+                essentials.chunked(2).forEach { pair ->
+                    Row(Modifier.fillMaxWidth().padding(bottom = 9.dp)) {
+                        pair.forEach { phrase ->
+                            EssentialTile(
+                                phrase = phrase,
+                                bangla = bangla,
+                                answered = state.replies[phrase.id] != null,
+                                onClick = { open = phrase },
+                                modifier = Modifier.weight(1f),
+                            )
+                            if (phrase !== pair.last()) Spacer(Modifier.width(9.dp))
+                        }
+                        // Keeps a lone tile on an odd row from stretching to full width.
+                        if (pair.size == 1) {
+                            Spacer(Modifier.width(9.dp))
+                            Spacer(Modifier.weight(1f))
+                        }
+                    }
+                }
+            }
+
+            // 4 - or say what you can see, and let the phrase-finder do the looking
+            Spacer(Modifier.height(8.dp))
             OutlinedTextField(
                 value = state.query,
                 onValueChange = { viewModel.setQuery(it) },
@@ -223,7 +257,7 @@ fun TranslateScreen(
                 )
             }
 
-            // 4 - the full book, out of the way until asked for
+            // 5 - the full book, out of the way until asked for
             Spacer(Modifier.height(16.dp))
             Row(
                 Modifier
@@ -249,7 +283,7 @@ fun TranslateScreen(
                 Icon(FeatherIcons.ChevronRight, null, tint = TextSecondary)
             }
 
-            // 5 - what the conversation produced
+            // 6 - what the conversation produced
             if (state.replies.isNotEmpty()) {
                 Spacer(Modifier.height(16.dp))
                 HandoverCard(
@@ -475,6 +509,52 @@ private fun HandoverCard(
             Spacer(Modifier.height(8.dp))
             Text(note, color = TextPrimary, style = MaterialTheme.typography.bodyMedium)
         }
+    }
+}
+
+/**
+ * One of the six openers, sized to be hit rather than read.
+ *
+ * It turns green once answered, so a volunteer working through a group can see at a glance
+ * which questions this person has already been asked — repeating "are you hurt?" to someone
+ * who just said yes is how you lose their trust.
+ */
+@Composable
+private fun EssentialTile(
+    phrase: Phrase,
+    bangla: Boolean,
+    answered: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val tint = if (answered) NongorColors.Safe else BrandBlue
+    Column(
+        modifier
+            .height(118.dp)
+            .clip(ShapeMd)
+            .background(BgCard)
+            .clickable(onClick = onClick)
+            .padding(13.dp),
+    ) {
+        Box(
+            Modifier.size(38.dp).clip(ShapeSm).background(tint.copy(alpha = 0.13f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                phraseIcon(phrase.icon),
+                contentDescription = null,
+                tint = tint,
+                modifier = Modifier.size(21.dp),
+            )
+        }
+        Spacer(Modifier.weight(1f))
+        Text(
+            if (bangla) phrase.bn else phrase.en,
+            color = TextPrimary,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            maxLines = 3,
+        )
     }
 }
 

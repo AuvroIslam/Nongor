@@ -84,6 +84,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.sp
+import compose.icons.feathericons.Crosshair
+import compose.icons.feathericons.Check
+import org.nongor.app.ui.theme.ShapePill
+import org.nongor.app.ui.theme.ShapeMd
+import org.nongor.app.ui.theme.TextPrimary
+import org.nongor.app.ui.theme.TextSecondary
 
 private val FLOOD = Color(0xFF2196F3)
 private val ROAD = Color(0xFF9E9E9E)
@@ -91,6 +97,8 @@ private val FLOODED_ROAD = ErrorRed
 private val ROUTE = Color(0xFFFF9800)
 private val SHELTER = Color(0xFF43A047)
 private val USER = Color(0xFF1B1030)
+// The map surface. Warmer than the page so the canvas reads as a distinct object.
+private val MapPaper = Color(0xFFEDEAE2)
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class, ExperimentalLayoutApi::class)
 @Composable
@@ -123,7 +131,7 @@ fun GisScreen(viewModel: GisViewModel, onBack: (() -> Unit)? = null) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(tr("Nongor · Safe Shelter & Route", "নোঙর · নিরাপদ আশ্রয় ও পথ")) },
+                title = { Text(tr("Safe Shelter", "নিরাপদ আশ্রয়")) },
                 navigationIcon = {
                     if (onBack != null) {
                         IconButton(onClick = onBack) {
@@ -135,206 +143,292 @@ fun GisScreen(viewModel: GisViewModel, onBack: (() -> Unit)? = null) {
         },
     ) { pad ->
         Column(
-            Modifier.padding(pad).padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState()),
+            Modifier
+                .padding(pad)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 28.dp),
         ) {
-            HeroBanner(FeatherIcons.MapPin, tint = TileShelterFg,
-                title = tr("Safe Shelter", "নিরাপদ আশ্রয়"),
-                subtitle = tr("Nearest shelter, safest way there", "নিকটতম আশ্রয়, নিরাপদতম পথ"))
-            Spacer(Modifier.height(12.dp))
             val district = if (LocalBangla.current) ui.districtBn else ui.districtEn
-            Text(
-                when {
-                    ui.locating -> tr("Locating…", "অবস্থান নেওয়া হচ্ছে…")
-                    !ui.hasLocation -> tr("Showing $district shelters. Tap the map to set your location, or use GPS.",
-                        "$district-এর আশ্রয় দেখানো হচ্ছে। আপনার অবস্থান দিতে ম্যাপে চাপ দিন, বা জিপিএস ব্যবহার করুন।")
-                    ui.detailed -> tr("You are in $district.", "আপনি $district-এ আছেন।") +
-                        (if (ui.manualPin) tr(" Pinned location.", " চিহ্নিত অবস্থান।")
-                        else if (ui.usingGps) tr(" GPS location.", " জিপিএস অবস্থান।") else "")
-                    else -> tr("You are in $district. Nearest shelters shown — tap one to see its distance.",
-                        "আপনি $district-এ আছেন। নিকটতম আশ্রয় দেখানো হচ্ছে — দূরত্ব দেখতে একটিতে চাপ দিন।")
-                },
-                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary,
-            )
 
-            Spacer(Modifier.height(10.dp))
-            LocationCard(
-                granted = locationPerm.status.isGranted,
-                locating = ui.locating,
-                hasLocation = ui.hasLocation,
-                manualPin = ui.manualPin,
-                gpsFailed = ui.gpsFailed,
-                onEnable = { locationPerm.launchPermissionRequest() },
-                onLocate = { viewModel.findNearestShelter() },
-            )
+            // ---- The map, first and full width ----
+            // It used to sit a full screen down, under a banner, a status line, a location
+            // card, the assistant and two disclaimers. On a map screen the map is the answer;
+            // everything else is a caption to it, so everything else now comes after.
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(330.dp)
+                    .background(MapPaper)
+                    .clipToBounds(),
+            ) {
+                Canvas(
+                    Modifier.fillMaxSize().pointerInput(bbox) {
+                        detectTapGestures { off ->
+                            val w = size.width.toFloat(); val h = size.height.toFloat(); val p = 14f
+                            val dLat = (bbox[1] - bbox[0]).let { if (it == 0.0) 1e-6 else it }
+                            val dLon = (bbox[3] - bbox[2]).let { if (it == 0.0) 1e-6 else it }
+                            val lon = bbox[2] + ((off.x - p) / (w - 2 * p)) * dLon
+                            val lat = bbox[1] - ((off.y - p) / (h - 2 * p)) * dLat
+                            viewModel.setManualLocation(
+                                lat.coerceIn(bbox[0], bbox[1]), lon.coerceIn(bbox[2], bbox[3]))
+                        }
+                    },
+                ) { drawShelterMap(ui, bbox, measurer, youLabel) }
 
-            // ---- Map Assistant: ask in natural language; Gemma picks a tool, code runs it ----
-            Spacer(Modifier.height(12.dp))
-            MapAssistantCard(ui, onAsk = { viewModel.ask(it) })
-
-            if (ui.detailed) {
-                Spacer(Modifier.height(12.dp))
-                Card(
-                    Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                // Where you are, floated over the map rather than stacked above it.
+                Row(
+                    Modifier
+                        .align(Alignment.TopStart)
+                        .padding(12.dp)
+                        .clip(ShapePill)
+                        .background(Color.White.copy(alpha = 0.94f))
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(Modifier.padding(12.dp), verticalAlignment = Alignment.Top) {
-                        Icon(FeatherIcons.AlertTriangle, null,
-                            tint = MaterialTheme.colorScheme.onErrorContainer,
-                            modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            tr("The flood zone below is a sample scenario for practicing routes — " +
-                                "not live flood data. The route avoids that sample zone, not confirmed " +
-                                "real floodwater. Check local conditions before you travel.",
-                                "নিচের বন্যা এলাকা পথ অনুশীলনের জন্য একটি নমুনা দৃশ্য — লাইভ বন্যা তথ্য নয়। " +
-                                    "পথটি সেই নমুনা এলাকা এড়ায়, প্রকৃত বন্যার পানি নিশ্চিত নয়। যাত্রার আগে স্থানীয় " +
-                                    "পরিস্থিতি যাচাই করুন।"),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onErrorContainer)
+                    if (ui.locating) {
+                        CircularProgressIndicator(
+                            Modifier.size(13.dp), strokeWidth = 2.dp, color = TileShelterFg,
+                        )
+                    } else {
+                        Icon(
+                            FeatherIcons.MapPin, null,
+                            tint = if (ui.hasLocation) TileShelterFg else CautionAmber,
+                            modifier = Modifier.size(13.dp),
+                        )
+                    }
+                    Spacer(Modifier.width(7.dp))
+                    Text(
+                        when {
+                            ui.locating -> tr("Finding you\u2026", "\u0986\u09aa\u09a8\u09be\u0995\u09c7 \u0996\u09cb\u0981\u099c\u09be \u09b9\u099a\u09cd\u099b\u09c7\u2026")
+                            ui.hasLocation -> district
+                            else -> tr("$district \u00b7 not your location", "$district \u00b7 \u0986\u09aa\u09a8\u09be\u09b0 \u0985\u09ac\u09b8\u09cd\u09a5\u09be\u09a8 \u09a8\u09df")
+                        },
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = TextPrimary,
+                    )
+                }
+
+                // Recentre on yourself, where a map app puts it.
+                Box(
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(12.dp)
+                        .size(46.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                        .clickable(enabled = !ui.locating) {
+                            if (locationPerm.status.isGranted) viewModel.findNearestShelter()
+                            else locationPerm.launchPermissionRequest()
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        FeatherIcons.Crosshair,
+                        contentDescription = tr("Find me", "\u0986\u09ae\u09be\u0995\u09c7 \u0996\u09c1\u0981\u099c\u09c1\u09a8"),
+                        tint = if (ui.hasLocation) TileShelterFg else CautionAmber,
+                        modifier = Modifier.size(21.dp),
+                    )
+                }
+
+                if (!ui.hasLocation) {
+                    Row(
+                        Modifier.align(Alignment.BottomStart).padding(12.dp)
+                            .clip(ShapePill).background(Color(0xCC1B2A25))
+                            .padding(horizontal = 11.dp, vertical = 7.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(FeatherIcons.MapPin, null, tint = Color.White, modifier = Modifier.size(12.dp))
+                        Spacer(Modifier.width(5.dp))
+                        Text(tr("Tap the map to place yourself", "\u09a8\u09bf\u099c\u09c7\u09b0 \u099c\u09be\u09df\u0997\u09be \u09a6\u09bf\u09a4\u09c7 \u09ae\u09cd\u09af\u09be\u09aa\u09c7 \u099a\u09be\u09aa \u09a6\u09bf\u09a8"),
+                            color = Color.White, style = MaterialTheme.typography.labelSmall)
                     }
                 }
             }
 
-            // ---- area picker (over the map) ---- //
-            // Only three districts ship with detailed road and flood data, so the picker can
-            // only ever name one of those three. Standing in Khulna it would have sat there
-            // saying "Chattogram" — which reads as the map being wrong about where you are.
-            // Once we know you are outside the detailed packs, say what coverage you have
-            // instead of offering a choice that does not describe you.
-            Spacer(Modifier.height(12.dp))
-            if (ui.hasLocation && !ui.detailed) {
-                Text(
-                    tr(
-                        "Detailed routing covers three districts so far. Here you get the nearest " +
-                            "known shelters and straight-line distances.",
-                        "বিস্তারিত পথনির্দেশ এখন পর্যন্ত তিনটি জেলায় আছে। এখানে নিকটতম পরিচিত আশ্রয় ও " +
-                            "সরলরেখার দূরত্ব দেখানো হচ্ছে।",
-                    ),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+            Column(Modifier.padding(horizontal = 16.dp)) {
+                // ---- Where you are, and the one control that changes it ----
+                // First thing under the map: everything below is measured from this point, so
+                // whether it is GPS, a pin you dropped, or nothing at all decides how much of
+                // the rest you should trust.
+                Spacer(Modifier.height(12.dp))
+                LocationCard(
+                    granted = locationPerm.status.isGranted,
+                    locating = ui.locating,
+                    hasLocation = ui.hasLocation,
+                    manualPin = ui.manualPin,
+                    gpsFailed = ui.gpsFailed,
+                    onEnable = { locationPerm.launchPermissionRequest() },
+                    onLocate = { viewModel.findNearestShelter() },
                 )
-            } else {
-                AreaPicker(
-                    regions = viewModel.regions(),
-                    currentId = ui.overviewRegion,
-                    onPick = { viewModel.setRegion(it) },
-                )
-            }
 
-            // ---- mini map — tap to set your location ---- //
-            Spacer(Modifier.height(8.dp))
-            Card(Modifier.fillMaxWidth()) {
-                Box(Modifier.fillMaxWidth().height(260.dp).clipToBounds()) {
-                    Canvas(
-                        Modifier.fillMaxSize().pointerInput(bbox) {
-                            detectTapGestures { off ->
-                                val w = size.width.toFloat(); val h = size.height.toFloat(); val p = 14f
-                                val dLat = (bbox[1] - bbox[0]).let { if (it == 0.0) 1e-6 else it }
-                                val dLon = (bbox[3] - bbox[2]).let { if (it == 0.0) 1e-6 else it }
-                                val lon = bbox[2] + ((off.x - p) / (w - 2 * p)) * dLon
-                                val lat = bbox[1] - ((off.y - p) / (h - 2 * p)) * dLat
-                                viewModel.setManualLocation(
-                                    lat.coerceIn(bbox[0], bbox[1]), lon.coerceIn(bbox[2], bbox[3]))
-                            }
-                        },
-                    ) { drawShelterMap(ui, bbox, measurer, youLabel) }
-                    if (!ui.hasLocation) {
-                        Row(
-                            Modifier.align(Alignment.BottomCenter).padding(8.dp)
-                                .clip(ShapeSm).background(Color(0xCC1B1030))
-                                .padding(horizontal = 10.dp, vertical = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(FeatherIcons.MapPin, null, tint = Color.White, modifier = Modifier.size(13.dp))
-                            Spacer(Modifier.width(5.dp))
-                            Text(tr("Tap the map to set your location", "অবস্থান দিতে ম্যাপে চাপ দিন"),
-                                color = Color.White, style = MaterialTheme.typography.labelSmall)
+                Spacer(Modifier.height(12.dp))
+                MapLegend(ui.detailed)
+
+                // ---- The answer ----
+                ui.route?.let { r ->
+                    Spacer(Modifier.height(14.dp))
+                    val top = ui.ranked.firstOrNull { it.shelterId == ui.selectedShelterId }
+                        ?: ui.ranked.firstOrNull()
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(ShapeMd)
+                            .background(TileShelterFg.copy(alpha = 0.10f))
+                            .padding(15.dp),
+                    ) {
+                        Text(
+                            tr("Go here", "\u098f\u0996\u09be\u09a8\u09c7 \u09af\u09be\u09a8"),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = TileShelterFg,
+                        )
+                        Spacer(Modifier.height(3.dp))
+                        Text(
+                            top?.name ?: tr("Shelter", "\u0986\u09b6\u09cd\u09b0\u09df"),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = TextPrimary,
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            tr("Walking", "\u09b9\u09be\u0981\u099f\u09be\u09b0 \u09aa\u09a5") + " \u00b7 " + fmtDist(r.distM),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = TextPrimary,
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                if (r.crossesFlood) FeatherIcons.AlertTriangle else FeatherIcons.Check,
+                                null,
+                                tint = if (r.crossesFlood) ErrorRed else TileShelterFg,
+                                modifier = Modifier.size(15.dp),
+                            )
+                            Spacer(Modifier.width(7.dp))
+                            Text(
+                                if (r.crossesFlood) {
+                                    tr("No route avoids the sample flood zone \u2014 this one crosses it.",
+                                        "\u09a8\u09ae\u09c1\u09a8\u09be \u09ac\u09a8\u09cd\u09af\u09be \u098f\u09b2\u09be\u0995\u09be \u098f\u09dc\u09be\u09a8\u09cb \u0995\u09cb\u09a8\u09cb \u09aa\u09a5 \u09a8\u09c7\u0987 \u2014 \u098f\u0987 \u09aa\u09a5 \u09b8\u09c7\u099f\u09bf \u09aa\u09be\u09b0 \u09b9\u09df\u0964")
+                                } else if (ui.naiveCrossesFlood) {
+                                    tr("Avoids the sample flood zone \u2014 the direct line would have crossed it.",
+                                        "\u09a8\u09ae\u09c1\u09a8\u09be \u09ac\u09a8\u09cd\u09af\u09be \u098f\u09b2\u09be\u0995\u09be \u098f\u09dc\u09be\u09df \u2014 \u09b8\u09b0\u09be\u09b8\u09b0\u09bf \u09aa\u09a5 \u09b8\u09c7\u099f\u09bf \u09aa\u09be\u09b0 \u09b9\u09a4\u09cb\u0964")
+                                } else {
+                                    tr("Avoids the sample flood zone.", "\u09a8\u09ae\u09c1\u09a8\u09be \u09ac\u09a8\u09cd\u09af\u09be \u098f\u09b2\u09be\u0995\u09be \u098f\u09dc\u09be\u09df\u0964")
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (r.crossesFlood) ErrorRed else TextSecondary,
+                            )
                         }
                     }
                 }
-            }
-            Spacer(Modifier.height(4.dp))
-            MapLegend(ui.detailed)
-            if (ui.detailed) {
-                Text(
-                    tr("Roads: © OpenStreetMap contributors.", "রাস্তা: © OpenStreetMap contributors।"),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 2.dp))
-            }
 
-            // ---- results ---- //
-            // Detailed mode: flood-avoiding walking route card.
-            ui.route?.let { r ->
-                Spacer(Modifier.height(12.dp))
-                Card(Modifier.fillMaxWidth()) {
-                    Column(Modifier.padding(12.dp)) {
-                        val top = ui.ranked.firstOrNull { it.shelterId == ui.selectedShelterId }
-                            ?: ui.ranked.firstOrNull()
-                        Text("→ ${top?.name ?: tr("Shelter", "আশ্রয়")}",
-                            style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                        Text("${tr("Walking route", "হাঁটার পথ")}: ${fmtDist(r.distM)}",
-                            style = MaterialTheme.typography.bodyMedium)
+                if (ui.computed && !ui.detailed) {
+                    Spacer(Modifier.height(14.dp))
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(ShapeMd)
+                            .background(TileShelterFg.copy(alpha = 0.10f))
+                            .padding(15.dp),
+                    ) {
+                        Text(tr("Move to safety", "\u09a8\u09bf\u09b0\u09be\u09aa\u09a6\u09c7 \u09b8\u09b0\u09c7 \u09af\u09be\u09a8"),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.ExtraBold, color = TextPrimary)
+                        Spacer(Modifier.height(5.dp))
                         Text(
-                            if (r.crossesFlood)
-                                tr("⚠ No route avoiding the sample flood zone — this path crosses it.",
-                                    "⚠ নমুনা বন্যা এলাকা এড়ানো কোনো পথ নেই — এই পথ সেটি পার হয়।")
-                            else tr("✓ Route avoids the sample flood zone", "✓ পথটি নমুনা বন্যা এলাকা এড়ায়") +
-                                if (ui.naiveCrossesFlood)
-                                    tr(" (the direct line would have crossed it).",
-                                        " (সরাসরি পথ সেটি পার হতো)।") else ".",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (r.crossesFlood) MaterialTheme.colorScheme.error
-                            else MaterialTheme.colorScheme.primary)
-                    }
-                }
-            }
-
-            // Nationwide fallback: safe-direction guidance (no detailed pack for this district).
-            if (ui.computed && !ui.detailed) {
-                Spacer(Modifier.height(12.dp))
-                Card(Modifier.fillMaxWidth()) {
-                    Column(Modifier.padding(12.dp)) {
-                        Text(tr("Move to safety", "নিরাপদে সরে যান"),
-                            style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            tr("Head to the nearest high ground or a strong multi-storey building — a school, " +
+                            tr("Head to the nearest high ground or a strong multi-storey building \u2014 a school, " +
                                 "college or Union Parishad often serves as a flood shelter. Do not cross " +
                                 "fast-moving water; even knee-deep flow can sweep you away.",
-                                "নিকটতম উঁচু জায়গা বা মজবুত বহুতল ভবনে যান — স্কুল, কলেজ বা ইউনিয়ন পরিষদ প্রায়ই " +
-                                    "বন্যা আশ্রয় হিসেবে ব্যবহৃত হয়। দ্রুত বয়ে চলা পানি পার হবেন না; হাঁটু-সমান স্রোতও " +
-                                    "আপনাকে ভাসিয়ে নিতে পারে।"),
-                            style = MaterialTheme.typography.bodyMedium)
+                                "\u09a8\u09bf\u0995\u099f\u09a4\u09ae \u0989\u0981\u099a\u09c1 \u099c\u09be\u09df\u0997\u09be \u09ac\u09be \u09ae\u099c\u09ac\u09c1\u09a4 \u09ac\u09b9\u09c1\u09a4\u09b2 \u09ad\u09ac\u09a8\u09c7 \u09af\u09be\u09a8 \u2014 \u09b8\u09cd\u0995\u09c1\u09b2, \u0995\u09b2\u09c7\u099c \u09ac\u09be \u0987\u0989\u09a8\u09bf\u09df\u09a8 \u09aa\u09b0\u09bf\u09b7\u09a6 \u09aa\u09cd\u09b0\u09be\u09df\u0987 " +
+                                    "\u09ac\u09a8\u09cd\u09af\u09be \u0986\u09b6\u09cd\u09b0\u09df \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7 \u09ac\u09cd\u09af\u09ac\u09b9\u09c3\u09a4 \u09b9\u09df\u0964 \u09a6\u09cd\u09b0\u09c1\u09a4 \u09ac\u09df\u09c7 \u099a\u09b2\u09be \u09aa\u09be\u09a8\u09bf \u09aa\u09be\u09b0 \u09b9\u09ac\u09c7\u09a8 \u09a8\u09be; \u09b9\u09be\u0981\u099f\u09c1-\u09b8\u09ae\u09be\u09a8 \u09b8\u09cd\u09b0\u09cb\u09a4\u0993 " +
+                                    "\u0986\u09aa\u09a8\u09be\u0995\u09c7 \u09ad\u09be\u09b8\u09bf\u09df\u09c7 \u09a8\u09bf\u09a4\u09c7 \u09aa\u09be\u09b0\u09c7\u0964"),
+                            style = MaterialTheme.typography.bodyMedium, color = TextPrimary)
                     }
                 }
-            }
 
-            if (ui.detailed && ui.ranked.isNotEmpty()) {
-                Spacer(Modifier.height(8.dp))
-                Text(tr("Ranked shelters", "সাজানো আশ্রয়কেন্দ্র"),
-                    style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                ui.ranked.forEach { s ->
-                    ShelterRow(s, selected = s.shelterId == ui.selectedShelterId,
-                        onClick = { viewModel.selectShelter(s) })
+                // ---- Every option, ranked ----
+                if (ui.detailed && ui.ranked.isNotEmpty()) {
+                    Spacer(Modifier.height(16.dp))
+                    Text(tr("Other shelters", "\u0985\u09a8\u09cd\u09af \u0986\u09b6\u09cd\u09b0\u09df"),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.ExtraBold, color = TextPrimary)
+                    ui.ranked.forEach { sh ->
+                        ShelterRow(sh, selected = sh.shelterId == ui.selectedShelterId,
+                            onClick = { viewModel.selectShelter(sh) })
+                    }
+                } else if (!ui.detailed && ui.nearbyPublic.isNotEmpty()) {
+                    Spacer(Modifier.height(16.dp))
+                    Text(tr("Nearest shelters", "\u09a8\u09bf\u0995\u099f\u09a4\u09ae \u0986\u09b6\u09cd\u09b0\u09df"),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.ExtraBold, color = TextPrimary)
+                    Text(tr("Public schools and colleges \u2014 commonly used as flood shelters.",
+                        "\u09b8\u09b0\u0995\u09be\u09b0\u09bf \u09b8\u09cd\u0995\u09c1\u09b2 \u0993 \u0995\u09b2\u09c7\u099c \u2014 \u09b8\u09be\u09a7\u09be\u09b0\u09a3\u09a4 \u09ac\u09a8\u09cd\u09af\u09be \u0986\u09b6\u09cd\u09b0\u09df \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7 \u09ac\u09cd\u09af\u09ac\u09b9\u09c3\u09a4 \u09b9\u09df\u0964"),
+                        style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+                    ui.nearbyPublic.forEachIndexed { i, h ->
+                        PublicShelterRow(h, selected = i == ui.selectedPublicIdx,
+                            best = i == 0, onClick = { viewModel.selectPublicShelter(i) })
+                    }
                 }
-            } else if (!ui.detailed && ui.nearbyPublic.isNotEmpty()) {
-                Spacer(Modifier.height(8.dp))
-                Text(tr("Nearest shelters (schools & colleges)", "নিকটতম আশ্রয় (স্কুল ও কলেজ)"),
-                    style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text(tr("Public schools and colleges — commonly used as flood shelters.",
-                    "সরকারি স্কুল ও কলেজ — সাধারণত বন্যা আশ্রয় হিসেবে ব্যবহৃত হয়।"),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
-                ui.nearbyPublic.forEachIndexed { i, h ->
-                    PublicShelterRow(h, selected = i == ui.selectedPublicIdx,
-                        best = i == 0, onClick = { viewModel.selectPublicShelter(i) })
+
+                // ---- Ask about it ----
+                Spacer(Modifier.height(18.dp))
+                MapAssistantCard(ui, onAsk = { viewModel.ask(it) })
+
+                // ---- The small print, at the bottom where small print belongs ----
+                // Only three districts ship with detailed road and flood data, so the picker
+                // can only ever name one of those three. Standing in Khulna it would have sat
+                // there saying "Chattogram", which reads as the map being wrong about where
+                // you are - so outside those packs we state the coverage instead.
+                Spacer(Modifier.height(14.dp))
+                if (ui.hasLocation && !ui.detailed) {
+                    Text(
+                        tr(
+                            "Detailed routing covers three districts so far. Here you get the nearest " +
+                                "known shelters and straight-line distances.",
+                            "\u09ac\u09bf\u09b8\u09cd\u09a4\u09be\u09b0\u09bf\u09a4 \u09aa\u09a5\u09a8\u09bf\u09b0\u09cd\u09a6\u09c7\u09b6 \u098f\u0996\u09a8 \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4 \u09a4\u09bf\u09a8\u099f\u09bf \u099c\u09c7\u09b2\u09be\u09df \u0986\u099b\u09c7\u0964 \u098f\u0996\u09be\u09a8\u09c7 \u09a8\u09bf\u0995\u099f\u09a4\u09ae \u09aa\u09b0\u09bf\u099a\u09bf\u09a4 \u0986\u09b6\u09cd\u09b0\u09df \u0993 " +
+                                "\u09b8\u09b0\u09b2\u09b0\u09c7\u0996\u09be\u09b0 \u09a6\u09c2\u09b0\u09a4\u09cd\u09ac \u09a6\u09c7\u0996\u09be\u09a8\u09cb \u09b9\u099a\u09cd\u099b\u09c7\u0964",
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TextSecondary,
+                    )
+                } else {
+                    AreaPicker(
+                        regions = viewModel.regions(),
+                        currentId = ui.overviewRegion,
+                        onPick = { viewModel.setRegion(it) },
+                    )
                 }
-            } else if (!ui.computed) {
-                Spacer(Modifier.height(12.dp))
-                Text(tr("Tap “Find nearest safe shelter”. It uses your GPS and works anywhere in Bangladesh.",
-                    "“নিকটতম নিরাপদ আশ্রয় খুঁজুন”-এ চাপ দিন। এটি আপনার জিপিএস ব্যবহার করে, বাংলাদেশের যেকোনো জায়গায় কাজ করে।"),
-                    style = MaterialTheme.typography.bodySmall)
+
+                if (ui.detailed) {
+                    Spacer(Modifier.height(10.dp))
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(ShapeSm)
+                            .background(ErrorRed.copy(alpha = 0.08f))
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.Top,
+                    ) {
+                        Icon(FeatherIcons.AlertTriangle, null, tint = ErrorRed,
+                            modifier = Modifier.size(15.dp).padding(top = 1.dp))
+                        Spacer(Modifier.width(9.dp))
+                        Text(
+                            tr("The flood zone drawn here is a sample scenario for practising routes \u2014 " +
+                                "not live flood data. Check local conditions before you travel.",
+                                "\u098f\u0996\u09be\u09a8\u09c7 \u0986\u0981\u0995\u09be \u09ac\u09a8\u09cd\u09af\u09be \u098f\u09b2\u09be\u0995\u09be \u09aa\u09a5 \u0985\u09a8\u09c1\u09b6\u09c0\u09b2\u09a8\u09c7\u09b0 \u099c\u09a8\u09cd\u09af \u098f\u0995\u099f\u09bf \u09a8\u09ae\u09c1\u09a8\u09be \u2014 \u09b2\u09be\u0987\u09ad \u09ac\u09a8\u09cd\u09af\u09be \u09a4\u09a5\u09cd\u09af \u09a8\u09df\u0964 " +
+                                    "\u09af\u09be\u09a4\u09cd\u09b0\u09be\u09b0 \u0986\u0997\u09c7 \u09b8\u09cd\u09a5\u09be\u09a8\u09c0\u09df \u09aa\u09b0\u09bf\u09b8\u09cd\u09a5\u09bf\u09a4\u09bf \u09af\u09be\u099a\u09be\u0987 \u0995\u09b0\u09c1\u09a8\u0964"),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextPrimary,
+                        )
+                    }
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        tr("Roads: \u00a9 OpenStreetMap contributors.", "\u09b0\u09be\u09b8\u09cd\u09a4\u09be: \u00a9 OpenStreetMap contributors\u0964"),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TextSecondary,
+                    )
+                }
             }
         }
     }

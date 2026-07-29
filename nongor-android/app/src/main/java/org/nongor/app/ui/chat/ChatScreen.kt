@@ -500,14 +500,14 @@ fun ChatScreen(
                                     stringResource(R.string.chip_identify_title),
                                     stringResource(R.string.chip_identify_hint),
                                     stringResource(R.string.chip_identify_fill),
-                                    listOf(Color(0xFF60A5FA), Color(0xFF8B9CFF)),
+                                    listOf(Color(0xFF3FA88C), Color(0xFF7FCBB4)),
                                 ),
                                 Suggestion(
                                     Icons.Default.AutoAwesome,
                                     stringResource(R.string.chip_boost_title),
                                     stringResource(R.string.chip_boost_hint),
                                     stringResource(R.string.chip_boost_fill),
-                                    listOf(Color(0xFF6EA8FF), Color(0xFF2F6BFF)),
+                                    listOf(Color(0xFF1E9E7E), Color(0xFF0B6E5F)),
                                 ),
                                 Suggestion(
                                     Icons.Default.Edit,
@@ -968,6 +968,11 @@ private fun GlassSuggestionCard(s: Suggestion, onPick: (String) -> Unit) {
     )
     Column(
         Modifier
+            // All four are one grid, so they are one size. Letting each wrap its own content
+            // made the card with a two-line hint taller than its neighbour, which reads as a
+            // layout bug rather than as four equivalent choices.
+            .fillMaxWidth()
+            .height(112.dp)
             .graphicsLayer {
                 translationY = lift
                 scaleX = scale
@@ -1004,9 +1009,23 @@ private fun GlassSuggestionCard(s: Suggestion, onPick: (String) -> Unit) {
         ) {
             Icon(s.icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
         }
-        Spacer(Modifier.height(8.dp))
-        Text(s.title, color = TextPrimary, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
-        Text(s.hint, color = TextSecondary.copy(alpha = 0.85f), fontSize = 12.sp)
+        Spacer(Modifier.weight(1f))
+        Text(
+            s.title,
+            color = TextPrimary,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            s.hint,
+            color = TextSecondary.copy(alpha = 0.85f),
+            fontSize = 12.sp,
+            lineHeight = 15.sp,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 

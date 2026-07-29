@@ -132,9 +132,14 @@ fun HomeTab(
                 Modifier
                     .statusBarsPadding()
                     .padding(horizontal = 18.dp)
-                    .padding(top = 8.dp),
+                    .padding(top = 2.dp),
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    // The two round buttons sit slightly above the wordmark's optical centre:
+                    // aligned dead-centre they read as sinking into the illustration behind.
+                    modifier = Modifier.padding(bottom = 4.dp),
+                ) {
                     Image(
                         painterResource(R.drawable.nongor_app_icon),
                         contentDescription = null,

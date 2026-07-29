@@ -183,10 +183,26 @@ data class PhrasebookData(
     fun targetLanguages(): List<LangInfo> = allLanguages.filter { !it.isAuthored }
 
     /** How many phrases carry a written line in [code], in any script. Shown in the picker. */
+    private companion object {
+        val ESSENTIAL_IDS = listOf(
+            "help_need", "safe_now", "injured", "bleeding", "trapped", "need_water",
+        )
+    }
+
     fun coverage(code: String): Int =
         allPhrases.count { it.translations[code]?.hasLine == true }
 
     fun triagePhrases(): List<Phrase> = flow.mapNotNull { byId[it] }
+
+    /**
+     * The handful you reach for before you have worked out what is going on.
+     *
+     * Not the guided flow — that is a sequence you commit to. These are the standalone
+     * openers: establish that you are help, find out if anyone is hurt or stuck, offer water.
+     * They sit on the screen rather than behind a search box because in the first thirty
+     * seconds of meeting a stranger you do not know what to search for.
+     */
+    fun essentials(): List<Phrase> = ESSENTIAL_IDS.mapNotNull { byId[it] }
 }
 
 /**
