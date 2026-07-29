@@ -97,6 +97,7 @@ import org.nongor.app.ui.theme.BrandTeal
 import org.nongor.app.ui.theme.CautionAmber
 import org.nongor.app.ui.theme.ErrorRed
 import org.nongor.app.ui.theme.SafeGreen
+import org.nongor.app.ui.theme.ShapePill
 
 @Composable
 fun NongorHomeScreen(
@@ -116,6 +117,9 @@ fun NongorHomeScreen(
     modelReady: Boolean = true,
     showCoach: Boolean = false,
     onCoachDismiss: () -> Unit = {},
+    sosActive: Boolean = false,
+    sirenOn: Boolean = false,
+    onStopSos: () -> Unit = {},
 ) {
     var showDemo by remember { mutableStateOf(false) }
     if (showDemo) {
@@ -165,6 +169,12 @@ fun NongorHomeScreen(
         Text(tr("Everything here works with no internet and no signal",
             "এখানকার সবকিছু ইন্টারনেট বা নেটওয়ার্ক ছাড়াই চলে"),
             color = TextSecondary, style = MaterialTheme.typography.bodyMedium)
+
+        // ---- A live SOS outranks everything, including the call button ----
+        if (sosActive) {
+            Spacer(Modifier.height(14.dp))
+            SosActiveBanner(sirenOn = sirenOn, onStop = onStopSos, onOpen = onMesh)
+        }
 
         // ---- Emergency call: always the most prominent action ----
         Spacer(Modifier.height(14.dp))
@@ -323,6 +333,51 @@ private fun EmergencyCard(onEmergency: () -> Unit) {
         ) {
             Text(tr("Call 999", "৯৯৯"), color = red, fontWeight = FontWeight.ExtraBold,
                 style = MaterialTheme.typography.titleSmall)
+        }
+    }
+}
+
+/**
+ * Shown on the home screen for as long as an SOS is being broadcast.
+ *
+ * The stop control has to be reachable from wherever the user happens to be. An alarm at full
+ * volume that can only be silenced from one particular screen is the kind of thing that makes
+ * someone force-quit the app — and force-quitting is exactly what must not happen to the
+ * thing that is calling for help on their behalf.
+ */
+@Composable
+private fun SosActiveBanner(sirenOn: Boolean, onStop: () -> Unit, onOpen: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().clip(ShapeMd)
+            .background(ErrorRed.copy(alpha = 0.12f))
+            .clickable(onClick = onOpen)
+            .padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(Modifier.size(36.dp).clip(CircleShape).background(ErrorRed),
+            contentAlignment = Alignment.Center) {
+            Icon(FeatherIcons.Radio, null, tint = Color.White, modifier = Modifier.size(18.dp))
+        }
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Text(tr("SOS is being sent", "এসওএস পাঠানো হচ্ছে"), color = ErrorRed,
+                fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleSmall)
+            Text(
+                if (sirenOn) {
+                    tr("Repeating, alarm sounding", "বারবার যাচ্ছে, শব্দ বাজছে")
+                } else {
+                    tr("Repeating, alarm silenced", "বারবার যাচ্ছে, শব্দ বন্ধ")
+                },
+                color = TextSecondary, style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        Box(
+            Modifier.clip(ShapePill).background(ErrorRed)
+                .clickable(onClick = onStop)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        ) {
+            Text(tr("Stop", "থামান"), color = Color.White, fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.labelLarge)
         }
     }
 }

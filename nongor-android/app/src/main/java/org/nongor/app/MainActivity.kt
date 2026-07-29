@@ -46,6 +46,8 @@ import org.nongor.app.ui.translate.TranslateScreen
 import org.nongor.app.ui.translate.TranslateViewModel
 import org.nongor.app.ui.triage.TriageScreen
 import org.nongor.app.ui.triage.TriageViewModel
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 private object Routes {
     const val SPLASH = "splash"
@@ -90,6 +92,7 @@ private fun NongorNavHost() {
     val introSeen by app.prefs.introSeen.collectAsState()
     val start = if (introSeen) Routes.HOME else Routes.ONBOARDING
     val navController = rememberNavController()
+    val scope = rememberCoroutineScope()
 
     fun toStartFromSplash() {
         navController.navigate(start) {
@@ -125,7 +128,12 @@ private fun NongorNavHost() {
         }
         composable(Routes.HOME) {
             val coachSeen by app.prefs.coachSeen.collectAsState()
+            val sosActive by app.sosSession.active.collectAsState()
+            val sirenOn by app.sosSession.sirenOn.collectAsState()
             NongorHomeScreen(
+                sosActive = sosActive,
+                sirenOn = sirenOn,
+                onStopSos = { app.sosSession.stop() },
                 modelReady = HfDownloadRepository.modelFile(context).exists(),
                 showCoach = !coachSeen,
                 onCoachDismiss = { app.prefs.markCoachSeen() },
@@ -146,6 +154,13 @@ private fun NongorNavHost() {
                         RegionAssets.loadScenarios(context).forEach {
                             app.sosRepository.add(SosEntry(it, Triage.fallbackTriage(it), source = "drill"))
                         }
+                    }
+                    // Family Reunion needs a second phone to show anything real, so the drill
+                    // seeds practice encounters around wherever the user actually is. They are
+                    // labelled as practice everywhere and vanish the moment a real one arrives.
+                    scope.launch {
+                        val here = runCatching { app.meshHub.myLocation() }.getOrNull()
+                        app.familyRepository.seedDrill(here)
                     }
                 },
             )
