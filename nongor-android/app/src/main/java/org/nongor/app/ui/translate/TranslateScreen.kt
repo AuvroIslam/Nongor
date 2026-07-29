@@ -67,6 +67,16 @@ import org.nongor.app.ui.theme.ShapePill
 import org.nongor.app.ui.theme.ShapeSm
 import compose.icons.feathericons.HelpCircle
 import compose.icons.feathericons.Settings
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.CircularProgressIndicator
+import compose.icons.feathericons.Grid
+import compose.icons.feathericons.Zap
+import org.nongor.app.core.PhrasebookData
+import org.nongor.app.ui.theme.BrandTeal
 
 /**
  * Emergency translation.
@@ -93,6 +103,7 @@ fun TranslateScreen(
     val bangla = LocalBangla.current
     val book = viewModel.book
     var open by remember { mutableStateOf<Phrase?>(null) }
+    var browsing by remember { mutableStateOf(false) }
 
     val guided = state.guidedStep
     val guidedPhrase = viewModel.guidedPhrase()
@@ -127,112 +138,138 @@ fun TranslateScreen(
             )
         },
     ) { pad ->
-        LazyColumn(
+        Column(
             Modifier
                 .padding(pad)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                start = 18.dp, end = 18.dp, top = 4.dp, bottom = 28.dp,
-            ),
+                .background(MaterialTheme.colorScheme.background)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 18.dp)
+                .padding(bottom = 28.dp),
         ) {
-            item {
+            // 1 - who am I talking to
+            LanguageRow(
+                languages = book.targetLanguages(),
+                selected = state.targetLang,
+                coverage = { book.coverage(it) },
+                bangla = bangla,
+                onSelect = { viewModel.setTargetLanguage(it) },
+            )
+
+            // 2 - the thing you almost always want. This is the screen's whole purpose, so it
+            // is the biggest thing on it rather than one row among a hundred and twenty.
+            Spacer(Modifier.height(16.dp))
+            GuidedCard(
+                active = guided != null,
+                answered = state.replies.size,
+                total = book.flow.size,
+                bangla = bangla,
+                onStart = {
+                    viewModel.startGuided()
+                    open = viewModel.guidedPhrase()
+                },
+                onResume = { open = guidedPhrase },
+            )
+
+            // 3 - or say what you can see, and let the phrase-finder do the looking
+            Spacer(Modifier.height(16.dp))
+            OutlinedTextField(
+                value = state.query,
+                onValueChange = { viewModel.setQuery(it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                shape = ShapeMd,
+                leadingIcon = { Icon(FeatherIcons.Search, contentDescription = null) },
+                trailingIcon = {
+                    if (state.searching) {
+                        CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
+                    }
+                },
+                label = { Text(tr("Describe what you see", "যা দেখছেন তা লিখুন")) },
+                placeholder = { Text(tr("bleeding, cannot stand...", "রক্তপাত, দাঁড়াতে পারছে না...")) },
+            )
+
+            if (state.usedModel && state.results.isNotEmpty()) {
+                Spacer(Modifier.height(6.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        FeatherIcons.Zap,
+                        contentDescription = null,
+                        tint = BrandTeal,
+                        modifier = Modifier.size(13.dp),
+                    )
+                    Spacer(Modifier.width(5.dp))
+                    Text(
+                        tr(
+                            "Gemma picked these questions - the wording is never AI-written",
+                            "Gemma এই প্রশ্নগুলো বেছেছে - লেখা কখনো এআই-এর নয়",
+                        ),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TextSecondary,
+                    )
+                }
+            }
+
+            state.results.forEach { phrase ->
+                Spacer(Modifier.height(6.dp))
+                PhraseRow(phrase, bangla, state.replies[phrase.id] != null) { open = phrase }
+            }
+            if (state.query.isNotBlank() && state.results.isEmpty() && !state.searching) {
+                Spacer(Modifier.height(8.dp))
                 Text(
-                    tr(
-                        "Pick the language they speak. If it has no written phrases yet, the " +
-                            "pictures and the yes/no buttons still work.",
-                        "তিনি যে ভাষায় কথা বলেন সেটি বেছে নিন। লেখা অনুবাদ না থাকলেও ছবি ও " +
-                            "হ্যাঁ/না বোতাম কাজ করবে।",
-                    ),
+                    tr("Nothing matches. Try browsing.", "কিছু মিলল না। সব দেখে নিন।"),
                     color = TextSecondary,
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                Spacer(Modifier.height(10.dp))
-                LanguageRow(
-                    languages = book.targetLanguages(),
-                    selected = state.targetLang,
-                    coverage = { book.coverage(it) },
-                    bangla = bangla,
-                    onSelect = { viewModel.setTargetLanguage(it) },
-                )
-                Spacer(Modifier.height(14.dp))
             }
 
-            item {
-                GuidedCard(
-                    active = guided != null,
-                    answered = state.replies.size,
-                    total = book.flow.size,
-                    bangla = bangla,
-                    onStart = {
-                        viewModel.startGuided()
-                        open = viewModel.guidedPhrase()
-                    },
-                    onResume = { open = guidedPhrase },
+            // 4 - the full book, out of the way until asked for
+            Spacer(Modifier.height(16.dp))
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(ShapeMd)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .clickable { browsing = true }
+                    .padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(FeatherIcons.Grid, null, tint = BrandTeal, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    localiseDigits(
+                        tr("Browse all ${book.allPhrases.size} phrases", "সব ${book.allPhrases.size} টি বাক্য দেখুন"),
+                        bangla,
+                    ),
+                    Modifier.weight(1f),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = TextPrimary,
                 )
-                Spacer(Modifier.height(14.dp))
+                Icon(FeatherIcons.ChevronRight, null, tint = TextSecondary)
             }
 
+            // 5 - what the conversation produced
             if (state.replies.isNotEmpty()) {
-                item {
-                    HandoverCard(
-                        note = viewModel.handoverNote(bangla),
-                        priority = viewModel.assessment().priority,
-                        bangla = bangla,
-                        onSend = { onSendAsSos(viewModel.handoverNote(bangla)) },
-                    )
-                    Spacer(Modifier.height(14.dp))
-                }
-            }
-
-            item {
-                OutlinedTextField(
-                    value = state.query,
-                    onValueChange = { viewModel.setQuery(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    leadingIcon = { Icon(FeatherIcons.Search, contentDescription = null) },
-                    placeholder = {
-                        Text(tr("Search — bleeding, water, child…", "খুঁজুন — রক্ত, পানি, শিশু…"))
-                    },
+                Spacer(Modifier.height(16.dp))
+                HandoverCard(
+                    note = viewModel.handoverNote(bangla),
+                    priority = viewModel.assessment().priority,
+                    bangla = bangla,
+                    onSend = { onSendAsSos(viewModel.handoverNote(bangla)) },
                 )
-                Spacer(Modifier.height(12.dp))
-            }
-
-            if (state.query.isNotBlank()) {
-                if (state.results.isEmpty()) {
-                    item {
-                        Text(
-                            tr("No phrase matches that.", "এমন কোনো বাক্য নেই।"),
-                            color = TextSecondary,
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-                } else {
-                    items(state.results) { phrase ->
-                        PhraseRow(phrase, bangla, state.replies[phrase.id] != null) { open = phrase }
-                    }
-                }
-            } else {
-                book.allCategories.forEach { category ->
-                    val phrases = book.inCategory(category.id)
-                    if (phrases.isEmpty()) return@forEach
-                    item(key = "cat_${category.id}") {
-                        Spacer(Modifier.height(6.dp))
-                        Text(
-                            if (bangla) category.bn else category.en,
-                            color = TextPrimary,
-                            fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier.padding(vertical = 6.dp),
-                        )
-                    }
-                    items(phrases, key = { it.id }) { phrase ->
-                        PhraseRow(phrase, bangla, state.replies[phrase.id] != null) { open = phrase }
-                    }
-                }
             }
         }
+    }
+
+    if (browsing) {
+        BrowseSheet(
+            book = book,
+            bangla = bangla,
+            answered = state.replies.keys,
+            onPick = { browsing = false; open = it },
+            onDismiss = { browsing = false },
+        )
     }
 
     val showing = open
@@ -486,5 +523,45 @@ private fun PhraseRow(phrase: Phrase, bangla: Boolean, answered: Boolean, onClic
             tint = TextSecondary,
             modifier = Modifier.size(18.dp),
         )
+    }
+}
+
+
+/** The whole phrasebook, by category, in a sheet so the tab itself stays short. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BrowseSheet(
+    book: PhrasebookData,
+    bangla: Boolean,
+    answered: Set<String>,
+    onPick: (Phrase) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    ) {
+        LazyColumn(
+            Modifier.fillMaxWidth().navigationBarsPadding(),
+            contentPadding = PaddingValues(horizontal = 18.dp, vertical = 4.dp),
+        ) {
+            book.allCategories.forEach { category ->
+                val phrases = book.inCategory(category.id)
+                if (phrases.isEmpty()) return@forEach
+                item(key = "cat_${category.id}") {
+                    Text(
+                        if (bangla) category.bn else category.en,
+                        color = TextPrimary,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier.padding(top = 14.dp, bottom = 6.dp),
+                    )
+                }
+                items(phrases, key = { it.id }) { phrase ->
+                    PhraseRow(phrase, bangla, phrase.id in answered) { onPick(phrase) }
+                    Spacer(Modifier.height(6.dp))
+                }
+            }
+        }
     }
 }
