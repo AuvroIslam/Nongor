@@ -88,6 +88,7 @@ class MeshManager(
             onStatus("Connecting to ${displayNameOf(info.endpointName)}…")
         }
         override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
+            synchronized(peerLock) { endpointNames[endpointId]?.let { dialing.remove(it) } }
             if (!result.status.isSuccess) {
                 synchronized(peerLock) { endpointNames.remove(endpointId) }
                 return
@@ -115,7 +116,9 @@ class MeshManager(
         }
         override fun onDisconnected(endpointId: String) {
             val n = synchronized(peerLock) {
-                connected.remove(endpointId); endpointNames.remove(endpointId); peerCountLocked()
+                connected.remove(endpointId)
+                endpointNames.remove(endpointId)?.let { dialing.remove(it) }
+                peerCountLocked()
             }
             onPeersChanged(n)
             // Without this the banner keeps claiming "Connected — 1 peer(s)" after the last phone
@@ -129,27 +132,49 @@ class MeshManager(
         }
     }
 
+    /**
+     * Advertised names we have an outstanding connection request to.
+     *
+     * Discovery fires repeatedly for the same endpoint; without this we would hammer
+     * requestConnection every callback. Cleared on failure, on loss, and once resolved.
+     */
+    private val dialing = mutableSetOf<String>()
+
     private val discovery = object : EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
-            // Both phones advertise *and* discover, so both would call requestConnection on each
-            // other and Nearby would hold two connections for the one pair — double-counted in the
-            // peer total and every payload sent twice. Break the symmetry so exactly one side
-            // dials: the lower advertised name initiates, the higher one just accepts. Advertised
-            // names are unique per install, so this always decides.
-            if (advertisedName > info.endpointName) return
-            // Already connected to this phone under another endpointId.
-            val duplicate = synchronized(peerLock) {
-                connected.any { endpointNames[it] == info.endpointName }
+            // Both sides dial. This used to break the symmetry so that only the lower advertised
+            // name initiated — tidier, and it avoided a redundant second channel. But it made the
+            // entire pairing depend on one specific phone's *discovery* working: if the lower-named
+            // phone was the one whose BLE scan got throttled (routine on OEM Android), both phones
+            // advertised at each other forever and neither ever dialled. Two phones on the same
+            // table, both saying "listening", peers stuck at zero.
+            //
+            // Dialling from both ends costs at most one duplicate channel, and that is already
+            // handled: onConnectionResult drops a second connection to a name we hold, and
+            // incoming payloads are deduped by message id regardless. A redundant socket is a far
+            // cheaper failure than no socket.
+            val alreadyKnown = synchronized(peerLock) {
+                connected.any { endpointNames[it] == info.endpointName } ||
+                    info.endpointName in dialing
             }
-            if (duplicate) return
+            if (alreadyKnown) return
+            synchronized(peerLock) { dialing.add(info.endpointName) }
             client.requestConnection(advertisedName, endpointId, lifecycle)
+                .addOnFailureListener {
+                    // A simultaneous dial from the other side loses one of the two requests.
+                    // Clearing the guard lets the next discovery callback try again rather than
+                    // marking this phone as permanently in-flight.
+                    synchronized(peerLock) { dialing.remove(info.endpointName) }
+                }
         }
 
         override fun onEndpointLost(endpointId: String) {
             // Discovery losing the advertisement does not mean an established connection dropped
             // (onDisconnected owns that), so only forget endpoints we never connected to.
             synchronized(peerLock) {
-                if (endpointId !in connected) endpointNames.remove(endpointId)
+                if (endpointId !in connected) {
+                    endpointNames.remove(endpointId)?.let { dialing.remove(it) }
+                }
             }
         }
     }
@@ -183,7 +208,7 @@ class MeshManager(
             client.stopAdvertising(); client.stopDiscovery(); client.stopAllEndpoints()
         } catch (_: Exception) {
         }
-        synchronized(peerLock) { connected.clear(); endpointNames.clear() }
+        synchronized(peerLock) { connected.clear(); endpointNames.clear(); dialing.clear() }
     }
 
     fun peers(): Int = synchronized(peerLock) { peerCountLocked() }

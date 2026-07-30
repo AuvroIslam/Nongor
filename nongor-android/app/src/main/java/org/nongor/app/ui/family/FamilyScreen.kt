@@ -48,14 +48,26 @@ import org.nongor.app.ui.theme.BrandTeal
 import org.nongor.app.ui.theme.CautionAmber
 import org.nongor.app.ui.theme.SafeGreen
 import org.nongor.app.ui.theme.ShapePill
+import androidx.compose.runtime.LaunchedEffect
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import org.nongor.app.mesh.MeshReadiness
+import org.nongor.app.ui.components.MeshHealthBanner
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
     val ui by viewModel.ui.collectAsState()
     // Tapping someone on the radar highlights their row below, so the picture and the
     // detail stay connected rather than being two separate things to read.
     var selected by remember { mutableStateOf<String?>(null) }
+    // Radar rides the same radio as Mesh SOS but never asked for its permissions. Open the
+    // app on this screen first, on a fresh install, and it would advertise into nothing and
+    // report "0 phones in range" forever without ever prompting.
+    val permState = rememberMultiplePermissionsState(MeshReadiness.requiredPermissions())
+    LaunchedEffect(Unit) {
+        if (!permState.allPermissionsGranted) permState.launchMultiplePermissionRequest()
+    }
     DisposableEffect(Unit) {
         viewModel.enter()
         onDispose { viewModel.leave() }
@@ -74,6 +86,8 @@ fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
         Column(
             Modifier.padding(pad).padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState()),
         ) {
+            MeshHealthBanner()
+
             if (!ui.configured) {
                 SetupCard(onSave = { code, name -> viewModel.saveFamily(code, name) })
                 return@Column

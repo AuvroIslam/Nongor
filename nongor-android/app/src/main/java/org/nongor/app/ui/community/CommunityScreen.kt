@@ -60,8 +60,13 @@ import org.nongor.app.ui.theme.BrandTeal
 import compose.icons.feathericons.Shield
 import compose.icons.feathericons.AlertCircle
 import org.nongor.app.ui.theme.ShapeMd
+import androidx.compose.runtime.LaunchedEffect
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import org.nongor.app.mesh.MeshReadiness
+import org.nongor.app.ui.components.MeshHealthBanner
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun CommunityScreen(viewModel: CommunityViewModel, onBack: (() -> Unit)? = null) {
     val ui by viewModel.ui.collectAsState()
@@ -70,6 +75,13 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: (() -> Unit)? = null)
         onDispose { viewModel.leave() }
     }
     var reporting by remember { mutableStateOf(false) }
+    // Alerts rides the same radio as Mesh SOS and Radar, and used to be the one mesh screen
+    // that never asked for its permissions. Open the app here first and every post you made
+    // was written to this phone and broadcast to nobody, with nothing on screen saying why.
+    val meshPerms = rememberMultiplePermissionsState(MeshReadiness.requiredPermissions())
+    LaunchedEffect(Unit) {
+        if (!meshPerms.allPermissionsGranted) meshPerms.launchMultiplePermissionRequest()
+    }
 
     if (reporting) {
         ReportSheet(
@@ -107,6 +119,7 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: (() -> Unit)? = null)
         Column(
             Modifier.padding(pad).padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState()),
         ) {
+            MeshHealthBanner()
             // ---- mesh status ----
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(10.dp).clip(CircleShape)

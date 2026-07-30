@@ -57,6 +57,8 @@ import org.nongor.app.ui.theme.SafeGreen
 import org.nongor.app.ui.theme.ShapeSm
 import org.nongor.app.ui.theme.TextSecondary
 import org.nongor.app.ui.i18n.localiseDigits
+import org.nongor.app.mesh.MeshReadiness
+import org.nongor.app.ui.components.MeshHealthBanner
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -69,21 +71,9 @@ fun MeshScreen(viewModel: MeshViewModel, onBack: () -> Unit, prefill: String = "
     // into the composer rather than making the volunteer hunt for where it went.
     LaunchedEffect(prefill) { if (prefill.isNotBlank()) sheet = MeshSheet.COMPOSE }
 
-    val permissions = remember {
-        buildList {
-            add(Manifest.permission.ACCESS_FINE_LOCATION)
-            add(Manifest.permission.ACCESS_COARSE_LOCATION)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                add(Manifest.permission.BLUETOOTH_ADVERTISE)
-                add(Manifest.permission.BLUETOOTH_CONNECT)
-                add(Manifest.permission.BLUETOOTH_SCAN)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                add(Manifest.permission.NEARBY_WIFI_DEVICES)
-            }
-        }
-    }
-    val permState = rememberMultiplePermissionsState(permissions)
+    // One list, shared with Radar and with the readiness check, so the three can never
+    // disagree about what the radio actually needs.
+    val permState = rememberMultiplePermissionsState(MeshReadiness.requiredPermissions())
 
     Scaffold(
         topBar = {
@@ -98,6 +88,7 @@ fun MeshScreen(viewModel: MeshViewModel, onBack: () -> Unit, prefill: String = "
         },
     ) { pad ->
         Column(Modifier.padding(pad).padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState())) {
+            MeshHealthBanner()
             if (!permState.allPermissionsGranted) {
                 Text(tr("Offline mesh needs Bluetooth, Nearby-Wi-Fi and location permissions to " +
                     "find nearby phones (no internet is used).",
