@@ -36,6 +36,8 @@ data class MeshMsg(
     val mine: Boolean,
     /** The envelope id, so acknowledgements coming back can be matched to this line. */
     val msgId: String = "",
+    /** True once the sender has said they are safe. */
+    val resolved: Boolean = false,
 )
 
 /**
@@ -185,6 +187,35 @@ class MeshHub(
         runCatching { m.sendSeen(msgId) }
     }
 
+    /**
+     * Say whether you can see what somebody else reported.
+     *
+     * Recorded locally under this phone's own name first, so the count moves the instant you
+     * tap even with nobody in range, then broadcast for everyone else.
+     */
+    fun voteOnReport(reportId: String, up: Boolean) {
+        if (reportId.isBlank()) return
+        communityRepo.recordVote(reportId, localName, up)
+        communityRepo.setMyVote(reportId, up)
+        mgr?.let { m -> runCatching { m.sendVote(reportId, up) } }
+    }
+
+    /**
+     * Tell everyone the call for help is over.
+     *
+     * Sent when the person presses "I am safe now". It relays as far as the original SOS did,
+     * because the phones that need to hear it are exactly the ones that heard the call.
+     */
+    fun markSafe(msgId: String) {
+        val m = mgr ?: return
+        if (msgId.isBlank()) return
+        sosRepo.markResolved(msgId)
+        _sosMessages.value = _sosMessages.value.map {
+            if (it.msgId == msgId) it.copy(resolved = true) else it
+        }
+        runCatching { m.sendSafe(msgId) }
+    }
+
     /** Our own current position, for working out how far away a family member was last seen. */
     suspend fun myLocation(): Pair<Double, Double>? = location.current()
 
@@ -219,6 +250,26 @@ class MeshHub(
                         hops = hops,
                     ),
                 )
+            }
+            "vote" -> {
+                // A vote only means something if we can tell distinct phones apart, so an
+                // unverified one is discarded rather than counted.
+                if (!ok) return
+                val forId = env.payload["for"] as? String ?: return
+                val up = (env.payload["v"] as? String) == "up"
+                communityRepo.recordVote(forId, env.sender, up)
+            }
+            "safe" -> {
+                // The sender says they are out of danger. Unverified envelopes are ignored: a
+                // forged stand-down would call off a rescue that is still needed, which is the
+                // most dangerous message this app could carry.
+                if (!ok) return
+                val forId = env.payload["for"] as? String ?: return
+                if (sosRepo.markResolved(forId)) {
+                    _sosMessages.value = _sosMessages.value.map {
+                        if (it.msgId == forId) it.copy(resolved = true) else it
+                    }
+                }
             }
             "seen" -> {
                 // Someone had our SOS on their screen. Record it against the original message.

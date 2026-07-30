@@ -216,7 +216,35 @@ private fun MeshRow(
             Spacer(Modifier.height(4.dp))
             Text(m.text, style = MaterialTheme.typography.bodyMedium)
 
-            if (m.mine) {
+            if (m.resolved) {
+                // Kept on the log rather than removed. A responder who was already moving needs
+                // to see that the call was stood down, not find that it silently disappeared.
+                Spacer(Modifier.height(10.dp))
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(ShapeSm)
+                        .background(SafeGreen.copy(alpha = 0.14f))
+                        .padding(horizontal = 11.dp, vertical = 9.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        FeatherIcons.CheckCircle, null,
+                        tint = SafeGreen, modifier = Modifier.size(15.dp),
+                    )
+                    Spacer(Modifier.width(9.dp))
+                    Text(
+                        if (m.mine) {
+                            tr("You marked yourself safe.", "আপনি নিজেকে নিরাপদ বলেছেন।")
+                        } else {
+                            tr("They have said they are safe.", "তাঁরা জানিয়েছেন তাঁরা নিরাপদ।")
+                        },
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = SafeGreen,
+                    )
+                }
+            } else if (m.mine) {
                 Spacer(Modifier.height(10.dp))
                 SeenReceipt(seenBy)
             }

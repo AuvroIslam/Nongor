@@ -45,6 +45,7 @@ import org.nongor.app.ui.theme.ErrorRed
 import org.nongor.app.ui.theme.ShapePill
 import org.nongor.app.ui.theme.SafeGreen
 import org.nongor.app.ui.theme.TextSecondary
+import compose.icons.feathericons.CheckCircle
 
 /**
  * The one control someone can find without reading.
@@ -142,21 +143,22 @@ fun SosButton(
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = ripple(color = Color.White),
-                        onClick = { if (active) onStop() else onPress() },
+                        enabled = !active,
+                        onClick = onPress,
                     ),
                 contentAlignment = Alignment.Center,
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        if (active) tr("STOP", "থামান") else "SOS",
+                        "SOS",
                         color = Color.White,
                         fontWeight = FontWeight.ExtraBold,
-                        fontSize = if (active) 34.sp else 44.sp,
+                        fontSize = if (active) 38.sp else 44.sp,
                         letterSpacing = 2.sp,
                     )
                     Text(
                         if (active) {
-                            tr("tap to stop", "থামাতে চাপুন")
+                            tr("going out…", "যাচ্ছে…")
                         } else {
                             tr("press for help", "সাহায্যের জন্য চাপুন")
                         },
@@ -218,6 +220,47 @@ fun SosButton(
                     color = MaterialTheme.colorScheme.onSurface,
                 )
             }
+
+            // Standing the call down is its own decision, so it gets its own button rather than
+            // being a second meaning for the SOS circle. Green and worded as a statement about
+            // the person, not as a control: someone shaking on a roof should not have to work
+            // out that "STOP" is the thing that tells their family they are alright.
+            Spacer(Modifier.height(14.dp))
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(ShapePill)
+                    .background(SafeGreen)
+                    .clickable(onClick = onStop)
+                    .padding(vertical = 14.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    FeatherIcons.CheckCircle,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp),
+                )
+                Spacer(Modifier.width(9.dp))
+                Text(
+                    tr("I am safe now", "আমি এখন নিরাপদ"),
+                    color = Color.White,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 16.sp,
+                )
+            }
+            Spacer(Modifier.height(6.dp))
+            Text(
+                tr(
+                    "Stops the alarm and tells every phone that heard you, so nobody sets out for you by mistake.",
+                    "শব্দ বন্ধ করে এবং যারা আপনার ডাক শুনেছে তাদের জানিয়ে দেয়, যাতে কেউ ভুল করে আপনার জন্য না আসে।",
+                ),
+                style = MaterialTheme.typography.bodySmall,
+                color = TextSecondary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 20.dp),
+            )
         }
     }
 }

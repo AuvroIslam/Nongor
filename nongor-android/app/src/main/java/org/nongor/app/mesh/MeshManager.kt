@@ -308,6 +308,41 @@ class MeshManager(
     }
 
     /**
+     * Confirm or dispute somebody else's report (type = "vote").
+     *
+     * Signed like everything else, because the whole value of a dispute is knowing that real
+     * distinct phones disagreed. Unsigned votes would let one handset manufacture a consensus
+     * and bury a true report — the exact attack this is meant to defend against.
+     */
+    fun sendVote(forReportId: String, up: Boolean): SignedEnvelope {
+        clock += 1
+        val env = SignedEnvelope.create(
+            signer, mapOf("for" to forReportId, "v" to if (up) "up" else "down"),
+            UUID.randomUUID().toString(), clock, ttl = 4, type = "vote")
+        seen.add(env.msgId)
+        broadcast(env)
+        return env
+    }
+
+    /**
+     * Stand down a call for help (type = "safe").
+     *
+     * Carries only the id of the SOS being resolved. This matters more than it looks: in a flood
+     * the scarce resource is boats and people, and a rescuer steering towards an SOS that was
+     * resolved an hour ago is capacity taken away from someone still waiting. Cancelling has to
+     * travel as far as the original call did, so it relays on the same terms.
+     */
+    fun sendSafe(forMsgId: String): SignedEnvelope {
+        clock += 1
+        val env = SignedEnvelope.create(
+            signer, mapOf("for" to forMsgId), UUID.randomUUID().toString(), clock,
+            ttl = 4, type = "safe")
+        seen.add(env.msgId)
+        broadcast(env)
+        return env
+    }
+
+    /**
      * Acknowledge that a received SOS was actually put in front of a human (type = "seen").
      *
      * The payload is only the id of the message being acknowledged - no text, no location, no

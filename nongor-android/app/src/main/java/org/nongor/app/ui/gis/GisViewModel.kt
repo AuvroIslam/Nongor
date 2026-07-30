@@ -315,6 +315,16 @@ class GisViewModel(application: Application) : AndroidViewModel(application) {
                 }
                 val who = if (r.mine) "the user themselves" else r.sender.ifBlank { "a neighbour" }
                 append("- $kind$where, ${ageLabel(r.ts)}, reported by $who")
+                // What the neighbours made of it. One claim and a claim four people have walked
+                // past and confirmed are not the same evidence, and a claim more people dispute
+                // than confirm is one the assistant should hedge rather than repeat.
+                val up = app.communityRepository.confirmCount(r.id)
+                val down = app.communityRepository.disputeCount(r.id)
+                if (up > 0 || down > 0) {
+                    append(" [$up other phones confirm, $down dispute")
+                    if (down > up && down >= 2) append("; disputed more than confirmed")
+                    append("]")
+                }
                 append(if (r.note.isBlank()) ".\n" else ": ${Safety.wrapAsData(r.note)}\n")
             }
         }

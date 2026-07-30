@@ -71,11 +71,56 @@ class CommunityRepository(private val persistFile: File? = null) {
     private val _quarantine = MutableStateFlow<List<CommunityReport>>(emptyList())
     val quarantine: StateFlow<List<CommunityReport>> = _quarantine
 
+    /**
+     * Who has confirmed or disputed each report, keyed by report id.
+     *
+     * Sets of voter ids rather than counters, because a vote relayed over two hops arrives twice
+     * and a report's credibility must not be inflatable by bouncing it around the mesh.
+     */
+    private val _confirms = MutableStateFlow<Map<String, Set<String>>>(emptyMap())
+    val confirms: StateFlow<Map<String, Set<String>>> = _confirms
+
+    private val _disputes = MutableStateFlow<Map<String, Set<String>>>(emptyMap())
+    val disputes: StateFlow<Map<String, Set<String>>> = _disputes
+
+    /** This phone's own vote per report, so the UI can show what you already said. */
+    private val _myVotes = MutableStateFlow<Map<String, String>>(emptyMap())
+    val myVotes: StateFlow<Map<String, String>> = _myVotes
+
+    /**
+     * Record a vote. [up] true = "I can see this too", false = "this is not what I see".
+     *
+     * One vote per voter per report, and a voter can change their mind — the later vote wins
+     * rather than counting twice on opposite sides.
+     */
+    fun recordVote(reportId: String, voter: String, up: Boolean): Boolean {
+        if (reportId.isBlank() || voter.isBlank()) return false
+        val c = _confirms.value[reportId].orEmpty()
+        val d = _disputes.value[reportId].orEmpty()
+        if ((up && voter in c) || (!up && voter in d)) return false
+        _confirms.value = _confirms.value + (reportId to if (up) c + voter else c - voter)
+        _disputes.value = _disputes.value + (reportId to if (up) d - voter else d + voter)
+        persist()
+        return true
+    }
+
+    /** Remember that this phone voted, so the buttons can show the current state. */
+    fun setMyVote(reportId: String, up: Boolean) {
+        _myVotes.value = _myVotes.value + (reportId to if (up) "up" else "down")
+        persist()
+    }
+
+    fun confirmCount(reportId: String): Int = _confirms.value[reportId].orEmpty().size
+    fun disputeCount(reportId: String): Int = _disputes.value[reportId].orEmpty().size
+
     init {
         val f = persistFile
         if (f != null && f.exists()) {
             runCatching { gson.fromJson(f.readText(), Persisted::class.java) }.getOrNull()?.let {
                 _entries.value = it.entries
+                _confirms.value = it.confirms?.mapValues { (_, v) -> v.toSet() } ?: emptyMap()
+                _disputes.value = it.disputes?.mapValues { (_, v) -> v.toSet() } ?: emptyMap()
+                _myVotes.value = it.myVotes ?: emptyMap()
                 _quarantine.value = it.quarantine
             }
         }
@@ -84,7 +129,13 @@ class CommunityRepository(private val persistFile: File? = null) {
     private data class Persisted(
         val entries: List<CommunityReport> = emptyList(),
         val quarantine: List<CommunityReport> = emptyList(),
+        // Nullable: a store written before voting existed leaves these null, and Gson does not
+        // run Kotlin constructors, so a non-null default would arrive as null and crash.
+        val confirms: Map<String, List<String>>? = null,
+        val disputes: Map<String, List<String>>? = null,
+        val myVotes: Map<String, String>? = null,
     )
+
 
     fun add(r: CommunityReport) {
         if (_entries.value.any { it.id == r.id }) return          // dedup relayed copies
@@ -103,11 +154,25 @@ class CommunityRepository(private val persistFile: File? = null) {
         _entries.value.filter { it.districtEn.equals(districtEn, ignoreCase = true) }
 
     fun clear() {
-        _entries.value = emptyList(); _quarantine.value = emptyList(); persist()
+        _entries.value = emptyList(); _quarantine.value = emptyList()
+        _confirms.value = emptyMap(); _disputes.value = emptyMap(); _myVotes.value = emptyMap()
+        persist()
     }
 
     private fun persist() {
         val f = persistFile ?: return
-        runCatching { f.writeText(gson.toJson(Persisted(_entries.value, _quarantine.value))) }
+        runCatching {
+            f.writeText(
+                gson.toJson(
+                    Persisted(
+                        _entries.value,
+                        _quarantine.value,
+                        _confirms.value.mapValues { (_, v) -> v.toList() },
+                        _disputes.value.mapValues { (_, v) -> v.toList() },
+                        _myVotes.value,
+                    ),
+                ),
+            )
+        }
     }
 }

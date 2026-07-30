@@ -105,14 +105,29 @@ class MeshViewModel(application: Application) : AndroidViewModel(application) {
 
     private val sos = app.sosSession
 
+    /** The id of the call currently going out, so "I am safe now" can name it. */
+    private var activeSosId: String? = null
+
     fun pressSos(text: String) {
         // One id for the whole session, so every repeat is understood as the same call for
         // help rather than a new emergency each time the timer fires.
         val id = java.util.UUID.randomUUID().toString()
+        activeSosId = id
         sos.start(text) { hub.sendSos(it, id) }
     }
 
-    fun stopSos() = sos.stop()
+    /**
+     * Stop broadcasting, and say why.
+     *
+     * Stopping the siren on this phone is the easy half. The half that matters is telling the
+     * phones that heard the call that it is over, so nobody sets out for someone who is already
+     * safe.
+     */
+    fun stopSos() {
+        sos.stop()
+        activeSosId?.let { hub.markSafe(it) }
+        activeSosId = null
+    }
 
     fun toggleSiren() = sos.toggleSiren()
 

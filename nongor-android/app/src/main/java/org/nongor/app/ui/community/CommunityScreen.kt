@@ -65,6 +65,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import org.nongor.app.mesh.MeshReadiness
 import org.nongor.app.ui.components.MeshHealthBanner
+import compose.icons.feathericons.Check
+import compose.icons.feathericons.X
+import org.nongor.app.ui.theme.ErrorRed
+import org.nongor.app.ui.theme.ShapePill
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -189,7 +193,15 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: (() -> Unit)? = null)
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            ui.reports.forEach { ReportRow(it) }
+            ui.reports.forEach { r ->
+                ReportRow(
+                    r = r,
+                    confirms = ui.confirms[r.id] ?: 0,
+                    disputes = ui.disputes[r.id] ?: 0,
+                    myVote = ui.myVotes[r.id],
+                    onVote = { up -> viewModel.vote(r.id, up) },
+                )
+            }
 
             // Reports from other districts — kept separate so they don't flood this area's board,
             // but still visible so nothing a neighbour shared is silently lost.
@@ -227,7 +239,13 @@ fun CommunityScreen(viewModel: CommunityViewModel, onBack: (() -> Unit)? = null)
  * so the board can be understood by colour alone before a single word is read.
  */
 @Composable
-private fun ReportRow(r: CommunityReport) {
+private fun ReportRow(
+    r: CommunityReport,
+    confirms: Int,
+    disputes: Int,
+    myVote: String?,
+    onVote: (Boolean) -> Unit,
+) {
     val kind = CommunityKinds.byId(r.kind)
     val style = kindStyle(r.kind)
     Column(
@@ -282,6 +300,78 @@ private fun ReportRow(r: CommunityReport) {
                 color = style.fg.copy(alpha = 0.85f),
             )
         }
+
+        // Does anyone else see this? One eyewitness is a claim; five who walked past the same
+        // road is close to a fact, and five who say the road is fine is a reason to doubt it.
+        // Your own reports are excluded — there is no sense voting on yourself.
+        if (!r.mine) {
+            Spacer(Modifier.height(10.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                VoteChip(
+                    icon = FeatherIcons.Check,
+                    label = tr("I see it too", "আমিও দেখছি"),
+                    count = confirms,
+                    selected = myVote == "up",
+                    tint = SafeGreen,
+                    onClick = { onVote(true) },
+                )
+                Spacer(Modifier.width(8.dp))
+                VoteChip(
+                    icon = FeatherIcons.X,
+                    label = tr("Not what I see", "আমি তা দেখছি না"),
+                    count = disputes,
+                    selected = myVote == "down",
+                    tint = ErrorRed,
+                    onClick = { onVote(false) },
+                )
+            }
+            if (disputes > confirms && disputes >= 2) {
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    tr(
+                        "More people disagree than agree — treat this one with caution.",
+                        "একমতের চেয়ে দ্বিমত বেশি — এটি সাবধানে নিন।",
+                    ),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = ErrorRed,
+                )
+            }
+        }
+    }
+}
+
+/**
+ * One vote button with its running count.
+ *
+ * Deliberately not a like button. "I see it too" is a statement about the world that a stranger
+ * can act on; a thumbs-up is a statement about how you feel, and nobody's feelings should move
+ * a rescue route.
+ */
+@Composable
+private fun VoteChip(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    count: Int,
+    selected: Boolean,
+    tint: Color,
+    onClick: () -> Unit,
+) {
+    Row(
+        Modifier
+            .clip(ShapePill)
+            .background(if (selected) tint.copy(alpha = 0.20f) else Color.White.copy(alpha = 0.55f))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 11.dp, vertical = 7.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(13.dp))
+        Spacer(Modifier.width(6.dp))
+        Text(
+            if (count > 0) "$label · $count" else label,
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Medium,
+            color = tint,
+        )
     }
 }
 

@@ -25,6 +25,12 @@ data class CommunityUiState(
     val quarantined: Int = 0,
     val summaryBusy: Boolean = false,
     val summary: String? = null,
+    /** report id -> how many distinct phones say they can see it too. */
+    val confirms: Map<String, Int> = emptyMap(),
+    /** report id -> how many say it is not what they see. */
+    val disputes: Map<String, Int> = emptyMap(),
+    /** This phone's own vote, so the buttons show what you already said. */
+    val myVotes: Map<String, String> = emptyMap(),
 )
 
 /**
@@ -62,10 +68,26 @@ class CommunityViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch { hub.started.collect { v -> _ui.update { it.copy(started = v) } } }
         viewModelScope.launch { hub.peers.collect { v -> _ui.update { it.copy(peers = v) } } }
         viewModelScope.launch { hub.status.collect { v -> _ui.update { it.copy(status = v) } } }
+        viewModelScope.launch {
+            app.communityRepository.confirms.collect { m ->
+                _ui.update { it.copy(confirms = m.mapValues { (_, v) -> v.size }) }
+            }
+        }
+        viewModelScope.launch {
+            app.communityRepository.disputes.collect { m ->
+                _ui.update { it.copy(disputes = m.mapValues { (_, v) -> v.size }) }
+            }
+        }
+        viewModelScope.launch {
+            app.communityRepository.myVotes.collect { m -> _ui.update { it.copy(myVotes = m) } }
+        }
     }
 
     fun enter() { if (!acquired) { acquired = true; hub.acquire() } }
     fun leave() { if (acquired) { acquired = false; hub.release() } }
+
+    /** "I can see this too" / "that is not what I see", shared over the mesh. */
+    fun vote(reportId: String, up: Boolean) = hub.voteOnReport(reportId, up)
 
     fun post(kind: String, note: String) {
         viewModelScope.launch { hub.sendReport(kind, note.trim()) }

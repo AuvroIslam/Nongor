@@ -24,6 +24,7 @@ private data class PersistedSos(
     // constructor, so a file written before this field existed leaves it null, not empty.
     val seenBy: Map<String, List<String>>? = null,
     val acked: List<String>? = null,
+    val resolved: List<String>? = null,
 )
 
 /**
@@ -73,6 +74,16 @@ class SosRepository(private val persistFile: File? = null) {
      */
     private val _acked = MutableStateFlow<Set<String>>(emptySet())
 
+    /**
+     * SOS ids whose sender has since said they are safe.
+     *
+     * Kept rather than deleted. A responder who was on their way needs to see that the call was
+     * stood down, not find that it silently vanished — "it disappeared" and "they are safe" are
+     * very different things to a person steering a boat.
+     */
+    private val _resolved = MutableStateFlow<Set<String>>(emptySet())
+    val resolved: StateFlow<Set<String>> = _resolved
+
     private var lastBriefedCount = 0
 
     init {
@@ -85,6 +96,7 @@ class SosRepository(private val persistFile: File? = null) {
                 _quarantine.value = saved.quarantine
                 _seenBy.value = saved.seenBy?.mapValues { (_, v) -> v.toSet() } ?: emptyMap()
                 _acked.value = saved.acked?.toSet() ?: emptySet()
+                _resolved.value = saved.resolved?.toSet() ?: emptySet()
             }
         }
     }
@@ -107,6 +119,7 @@ class SosRepository(private val persistFile: File? = null) {
         _quarantine.value = emptyList()
         _seenBy.value = emptyMap()
         _acked.value = emptySet()
+        _resolved.value = emptySet()
         lastBriefedCount = 0
         persist()
     }
@@ -145,6 +158,16 @@ class SosRepository(private val persistFile: File? = null) {
 
     fun hasAcked(msgId: String): Boolean = msgId in _acked.value
 
+    /** Record that the sender of [msgId] has stood the call down. */
+    fun markResolved(msgId: String): Boolean {
+        if (msgId.isBlank() || msgId in _resolved.value) return false
+        _resolved.value = _resolved.value + msgId
+        persist()
+        return true
+    }
+
+    fun isResolved(msgId: String): Boolean = msgId in _resolved.value
+
     /** How many reports arrived since the last briefing was generated. */
     fun newSince(): Int = (_entries.value.size - lastBriefedCount).coerceAtLeast(0)
 
@@ -167,6 +190,7 @@ class SosRepository(private val persistFile: File? = null) {
                         _quarantine.value,
                         _seenBy.value.mapValues { (_, v) -> v.toList() },
                         _acked.value.toList(),
+                        _resolved.value.toList(),
                     ),
                 ),
             )
