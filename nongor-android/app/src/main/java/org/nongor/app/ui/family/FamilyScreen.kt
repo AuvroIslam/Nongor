@@ -55,6 +55,8 @@ import org.nongor.app.mesh.MeshReadiness
 import org.nongor.app.ui.components.MeshHealthBanner
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.material3.AlertDialog
+import compose.icons.feathericons.Trash2
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -63,6 +65,7 @@ fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
     // Tapping someone on the radar highlights their row below, so the picture and the
     // detail stay connected rather than being two separate things to read.
     var selected by remember { mutableStateOf<String?>(null) }
+    var confirmClear by remember { mutableStateOf(false) }
     // Radar rides the same radio as Mesh SOS but never asked for its permissions. Open the
     // app on this screen first, on a fresh install, and it would advertise into nothing and
     // report "0 phones in range" forever without ever prompting.
@@ -75,10 +78,46 @@ fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
         onDispose { viewModel.leave() }
     }
 
+    if (confirmClear) {
+        AlertDialog(
+            onDismissRequest = { confirmClear = false },
+            title = { Text(tr("Clear the radar?", "রাডার খালি করবেন?")) },
+            text = {
+                Text(
+                    tr(
+                        "Removes the family sightings logged on this phone and any practice data. " +
+                            "Real SOS reports are kept — the triage queue and the briefing are " +
+                            "counted from those.",
+                        "এই ফোনে জমা পরিবারের সাক্ষাৎ ও অনুশীলনের তথ্য মুছে যাবে। প্রকৃত এসওএস " +
+                            "রিপোর্ট থাকবে — ট্রায়াজ তালিকা ও ব্রিফিং সেগুলো থেকেই গোনা হয়।",
+                    ),
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearRadar(); confirmClear = false }) {
+                    Text(tr("Clear", "খালি করুন"), color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmClear = false }) {
+                    Text(tr("Cancel", "বাতিল"))
+                }
+            },
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(tr("Radar", "রাডার")) },
+                actions = {
+                    IconButton(onClick = { confirmClear = true }) {
+                        Icon(
+                            FeatherIcons.Trash2,
+                            contentDescription = tr("Clear the radar", "রাডার খালি করুন"),
+                        )
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) { Icon(FeatherIcons.ArrowLeft, contentDescription = "Back") }
                 },

@@ -102,6 +102,19 @@ class FamilyViewModel(application: Application) : AndroidViewModel(application) 
         if (code.isNotBlank() && name.isNotBlank()) startBeacon()
     }
 
+    /**
+     * Wipe what is plotted, without wiping what matters.
+     *
+     * Clears the family encounters this phone has logged and any leftover drill cases, which is
+     * what actually clutters the radar. Real SOS reports stay: they feed the triage queue and
+     * the briefing, and a tidy-up button is not a place to lose them.
+     */
+    fun clearRadar() {
+        app.familyRepository.clear()
+        app.sosRepository.clearDrills()
+        refreshOthers()
+    }
+
     fun forgetFamily() {
         app.prefs.clearFamily()
         app.familyRepository.clear()
