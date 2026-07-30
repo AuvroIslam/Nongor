@@ -1,208 +1,406 @@
 <div align="center">
 
-# নোঙর · Nongor
+<img src="docs/logo.png" alt="নোঙর · Nongor" width="380">
 
-**An offline crisis companion for Bangladesh**
-No internet. No account. No server. No signal required.
+### An offline crisis companion for Bangladesh
 
-*July Hackathon 2026 — Crisis Tech (Track A)*
+**No internet. No account. No server. No signal required.**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-0B6E5F.svg?style=flat-square)](LICENSE)
+[![Platform](https://img.shields.io/badge/Android-8.0%2B-0B6E5F?style=flat-square&logo=android&logoColor=white)](#build-and-run)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0-0B6E5F?style=flat-square&logo=kotlin&logoColor=white)](#tech-stack)
+[![Gemma 4](https://img.shields.io/badge/Gemma%204-on--device-C46A00?style=flat-square)](#how-gemma-4-is-used)
+[![Tests](https://img.shields.io/badge/unit%20tests-145%20passing-1B8F62?style=flat-square)](#tests)
+
+*Nongor (নোঙর) means **anchor** — what holds when everything else is moving.*
 
 </div>
 
 ---
 
-*Nongor (নোঙর) means **anchor** — what holds when everything else is moving.*
-
-When a flood takes out the tower, the phone in your pocket becomes a torch and a clock.
-Nongor makes it a rescue tool instead: it calls for help phone-to-phone with no network,
-routes you around water that is already over the road, tells you what to do for the bleeding,
-and — the part nobody else builds — **lets a Bangla-speaking volunteer actually talk to
-someone who does not speak Bangla.**
-
-Every feature below runs on a phone in aeroplane mode. That is the whole design constraint.
+> **Nongor keeps flood victims and volunteers connected with no internet: signed phone-to-phone
+> SOS, offline shelter maps, first aid and triage, AI on-device.**
 
 ---
 
-## The problem we kept coming back to
+## Why this exists
 
-Bangladesh's disaster response is good. The gap is not helicopters or volunteers — it is the
-last two hundred metres, where a rescuer reaches a person and cannot do anything useful:
+<img src="GithubSlides/2.png" alt="51 people died in Bangladesh floods this July alone. 39 injured, 1,000,000+ affected, 7 districts." width="100%">
 
-- The network is down, so nobody knows they are there.
-- The road on the map is under a metre of water.
-- **They do not share a language.** A volunteer from Dhaka reaches a Chakma family in
-  Rangamati, a Rohingya family in Ukhiya, a Deaf woman in a shelter queue — and the first
-  question, *"are you hurt?"*, cannot be asked. Google Translate has none of these languages,
-  and it would need internet if it did.
+Those are the confirmed figures from Bangladesh's Ministry of Disaster Management for **July 2026
+alone** ([BSS](https://www.bssnews.net/news/404964)). Cox's Bazar lost 28 people, Chattogram 13,
+Bandarban 6, Rangamati 3, Moulvibazar 1.
 
-That last one is why Nongor exists in the shape it does.
+Bangladesh's disaster response is not short of helicopters or volunteers. The gap is the
+**last two hundred metres** — where a rescuer physically reaches a person and still cannot help.
+
+<img src="GithubSlides/3.png" alt="The Last 200 Meters — the districts that lost the most people are exactly where Rohingya, Chakma, Marma and Kokborok are spoken." width="100%">
+
+Read that casualty list against a language map. The districts that lost the most people —
+**Cox's Bazar, Bandarban, Rangamati, Khagrachhari** — are precisely where Rohingya, Chakma, Marma
+and Kokborok are spoken. Cox's Bazar alone holds the world's largest Rohingya settlement.
+
+A volunteer from Dhaka reaches a family there and cannot ask *"are you hurt?"*. Google Translate
+carries none of those languages, and would need a tower if it did.
+
+That is the shape of the problem Nongor is built around.
 
 ---
 
-## Emergency Translation — the part we built this app around
+## What it does
 
-No offline translator covers Chakma, Marma, Kokborok, Santali, Garo or Rohingya. So Nongor
-does not pretend to be one. It does something that actually works with no shared language:
+<img src="GithubSlides/4.png" alt="Nongor home screen in Bangla, captured in aeroplane mode." width="100%">
 
-**1. A fixed set of the questions that matter in a rescue.** 127 phrases across first contact,
-medical, rescue, reassurance, water and food, shelter, family, danger and directions — with
-**276 lines of sourced translation** across six languages:
+**Every screenshot in this README was captured in aeroplane mode**, on a ৳8,000 handset. That is
+the design constraint, not a marketing line.
+
+### Emergency Translation
+
+<img src="GithubSlides/5.png" alt="Emergency Translation — 127 phrases, 276 sourced lines, 6 languages." width="100%">
+
+No offline translator covers these languages, so Nongor does not pretend to be one. It ships a
+fixed set of the questions that matter in a rescue — **127 phrases, 276 sourced translation lines,
+six languages** — and makes the conversation completable even where the phrasebook is silent.
 
 | | Chakma | Rohingya | Kokborok | Santali | Marma | Garo |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| lines | 51 | 50 | 50 | 50 | 39 | 36 |
+| sourced lines | 51 | 50 | 50 | 50 | 39 | 36 |
 
-**2. A hand-over card, split down the middle.** The top half is drawn upside down. You lay the
-phone flat between you and the other person reads their half across it — nobody snatches the
-phone back and forth, and both of you can see what was asked and what was answered.
+The hand-over card is split down the middle and the top half is drawn **upside down**: lay the
+phone flat between you and the other person reads their half across it. Every phrase carries a
+pictogram and a tap-reply — Yes / No / Don't know, a number pad, a 1–5 pain scale, a body-part
+list — so the exchange completes **even when there is no line at all** for that language. That is
+the real innovation: the fallback is not a worse translation, it is a protocol that needs no
+shared language.
 
-**3. Every question has a pictogram and a tap-reply.** Yes / No / Don't know, a number pad, a
-1–5 pain scale, a body-part list. So the conversation completes **even when the phrasebook has
-no line at all** for that language. That is the actual innovation here: the fallback is not a
-worse translation, it is a protocol that needs no language.
+Ten guided questions build a structured hand-over note — bleeding: yes, breathing: no, four
+people, one child — triaged by the same engine as the rest of the app and sendable straight over
+the mesh. A volunteer who speaks no Chakma still walks away holding a medical record.
 
-**4. A described BdSL-style gesture for every phrase**, for Deaf users and for noise.
-
-**5. Ten guided questions build a hand-over note** — bleeding: yes, breathing: no, four people,
-one child — which is triaged by the same rule engine the rest of the app uses and can be sent
-straight over the mesh as an SOS. A volunteer who speaks no Chakma still walks away holding a
-structured medical record.
-
-> **On the minority-language lines.** Bangla and English are authored. Everything else is one
-> of two clearly-labelled things, and the app never flattens them into each other:
->
-> - **From a corpus** — Chakma, Marma and Garo lines drawn from
->   [MELD](https://data.mendeley.com/datasets/dy5dyfygbp/4) (CC BY 4.0), a published parallel
->   corpus collected from native speakers at Daffodil International University. Each line
->   carries the English sentence it was *actually* translated from, shown on screen — because
->   the closest published line to "Do you need help?" is "Can I help you?", and the volunteer
->   should see that rather than have it hidden.
-> - **Unverified seed** — a small Chakma and Rohingya word list, marked
->   **যাচাই হয়নি · unverified** every time it appears.
->
-> Neither is presented as verified, and the pictogram plus the yes/no protocol never depend on
-> either. Verification by native speakers is the next step, not something quietly assumed — see
+> **On the minority-language lines.** Bangla and English are authored. Everything else is either
+> drawn from a published corpus ([MELD](https://data.mendeley.com/datasets/dy5dyfygbp/4),
+> [GATITOS](https://github.com/google-research/url-nlp/tree/main/gatitos), both CC BY 4.0) and
+> shown with the English sentence it was actually translated from, or marked
+> **যাচাই হয়নি · unverified** every single time it appears. Neither is presented as verified, and
+> the pictogram protocol never depends on either. Details in
 > [`docs/PHRASEBOOK.md`](docs/PHRASEBOOK.md).
 >
-> **Gemma is never used to translate these languages.** It has almost no training data for
-> them and would produce fluent, confident, wrong output — the one failure mode a rescue
-> phrasebook cannot have. Where the optional model *is* installed it does one narrow job:
-> reading a free-text description and picking which existing phrases to show. It selects ids;
-> it never writes a word of any language, and a hallucinated id is discarded.
+> **Gemma is never used to translate these languages.** It has almost no training data for them
+> and would produce fluent, confident, wrong output — the one failure mode a rescue phrasebook
+> cannot have. Where the model is installed it does one narrow job: reading a free-text
+> description and picking which *existing* phrases to show. It selects ids; it never writes a word
+> of any language, and a hallucinated id is discarded.
 
----
+### SOS — mesh, then SMS
 
-## Everything else
+<img src="GithubSlides/6.png" alt="SOS: mesh + SMS. Ed25519-signed, relayed phone to phone, with an outbox and a 160-character SMS fallback." width="100%">
+
+Hold the button and the phone sounds a siren *and* pushes an **Ed25519-signed** SOS to every
+Nongor phone in Bluetooth / Wi-Fi Direct range, relayed onward hop by hop. Forged envelopes are
+quarantined, never merged into the trusted set — a fake report must not be able to distort rescue
+priority.
+
+Nobody in range? It goes to an **outbox** and flushes the moment a peer appears; "queued" never
+silently means "lost". No data network at all? The same SOS collapses into **one 160-character
+SMS line** that reads on a button phone and can be pasted back into Nongor at the other end.
+
+When someone actually opens your SOS, you find out — a signed read receipt travels back over the
+same mesh. The screen is careful about what that means: *your message got through*, not *help is
+coming*.
+
+### The map reads the board
+
+<img src="GithubSlides/7.png" alt="Dijkstra flood-avoiding routing over OpenStreetMap graphs, 9,525 shelters across all 64 districts." width="100%">
+
+**9,525 shelters across all 64 districts**, with flood-avoiding pedestrian routing (Dijkstra over
+real OpenStreetMap road graphs) in the detailed packs.
+
+The part that makes it more than a map: a neighbour posts *"this road is blocked"* to the community
+board over the mesh, and the map assistant **takes that into account** when you ask for a safe
+route. Local knowledge, minutes old, with no internet in the loop.
+
+### Built for responders too
+
+<img src="GithubSlides/8.png" alt="Volunteers section — triage ranking with visible reasoning, and a situation briefing." width="100%">
+
+A volunteer with one boat and nine calls has one question: *who do I go to first?* Triage ranks the
+queue **and shows the signal behind each ranking** — a responder has to be able to disagree with
+the app, and can only do that if they can see why.
+
+The briefing turns a hundred reports into one short summary. Every exact number is computed in
+code; the model only writes them up.
+
+### And the rest
 
 | Feature | What it does when the network is gone |
 | --- | --- |
-| **Emergency call** | 999 plus the official BD short codes (1090 flood warning, 16111 Coast Guard, 333, 102, 109, 1098) bundled in the APK. Uses `ACTION_DIAL`, so it needs no call permission and never dials on its own. |
-| **Mesh SOS** | Ed25519-signed SOS over Nearby Connections (Bluetooth + Wi-Fi Direct), relayed multi-hop phone to phone. A `isProductionTrusted()` gate accepts only `scheme == ed25519`, so an attacker cannot forge a "verified" message by claiming an older scheme. Forgeries are quarantined, never merged. A store-and-forward outbox holds an SOS sent with nobody in range and flushes it the moment a peer appears — "queued" never silently means "lost". |
-| **SMS bridge** | After a flood the data network dies first and comes back last, but the same tower often still carries SMS — and half the handsets in a haor village are button phones. An SOS compresses to one line (`NGR1 C 24.8901,91.8712 P4 F:trp,bld N:Rahim`) that fits a single 160-character SMS, reads on any handset made this century, and pastes back into another Nongor phone to recover the exact coordinates. Nongor fills in your messaging app; you press send. It asks for no SMS permission. |
-| **Safe shelter & route** | Dijkstra flood-avoiding routing over real OpenStreetMap road graphs for three districts (4,801 / 1,532 / 546 junctions), with a nationwide fallback to the nearest of **9,525** real shelters across all **64** districts. |
-| **First aid** | Retrieval over a WHO/IFRC-grounded corpus, cited, in Bangla or English, with a life-threat red-flag banner. |
-| **Rescue triage** | Ranks a queue of SOS reports by a transparent rule table, and shows the signal that caused each ranking — a responder has to be able to disagree with the app, and can only do that if they can see why. |
-| **Community board** | Tagged area reports (road flooded, shelter full, danger) over the same signed mesh, scoped to your district so one area's news does not drown another's. |
-| **Family reunion** | Your phone beacons a hashed family tag and an AES-sealed name. Only a phone with the same family code can open it, so strangers in range learn nothing. Shows direction and rough distance when a separated member's phone passes by. |
-| **Coordinator summary** | A briefing where **every exact number is computed in code** — counts, coordinates, capacities. Nothing precise is ever passed through a language model to be echoed back. |
-| **Full Bangla** | Both languages live side by side at every call site, so a missing translation does not compile. |
-| **Drill & guide** | Practise before it happens; drill data is purged the moment a real report arrives. |
-
-### The optional AI
-
-An on-device model (LiteRT-LM / Gemma) can be downloaded to add free-form questions and photo
-assessment. **It is genuinely optional.** Every feature above runs without it, the intro offers
-a one-tap skip, and the home screen says plainly whether it is installed. We would rather the
-app work on a ৳8,000 handset than demo well on a flagship.
+| **Emergency call** | 999 plus the official BD short codes (1090 flood warning, 16111 Coast Guard, 333, 102, 109, 1098), bundled in the APK. Uses `ACTION_DIAL`, so it needs no call permission and never dials on its own. |
+| **Radar** | Direction and distance to family, to people calling for help, and to volunteers offering it — no map needed. Family presence is hashed and encrypted, so strangers in range learn nothing. |
+| **Community board** | Tag what you can see — road flooded, shelter full, pharmacy open — and it spreads phone to phone. |
+| **Offline AI** | Free-form questions about the flood, entirely on the handset. |
 
 ---
 
-## Design rules we held to
+## System architecture
 
-**Counts in code, never in prose.** A language model may phrase a briefing; it is never handed
-a coordinate, capacity or ID to reproduce. Long numbers are exactly what they get wrong.
+```mermaid
+flowchart TB
+    subgraph UI["📱 Compose UI · Bangla / English"]
+        direction LR
+        HOME["Home · SOS"]
+        TRANS["Translation"]
+        MAP["Map"]
+        VOL["Volunteer"]
+    end
 
-**Every ranking shows its reason.** No bare urgency score anywhere.
+    subgraph BRAIN["🧠 Intelligence · on-device only"]
+        direction LR
+        GEMMA["<b>Gemma 4 E2B</b><br/>LiteRT-LM runtime<br/><i>the only LLM</i>"]
+        RAG["Grounding<br/>retrieve → cite"]
+        RULES["Deterministic core<br/>triage · routing · counts"]
+    end
 
-**Degrade to something, never to nothing.** No peer in range → outbox. No data → SMS. No
-translation → pictogram. No GPS → district centre, clearly labelled. No model → rule engine.
+    subgraph DATA["💾 Bundled data · no network"]
+        direction LR
+        PHRASE["Phrasebook<br/>127 × 6 languages"]
+        SHELT["9,525 shelters<br/>64 districts"]
+        AID["First-aid packs<br/>WHO · IFRC"]
+        OSM["OSM road graphs<br/>+ flood layer"]
+    end
 
-**Say what is not verified.** The unverified phrase band, the "illustrative scenario" label on
-flood extents, the honest model-status line. A crisis tool that overstates itself is worse than
-one that admits a gap.
+    subgraph MESH["📡 Transport · no tower"]
+        direction LR
+        NEARBY["Nearby Connections<br/>BLE + Wi-Fi Direct"]
+        SIGN["Ed25519 envelope<br/>verify before trust"]
+        OUT["Outbox<br/>store &amp; forward"]
+        SMS["SMS bridge<br/>160 characters"]
+    end
+
+    UI --> BRAIN
+    BRAIN --> DATA
+    UI --> MESH
+    MESH <-->|"signed SOS · reports · presence"| PEER["🤝 Other Nongor phones"]
+    DATA --> RAG
+    RAG --> GEMMA
+    RULES -.->|"fallback when no model"| BRAIN
+
+    classDef ui fill:#0B6E5F,stroke:#064A3F,stroke-width:2px,color:#ffffff
+    classDef brain fill:#C46A00,stroke:#8A4A00,stroke-width:2px,color:#ffffff
+    classDef data fill:#1B8F62,stroke:#0F6444,stroke-width:2px,color:#ffffff
+    classDef mesh fill:#B32B62,stroke:#7D1E45,stroke-width:2px,color:#ffffff
+    classDef peer fill:#1F62B0,stroke:#154479,stroke-width:2px,color:#ffffff
+
+    class HOME,TRANS,MAP,VOL ui
+    class GEMMA,RAG,RULES brain
+    class PHRASE,SHELT,AID,OSM data
+    class NEARBY,SIGN,OUT,SMS mesh
+    class PEER peer
+```
+
+Nothing in that diagram crosses the internet. The only network Nongor speaks is **phone to phone**.
+
+---
+
+## How Gemma 4 is used
+
+**Gemma 4 E2B is the only large language model in this project.** No other LLM or generative
+foundation model is used anywhere — not for a feature, not for a fallback, not behind an API. It
+runs entirely on the handset through **LiteRT-LM**; no prompt, photo or location ever leaves the
+device.
+
+It is the reasoning layer behind six features:
+
+| Feature | What Gemma 4 does | Grounded on |
+| --- | --- | --- |
+| **First Aid** | Turns "deep cut on the leg, bleeding a lot" into ordered, individually cited steps — and can read an attached photo of the injury | Retrieved WHO / IFRC / Red Cross passages |
+| **Map assistant** | Answers "which way to the nearest shelter?" in natural language, **including neighbours' mesh reports** about blocked roads | Shelter list, route result, community board |
+| **Triage** | Ranks a queue of SOS calls by urgency and states the risk signals behind each ranking | The report text and optional photo |
+| **Situation briefing** | Writes a coordinator briefing from a hundred reports | Counts computed in code, never by the model |
+| **Offline chat** | Free-form questions about the flood, safety, what to do next | Open, with safety framing |
+| **Phrase finder** | Picks which fixed phrases fit what the volunteer describes | The 127-phrase book |
+
+### Where the model is deliberately *not* trusted
+
+This took the most work of anything in the project. An LLM that invents a shelter name or a
+compression rate during a flood is worse than no LLM.
+
+- **Numbers never pass through the model.** Counts, distances, coordinates and shelter capacities
+  are computed in Kotlin and rendered directly. Gemma paraphrases them into prose; it never
+  supplies them. That was not a theoretical worry — asked to summarise, it turned `500` into
+  `50000`, and reported "455 blocked roads" when the engine had counted 455 *graph segments
+  crossing a flood layer*, which is a far bigger claim than the data supports.
+- **First aid is retrieval-grounded.** Steps must come from retrieved passages and carry their
+  citation; the prompt forbids inventing a drug, dose or rate, and requires every number copied
+  exactly.
+- **Untrusted text is fenced.** User input, mesh reports and phrase notes are wrapped as data, not
+  instructions, before reaching a prompt.
+- **Neighbours' reports are attributed, not absorbed.** When the map assistant uses a community
+  report it must say who reported it and how long ago, and may never restate it as confirmed fact.
+- **The phrasebook is never AI-written**, as described above.
+
+### What is lost without the model
+
+Nongor still runs — but this is an honest account of the difference:
+
+| Feature | With Gemma 4 | Without |
+| --- | --- | --- |
+| First Aid | Ordered steps for *your* situation, photo-aware | The source passages, unranked |
+| Map assistant | Natural-language answer citing the board | Nearest shelter + route only |
+| Triage | Reasoned ranking with stated signals | Keyword rule engine |
+| Briefing | Written summary | Raw counts and bars |
+| Offline chat | Available | Unavailable |
+
+The deterministic core is a **safety net for ৳8,000 phones, not an equivalent**. It keeps the
+life-critical paths — SOS, mesh, routing, phrasebook, siren — alive on hardware that cannot hold a
+2.5 GB model. Everything that requires *understanding* is Gemma.
+
+---
+
+## Degrade to something, never to nothing
+
+<img src="GithubSlides/9.png" alt="Degradation table: no peer → outbox, no data network → SMS, no shared language → pictogram, no GPS → district centre, no AI model → rule engine." width="100%">
+
+| Failure | Nongor's answer |
+| --- | --- |
+| No peer in range | Outbox — flushes the moment one appears |
+| No data network | SMS bridge, 160 characters, button-phone readable |
+| No shared language | Pictogram + tap-reply |
+| No GPS fix | Tap the map to place yourself; district centre labelled honestly |
+| No AI model | Deterministic rule engine |
+| No internet, ever | The default assumption |
 
 ---
 
 ## Build and run
 
-Requires **Android Studio** (bundled JDK 21) and a phone on **Android 12+**.
+**Requirements** — JDK 17, Android SDK 35, and a device or emulator on Android 8.0 (API 26) or
+newer. Two physical devices if you want to see the mesh.
 
 ```bash
-cd nongor-android
+git clone https://github.com/AuvroIslam/Nongor.git
+cd Nongor/nongor-android
 
-# Debug APK
-./gradlew :app:assembleDebug        # app/build/outputs/apk/debug/app-debug.apk
-
-# Release APK (~32 MB, arm64-v8a + armeabi-v7a)
-./gradlew :app:assembleRelease
-
-# The reasoning core, the phrasebook engine and the SMS codec are pure Kotlin
-./gradlew :app:testDebugUnitTest    # 95 unit tests
+./gradlew assembleDebug        # build
+./gradlew installDebug         # install on a connected device
+./gradlew testDebugUnitTest    # run the 145 unit tests
 ```
 
-On Windows, point Gradle at Android Studio's JDK:
+The APK lands in `app/build/outputs/apk/debug/app-debug.apk`.
 
-```bash
-JAVA_HOME="/c/Program Files/Android/Android Studio/jbr" ./gradlew :app:assembleDebug
-```
+No API keys, no `local.properties` secrets, no backend to stand up. Gradle resolves everything;
+`gradle/libs.versions.toml` is the single dependency manifest.
 
-Install and open it. There is no sign-in and no first-run download. **Turn aeroplane mode on
-and use the whole app** — that is the intended demo.
+### Using it
 
-To see the mesh work you need two phones with Nongor installed, Bluetooth and location on,
-within about 100 m of each other.
+1. **Launch.** Every feature except the AI works immediately — no sign-in, no first-run download.
+2. **Optional: add Gemma 4.** Onboarding offers a ~2.5 GB model download (Wi-Fi recommended). Skip
+   it and the app runs on the deterministic core; add it later from Settings.
+3. **Two phones for the mesh.** Install on both, grant nearby-devices and location permission, and
+   keep Bluetooth on. SOS, community reports and family presence flow between them with no network.
+4. **Aeroplane mode.** Switch it on and keep using the app — that is the whole demo.
 
 ---
 
-## What is under the hood
+## Tech stack
 
-```
-nongor-android/app/src/main/
-├── java/org/nongor/app/
-│   ├── core/        pure-Kotlin engines — triage, GIS/Dijkstra, RAG, phrasebook,
-│   │                conversation triage, SMS codec, mesh envelope, family crypto
-│   ├── data/        prefs · districts · 9,525 shelters · region packs · repositories
-│   ├── mesh/        Nearby Connections hub, Ed25519 identity, store-and-forward outbox
-│   ├── inference/   optional on-device model runtime
-│   ├── location/    fused location with a graceful district-centre fallback
-│   └── ui/          home · translate · emergency · mesh · gis · firstaid · triage ·
-│                    community · family · summary · chat · guide · onboarding · settings
-└── assets/          phrasebook · road graphs · districts · shelters · first-aid packs
-```
+| Layer | Choice |
+| --- | --- |
+| Language / UI | Kotlin 2.0, Jetpack Compose, Material 3 |
+| On-device LLM | **Gemma 4 E2B** via LiteRT-LM — the only LLM |
+| Mesh transport | Google Nearby Connections (BLE + Wi-Fi Direct), `P2P_CLUSTER` |
+| Signing | Ed25519 via BouncyCastle, Lamport-clock dedup, TTL relay |
+| Routing | Dijkstra over OpenStreetMap pedestrian graphs, flood-polygon avoidance |
+| Storage | JSON stores on internal storage, SharedPreferences |
+| Build | AGP 9.1, Gradle version catalog |
 
-Everything in `core/` is free of Android imports, which is why it can be unit-tested on the
-JVM — the disaster logic is verifiable without a device and without the model.
+### Third-party components and data
+
+| Component | Use | Licence |
+| --- | --- | --- |
+| [Gemma 4 E2B](https://deepmind.google/models/gemma/gemma-4/) | On-device LLM | Gemma Terms of Use |
+| [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) | Model runtime | Apache-2.0 |
+| Google Nearby Connections | Mesh transport | Play Services terms |
+| BouncyCastle | Ed25519 signing | MIT |
+| Feather Icons (compose-icons) | Iconography | MIT |
+| [OpenStreetMap](https://www.openstreetmap.org/copyright) | Road graphs | ODbL |
+| [MELD](https://data.mendeley.com/datasets/dy5dyfygbp/4) | Chakma / Marma / Garo lines | CC BY 4.0 |
+| [GATITOS](https://github.com/google-research/url-nlp/tree/main/gatitos) | Six-language vocabulary | CC BY 4.0 |
+| WHO / IFRC / Red Cross first-aid guidance | First-aid passages | Cited in-app, per step |
+
+### AI assistance disclosure
+
+Per the hackathon rules: **Claude (Anthropic) was used as a coding assistant** during the sprint
+for implementation, refactoring and test writing. Architecture and product decisions were made by
+the team, and changes were reviewed before commit. The *application's own* intelligence is Gemma 4
+exclusively — no other model runs inside the app or generated any of its shipped content.
 
 ---
 
-## Data and attribution
+## Data and privacy
 
-- **Roads & shelters** — © OpenStreetMap contributors (ODbL); road networks via Overpass,
-  shelters via HOT-OSM `hotosm_bgd_education_facilities`.
-- **Districts** — [nuhil/bangladesh-geocode](https://github.com/nuhil/bangladesh-geocode) (gov.bd-sourced).
-- **Chakma, Marma & Garo phrases** — MELD: *A multilingual ethnic dataset of Chakma, Garo and
-  Marma in Bengali script with English and standard Bengali translation*, Mahi, Khan, Anik &
-  Mojumdar, Daffodil International University —
-  [Mendeley Data](https://data.mendeley.com/datasets/dy5dyfygbp/4), **CC BY 4.0**.
-- **Rohingya, Kokborok & Santali vocabulary** — GATITOS, from Google Research's
-  [SMOL](https://huggingface.co/datasets/google/smol) collection of professional translations
-  into low-resource languages, **CC BY 4.0**. Published in Latin script, and shown that way.
-- **First-aid content** — grounded in WHO / IFRC / Red Cross guidance.
-- **Emergency numbers** — official Government of Bangladesh short codes.
-- **Icons** — Feather (MIT) and Material Symbols (Apache-2.0).
-- Flood extents in the region packs are **illustrative scenarios**, not live flood data.
-- AI assistance was used during development and is disclosed in our submission.
+Nongor has no server, no account and no analytics. Nothing is uploaded, because there is nowhere
+to upload to.
 
-## Licence
+| Data | Why it is collected | Where it goes |
+| --- | --- | --- |
+| Your SOS text and position | So a rescuer can find you | Signed, broadcast to nearby Nongor phones only |
+| Community reports | Warn neighbours about roads and shelters | Same mesh, same signing |
+| Family code and name | Recognise relatives over the mesh | Never broadcast in the clear — the code is **hashed**, the name **AES-GCM encrypted**; a stranger in range learns nothing |
+| Location | Distances, routing, attaching a position to an SOS | Stays on the phone unless you send an SOS or report |
+| Photos and prompts | First aid and triage | Never leave the device — the model is local |
 
-MIT — see [LICENSE](LICENSE). Please fork it, and please correct our phrasebook.
+Permissions requested: location and nearby-devices (mesh discovery), microphone (voice input),
+camera and photos (injury assessment). All are optional; declining one degrades that feature alone.
+
+Nongor is not a surveillance tool, and could not be repurposed as one — there is no central view of
+anything, anywhere.
+
+---
+
+## Tests
+
+```bash
+./gradlew testDebugUnitTest
+```
+
+**145 unit tests**, concentrated where being wrong is expensive: Ed25519 envelope verification and
+forgery rejection, mesh dedup and multi-hop relay, the family-presence crypto handshake, SOS read
+receipts and their persistence across a restart, triage rules, flood-avoiding routing, SMS
+encode/decode round-trips, and phrasebook asset integrity.
+
+The core logic is deliberately pure Kotlin with no Android dependencies, so it runs on the JVM
+without a device.
+
+---
+
+## Repository layout
+
+```
+nongor-android/app/src/main/java/org/nongor/app/
+  core/          pure Kotlin — mesh envelope, crypto, routing, triage, SMS, phrasebook
+  mesh/          Nearby Connections transport, outbox, identity, readiness checks
+  inference/     Gemma 4 / LiteRT-LM engine holder
+  data/          repositories and bundled-asset loaders
+  ui/            Compose screens
+nongor-android/app/src/main/assets/
+  phrasebook.json        127 phrases × 6 languages
+  bd_shelters.json       9,525 shelters
+  first_aid_packs.json   WHO / IFRC passages
+docs/PHRASEBOOK.md       how each translation line was sourced
+```
+
+---
+
+<div align="center">
+
+<img src="GithubSlides/10.png" alt="Thank you" width="100%">
+
+**Built during the 72-hour sprint, 28–30 July 2026.**
+
+July Hackathon 2026 — Crisis Tech (Track A) · Build with Gemma 4 Hackathon
+
+Licensed under the [MIT License](LICENSE).
+
+*If Nongor is useful to you, a ⭐ helps it reach the people who need it.*
+
+</div>
