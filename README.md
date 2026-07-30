@@ -7,7 +7,7 @@
 **No internet. No account. No server. No signal required.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-0B6E5F.svg?style=flat-square)](LICENSE)
-[![Platform](https://img.shields.io/badge/Android-8.0%2B-0B6E5F?style=flat-square&logo=android&logoColor=white)](#build-and-run)
+[![Platform](https://img.shields.io/badge/Android-12%2B-0B6E5F?style=flat-square&logo=android&logoColor=white)](#build-and-run)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0-0B6E5F?style=flat-square&logo=kotlin&logoColor=white)](#tech-stack)
 [![Gemma 4](https://img.shields.io/badge/Gemma%204-on--device-C46A00?style=flat-square)](#how-gemma-4-is-used)
 [![Tests](https://img.shields.io/badge/unit%20tests-166%20passing-1B8F62?style=flat-square)](#tests)
@@ -33,7 +33,7 @@
 
 ### ⬇ Install it
 
-**[Download the APK](https://drive.google.com/file/d/1cA6WW_H4o2aPEyy_hucZZAHBhUw0P1G7/view?usp=sharing)** · 32 MB · Android 8.0+
+**[Download the APK](https://drive.google.com/file/d/1cA6WW_H4o2aPEyy_hucZZAHBhUw0P1G7/view?usp=sharing)** · 32 MB · Android 12+
 
 No sign-in and no first-run download — everything except the optional AI works the moment it opens.
 
@@ -425,7 +425,7 @@ conversation without any words at all, which is a better answer than a confident
 
 ## Build and run
 
-**Requirements** — JDK 17, Android SDK 35, and a device or emulator on Android 8.0 (API 26) or
+**Requirements** — JDK 17, Android SDK 35, and a device or emulator on Android 12 (API 31) or
 newer. Two physical devices if you want to see the mesh.
 
 ```bash
