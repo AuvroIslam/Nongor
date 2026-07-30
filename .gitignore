@@ -28,3 +28,9 @@ venv/
 # Release signing - never commit
 keystore.properties
 *.jks
+
+# Working notes and design sources, not part of the app
+all_description.md
+gemmaHackathon.md
+video-script-bn.md
+uiImages/

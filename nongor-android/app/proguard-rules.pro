@@ -1,4 +1,4 @@
-# ---- Nongor release keep rules -------------------------------------------------
+# ---- Nongor release keep rules ------------------------------------------------
 # Keep line numbers so a crash in the field maps back to source.
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
