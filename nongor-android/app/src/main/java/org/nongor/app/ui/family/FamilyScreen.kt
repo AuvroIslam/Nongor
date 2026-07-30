@@ -53,6 +53,8 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import org.nongor.app.mesh.MeshReadiness
 import org.nongor.app.ui.components.MeshHealthBanner
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -192,20 +194,62 @@ private fun SetupCard(onSave: (String, String) -> Unit) {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant)
         Spacer(Modifier.height(14.dp))
-        OutlinedTextField(value = code, onValueChange = { code = it }, singleLine = true,
+        // Digits only, and at least four of them. The code has to be agreed out loud between
+        // relatives and typed identically on several phones, often by someone who is not
+        // confident with a keyboard — letters invite case and spelling mismatches that silently
+        // put two family members in two different families. A number keypad removes that whole
+        // class of failure, and four digits is the shortest length that is not guessable by a
+        // stranger in range who is trying codes.
+        val digitsOnly = code.all { it.isDigit() }
+        val longEnough = code.length >= FAMILY_CODE_MIN
+        OutlinedTextField(
+            value = code,
+            onValueChange = { input -> code = input.filter { it.isDigit() }.take(FAMILY_CODE_MAX) },
+            singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            label = { Text(tr("Family code (secret)", "পরিবার কোড (গোপন)")) })
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+            isError = code.isNotEmpty() && !longEnough,
+            label = { Text(tr("Family code (numbers only)", "পরিবার কোড (শুধু সংখ্যা)")) },
+            supportingText = {
+                Text(
+                    if (code.isNotEmpty() && !longEnough) {
+                        tr(
+                            "At least $FAMILY_CODE_MIN digits.",
+                            "কমপক্ষে $FAMILY_CODE_MIN সংখ্যা দিন।",
+                        )
+                    } else {
+                        tr(
+                            "$FAMILY_CODE_MIN digits or more. Everyone in the family types the same one.",
+                            "$FAMILY_CODE_MIN বা তার বেশি সংখ্যা। পরিবারের সবাই একই কোড দেবেন।",
+                        )
+                    },
+                )
+            },
+        )
         Spacer(Modifier.height(10.dp))
         OutlinedTextField(value = name, onValueChange = { name = it }, singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             label = { Text(tr("Your name in the family", "পরিবারে আপনার নাম")) })
         Spacer(Modifier.height(14.dp))
-        Button(onClick = { onSave(code, name) },
-            enabled = code.isNotBlank() && name.isNotBlank(), modifier = Modifier.fillMaxWidth()) {
+        Button(
+            onClick = { onSave(code, name.trim()) },
+            enabled = longEnough && digitsOnly && name.isNotBlank(),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             Text(tr("Save & start", "সেভ করে শুরু করুন"))
         }
     }
 }
+
+/**
+ * Four digits is the floor.
+ *
+ * Short enough to say down a corridor and remember without writing it down; long enough that
+ * someone within radio range cannot work through the space by hand. The cap keeps it typable
+ * on a feature-phone keypad.
+ */
+private const val FAMILY_CODE_MIN = 4
+private const val FAMILY_CODE_MAX = 12
 
 @Composable
 private fun MemberRow(s: SeenMember, highlighted: Boolean = false) {
