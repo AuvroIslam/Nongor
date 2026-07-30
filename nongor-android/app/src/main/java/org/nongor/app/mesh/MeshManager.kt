@@ -17,6 +17,13 @@ import com.google.android.gms.nearby.connection.PayloadTransferUpdate
 import com.google.android.gms.nearby.connection.Strategy
 import com.google.gson.Gson
 import java.util.UUID
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 /**
  * Offline mesh transport over Google Nearby Connections (Bluetooth + Wi-Fi Direct, no internet).
@@ -72,6 +79,14 @@ class MeshManager(
     companion object {
         const val SERVICE_ID = "org.nongor.app.NONGOR_MESH"
         private const val MAX_SEEN = 2_000
+
+        // Wide enough that two phones rarely land in the same window, short enough that pairing
+        // still feels immediate when someone is standing next to you.
+        private const val DIAL_JITTER_MIN_MS = 150L
+        private const val DIAL_JITTER_MAX_MS = 1_800L
+
+        // How long a dial may sit unresolved before we assume it stalled and allow a retry.
+        private const val DIAL_TIMEOUT_MS = 12_000L
     }
 
     private val payloadCallback = object : PayloadCallback() {
@@ -140,6 +155,13 @@ class MeshManager(
      */
     private val dialing = mutableSetOf<String>()
 
+    /** Own scope so a jittered dial and its watchdog survive independently of any screen. */
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    private fun clearDial(name: String) {
+        synchronized(peerLock) { dialing.remove(name) }
+    }
+
     private val discovery = object : EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
             // Both sides dial. This used to break the symmetry so that only the lower advertised
@@ -153,19 +175,44 @@ class MeshManager(
             // handled: onConnectionResult drops a second connection to a name we hold, and
             // incoming payloads are deduped by message id regardless. A redundant socket is a far
             // cheaper failure than no socket.
+            val name = info.endpointName
             val alreadyKnown = synchronized(peerLock) {
-                connected.any { endpointNames[it] == info.endpointName } ||
-                    info.endpointName in dialing
+                connected.any { endpointNames[it] == name } || name in dialing
             }
             if (alreadyKnown) return
-            synchronized(peerLock) { dialing.add(info.endpointName) }
-            client.requestConnection(advertisedName, endpointId, lifecycle)
-                .addOnFailureListener {
-                    // A simultaneous dial from the other side loses one of the two requests.
-                    // Clearing the guard lets the next discovery callback try again rather than
-                    // marking this phone as permanently in-flight.
-                    synchronized(peerLock) { dialing.remove(info.endpointName) }
+            synchronized(peerLock) { dialing.add(name) }
+
+            scope.launch {
+                // Jitter before dialling. Two phones that discover each other in the same instant
+                // will otherwise call requestConnection simultaneously, and Nearby resolves that
+                // collision by dropping one or both requests — silently, with no failure callback.
+                // A short random wait means one side almost always gets there first and the other
+                // sees it as an incoming connection instead.
+                delay(Random.nextLong(DIAL_JITTER_MIN_MS, DIAL_JITTER_MAX_MS))
+                val stillWanted = synchronized(peerLock) {
+                    name in dialing && connected.none { endpointNames[it] == name }
                 }
+                if (!stillWanted) return@launch
+
+                runCatching {
+                    client.requestConnection(advertisedName, endpointId, lifecycle)
+                        .addOnFailureListener { clearDial(name) }
+                }.onFailure { clearDial(name) }
+
+                // Watchdog. requestConnection can report success and then never resolve — the
+                // handshake stalls and neither onConnectionResult nor the failure listener ever
+                // fires. Without this the guard stays set for the life of the process and every
+                // later discovery callback returns early, so two phones sitting next to each
+                // other never pair again. Releasing the guard lets the next callback retry.
+                delay(DIAL_TIMEOUT_MS)
+                val stalled = synchronized(peerLock) {
+                    name in dialing && connected.none { endpointNames[it] == name }
+                }
+                if (stalled) {
+                    clearDial(name)
+                    onStatus("Retrying ${displayNameOf(name)}…")
+                }
+            }
         }
 
         override fun onEndpointLost(endpointId: String) {
@@ -204,6 +251,7 @@ class MeshManager(
     }
 
     fun stop() {
+        scope.coroutineContext.cancelChildren()
         try {
             client.stopAdvertising(); client.stopDiscovery(); client.stopAllEndpoints()
         } catch (_: Exception) {
