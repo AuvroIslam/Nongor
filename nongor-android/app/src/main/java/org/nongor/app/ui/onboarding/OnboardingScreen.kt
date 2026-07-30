@@ -18,11 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
@@ -34,14 +31,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
@@ -51,15 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.nongor.app.R
 import org.nongor.app.ui.i18n.tr
-import org.nongor.app.ui.theme.BrandBlueGlow
-import org.nongor.app.ui.theme.BrandBlue
 import org.nongor.app.ui.theme.BrandTeal
 import org.nongor.app.ui.theme.BgCard
 import org.nongor.app.ui.theme.BgDark
-import org.nongor.app.ui.theme.BgMid
 import org.nongor.app.ui.theme.Divider
 import org.nongor.app.ui.theme.ErrorRed
-import org.nongor.app.ui.theme.GlassBg
 import org.nongor.app.ui.theme.GlassBorder
 import org.nongor.app.ui.theme.TextMuted
 import org.nongor.app.ui.theme.TextPrimary
@@ -140,261 +131,211 @@ fun OnboardingScreen(
         )
     }
 
-    Box(
+    // One page, no scrolling. A first-run screen that has to be scrolled hides its own Skip
+    // button, and the whole point of this screen is that skipping is the expected path — every
+    // feature except the AI already works. Weighted spacers absorb the difference between a
+    // tall phone and a short one rather than letting the content run off the bottom.
+    Column(
         Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(listOf(BgDark, BgMid, BgDark)),
-            ),
+            .background(BgDark)
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .padding(horizontal = 24.dp, vertical = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        // Top glow
+        Spacer(Modifier.weight(0.6f))
+
+        // Flat brand mark. The old screen stacked two radial gradients and a glow orb behind
+        // this; on a cheap phone that is three overdrawn layers for decoration.
         Box(
-            Modifier
-                .align(Alignment.TopCenter)
-                .size(360.dp)
-                .background(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            BrandBlue.copy(alpha = 0.2f),
-                            BrandBlueGlow.copy(alpha = 0.05f),
-                            Color.Transparent,
-                        ),
-                    ),
-                    shape = CircleShape,
-                ),
+            Modifier.size(76.dp).clip(CircleShape).background(BrandTeal),
+            contentAlignment = Alignment.Center,
+        ) {
+            Image(
+                painterResource(R.drawable.nongor_mark),
+                contentDescription = null,
+                modifier = Modifier.size(44.dp),
+            )
+        }
+
+        Spacer(Modifier.height(16.dp))
+        Text(
+            tr("Nongor is ready", "নোঙর প্রস্তুত"),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.ExtraBold,
+            color = TextPrimary,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(
+            tr(
+                "Emergency calls, translation, mesh SOS, shelters, routes and first aid all work " +
+                    "right now — no internet, no download.",
+                "জরুরি কল, অনুবাদ, মেশ এসওএস, আশ্রয়, পথ ও প্রাথমিক চিকিৎসা এখনই চলে — ইন্টারনেট বা " +
+                    "ডাউনলোড ছাড়াই।",
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            color = TextSecondary,
+            textAlign = TextAlign.Center,
         )
 
+        Spacer(Modifier.weight(0.8f))
+
+        // ---- The optional model ----
         Column(
             Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 32.dp, vertical = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+                .fillMaxWidth()
+                .clip(ShapeMd)
+                .background(BrandTeal.copy(alpha = 0.08f))
+                .padding(16.dp),
         ) {
-            // Glow orb logo
-            Box(contentAlignment = Alignment.Center) {
-                Box(
-                    Modifier
-                        .size(140.dp)
-                        .background(
-                            brush = Brush.radialGradient(
-                                colors = listOf(BrandBlue.copy(alpha = 0.35f), BrandBlueGlow.copy(alpha = 0.1f), Color.Transparent),
-                            ),
-                            shape = CircleShape,
-                        ),
-                )
-                Box(
-                    Modifier
-                        .size(88.dp)
-                        .background(
-                            brush = Brush.linearGradient(
-                                colors = listOf(BrandBlue, BrandTeal),
-                                start = Offset.Zero,
-                                end = Offset(88f, 88f),
-                            ),
-                            shape = CircleShape,
-                        ),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Image(
-                        painterResource(R.drawable.nongor_mark),
-                        contentDescription = null,
-                        modifier = Modifier.size(56.dp),
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(32.dp))
-
             Text(
-                tr("Nongor is ready to use", "নোঙর এখনই ব্যবহারের জন্য প্রস্তুত"),
-                style = MaterialTheme.typography.displayLarge,
+                stringResource(R.string.consent_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.ExtraBold,
                 color = TextPrimary,
-                textAlign = TextAlign.Center,
-            )
-            Spacer(Modifier.height(12.dp))
-            Text(
-                tr(
-                    "Emergency calls, translation, mesh SOS, shelters, routes, first aid and " +
-                        "family reunion all work right now, with no internet and no download.\n\n" +
-                        "An optional AI model adds free-form questions and photo assessment. " +
-                        "It is a large download and it is not needed for anything above.",
-                    "জরুরি কল, অনুবাদ, মেশ SOS, আশ্রয়কেন্দ্র, পথ, প্রাথমিক চিকিৎসা ও পরিবার " +
-                        "পুনর্মিলন — সবই এখনই চলে, ইন্টারনেট বা ডাউনলোড ছাড়াই।\n\n" +
-                        "একটি ঐচ্ছিক এআই মডেল যোগ করলে খোলা প্রশ্ন ও ছবি বিশ্লেষণ করা যায়। " +
-                        "এটি বড় ডাউনলোড, এবং উপরের কোনো কিছুর জন্যই এটি লাগে না।",
-                ),
-                style = MaterialTheme.typography.bodyLarge,
-                color = TextSecondary,
-                textAlign = TextAlign.Center,
-            )
-
-            Spacer(Modifier.height(20.dp))
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(ShapeMd)
-                    .border(1.dp, GlassBorder, ShapeMd)
-                    .background(GlassBg)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                Text(
-                    stringResource(R.string.consent_title),
-                    color = TextPrimary,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                )
-                ConsentLine(stringResource(R.string.consent_download_size))
-                ConsentLine(stringResource(R.string.consent_ram))
-                ConsentLine(stringResource(R.string.consent_intensive))
-                ConsentLine(stringResource(R.string.consent_offline))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(ShapeSm)
-                        .clickable(enabled = !ui.downloading) { consentAccepted = !consentAccepted }
-                        .padding(top = 4.dp),
-                    verticalAlignment = Alignment.Top,
-                ) {
-                    Checkbox(
-                        checked = consentAccepted,
-                        onCheckedChange = if (ui.downloading) null else { checked -> consentAccepted = checked },
-                        enabled = !ui.downloading,
-                    )
-                    Text(
-                        text = stringResource(R.string.consent_checkbox),
-                        color = TextSecondary,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(top = 12.dp, start = 4.dp),
-                    )
-                }
-            }
-
-            if (ui.lowMemoryWarning) {
-                Spacer(Modifier.height(16.dp))
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .clip(ShapeSm)
-                        .background(ErrorRed.copy(alpha = 0.12f))
-                        .border(1.dp, ErrorRed.copy(alpha = 0.3f), ShapeSm)
-                        .padding(12.dp),
-                ) {
-                    Text(
-                        stringResource(R.string.low_memory_warning),
-                        color = ErrorRed,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
-            }
-
-            ui.error?.let { err ->
-                Spacer(Modifier.height(16.dp))
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .clip(ShapeSm)
-                        .background(ErrorRed.copy(alpha = 0.12f))
-                        .border(1.dp, ErrorRed.copy(alpha = 0.3f), ShapeSm)
-                        .padding(12.dp),
-                ) {
-                    Text(err, color = ErrorRed, style = MaterialTheme.typography.bodyMedium)
-                }
-            }
-
-            if (ui.downloading) {
-                Spacer(Modifier.height(28.dp))
-                val cur = ui.progress.first
-                val max = ui.progress.second
-                val fraction = if (max > 0) cur.toFloat() / max else 0f
-                LinearProgressIndicator(
-                    progress = { fraction },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                        .clip(ShapePill),
-                    color = BrandTeal,
-                    trackColor = Divider,
-                )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    if (max > 0) "${cur / (1024 * 1024)} / ${max / (1024 * 1024)} MB · ${(fraction * 100).toInt()}%"
-                    else stringResource(R.string.downloading_model),
-                    color = TextSecondary,
-                    style = MaterialTheme.typography.labelMedium,
-                )
-            }
-
-            Spacer(Modifier.height(36.dp))
-
-            Button(
-                onClick = { viewModel.startDownload() },
-                enabled = !ui.downloading && consentAccepted,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(54.dp),
-                shape = ShapeMd,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = BrandBlue,
-                    contentColor = Color.White,
-                    disabledContainerColor = BgCard,
-                    disabledContentColor = TextMuted,
-                ),
-            ) {
-                if (ui.downloading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(18.dp),
-                        strokeWidth = 2.dp,
-                        color = TextSecondary,
-                    )
-                } else {
-                    Text(
-                        stringResource(R.string.download_and_continue),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 16.sp,
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(16.dp))
-            Text(
-                if (!consentAccepted && !ui.downloading) {
-                    stringResource(R.string.consent_required)
-                } else {
-                    "~2.5 GB · Wi-Fi recommended · Runs fully offline"
-                },
-                color = TextMuted,
-                style = MaterialTheme.typography.labelMedium,
-                textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(10.dp))
-            TextButton(
-                onClick = { showLegalInfo = true },
-                enabled = !ui.downloading,
+            FactRow(stringResource(R.string.consent_download_size))
+            FactRow(stringResource(R.string.consent_ram))
+            FactRow(stringResource(R.string.consent_intensive))
+            FactRow(stringResource(R.string.consent_offline))
+
+            Spacer(Modifier.height(6.dp))
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(ShapeSm)
+                    .clickable(enabled = !ui.downloading) { consentAccepted = !consentAccepted },
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(stringResource(R.string.review_terms_credits_privacy))
-            }
-            // Skipping is the expected path, not a fallback for people who gave up, so it
-            // gets a real button rather than a grey link buried under the download CTA.
-            Spacer(Modifier.height(4.dp))
-            OutlinedButton(
-                onClick = onSkip,
-                enabled = !ui.downloading,
-                modifier = Modifier.fillMaxWidth().height(52.dp),
-                shape = ShapeMd,
-            ) {
+                Checkbox(
+                    checked = consentAccepted,
+                    onCheckedChange = if (ui.downloading) null else { c -> consentAccepted = c },
+                    enabled = !ui.downloading,
+                )
                 Text(
-                    tr("Skip — start using Nongor now", "বাদ দিন — এখনই নোঙর ব্যবহার করুন"),
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
+                    stringResource(R.string.consent_checkbox),
+                    color = TextSecondary,
+                    style = MaterialTheme.typography.bodySmall,
                 )
             }
         }
+
+        if (ui.lowMemoryWarning) {
+            Spacer(Modifier.height(10.dp))
+            Text(
+                stringResource(R.string.low_memory_warning),
+                color = ErrorRed,
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        ui.error?.let { err ->
+            Spacer(Modifier.height(10.dp))
+            Text(
+                err,
+                color = ErrorRed,
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        if (ui.downloading) {
+            Spacer(Modifier.height(14.dp))
+            val cur = ui.progress.first
+            val max = ui.progress.second
+            val fraction = if (max > 0) cur.toFloat() / max else 0f
+            LinearProgressIndicator(
+                progress = { fraction },
+                modifier = Modifier.fillMaxWidth().height(6.dp).clip(ShapePill),
+                color = BrandTeal,
+                trackColor = Divider,
+            )
+            Spacer(Modifier.height(6.dp))
+            Text(
+                if (max > 0) {
+                    "${cur / (1024 * 1024)} / ${max / (1024 * 1024)} MB · ${(fraction * 100).toInt()}%"
+                } else {
+                    stringResource(R.string.downloading_model)
+                },
+                color = TextSecondary,
+                style = MaterialTheme.typography.labelMedium,
+            )
+        }
+
+        Spacer(Modifier.weight(1f))
+
+        // ---- Actions ----
+        // Skip is a real button of equal weight, not a grey link under the download CTA:
+        // it is the expected path, not a consolation for people who gave up.
+        val canDownload = !ui.downloading && consentAccepted
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .clip(ShapePill)
+                .background(if (canDownload) BrandTeal else BrandTeal.copy(alpha = 0.30f))
+                .clickable(enabled = canDownload) { viewModel.startDownload() }
+                .padding(vertical = 15.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (ui.downloading) {
+                CircularProgressIndicator(
+                    Modifier.size(17.dp), strokeWidth = 2.dp, color = Color.White,
+                )
+                Spacer(Modifier.size(9.dp))
+            }
+            Text(
+                stringResource(R.string.download_and_continue),
+                color = Color.White,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 15.sp,
+            )
+        }
+
+        Spacer(Modifier.height(9.dp))
+        OutlinedButton(
+            onClick = onSkip,
+            enabled = !ui.downloading,
+            modifier = Modifier.fillMaxWidth().height(50.dp),
+            shape = ShapePill,
+        ) {
+            Text(
+                tr("Skip — start using Nongor now", "বাদ দিন — এখনই নোঙর ব্যবহার করুন"),
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+            )
+        }
+
+        Spacer(Modifier.height(2.dp))
+        TextButton(onClick = { showLegalInfo = true }, enabled = !ui.downloading) {
+            Text(
+                stringResource(R.string.review_terms_credits_privacy),
+                style = MaterialTheme.typography.labelMedium,
+                color = TextMuted,
+            )
+        }
+
+        Spacer(Modifier.weight(0.3f))
+    }
+}
+
+/** One fact about the download: a teal dot and a line, nothing more. */
+@Composable
+private fun FactRow(text: String) {
+    Row(Modifier.padding(bottom = 7.dp), verticalAlignment = Alignment.Top) {
+        Box(
+            Modifier.padding(top = 6.dp).size(5.dp).clip(CircleShape).background(BrandTeal),
+        )
+        Text(
+            text,
+            color = TextSecondary,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(start = 10.dp),
+        )
     }
 }
 
