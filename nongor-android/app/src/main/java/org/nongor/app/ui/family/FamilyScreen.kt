@@ -85,11 +85,12 @@ fun FamilyScreen(viewModel: FamilyViewModel, onBack: () -> Unit) {
             text = {
                 Text(
                     tr(
-                        "Removes the family sightings logged on this phone and any practice data. " +
-                            "Real SOS reports are kept — the triage queue and the briefing are " +
-                            "counted from those.",
-                        "এই ফোনে জমা পরিবারের সাক্ষাৎ ও অনুশীলনের তথ্য মুছে যাবে। প্রকৃত এসওএস " +
-                            "রিপোর্ট থাকবে — ট্রায়াজ তালিকা ও ব্রিফিং সেগুলো থেকেই গোনা হয়।",
+                        "Removes every family sighting and every SOS this phone holds — practice " +
+                            "and real. The triage queue and the briefing are counted from the same " +
+                            "reports, so they empty too. This cannot be undone.",
+                        "এই ফোনের সব পরিবারের সাক্ষাৎ ও সব এসওএস মুছে যাবে — অনুশীলন ও প্রকৃত, দুটোই। " +
+                            "ট্রায়াজ তালিকা ও ব্রিফিং একই রিপোর্ট থেকে গোনা হয়, তাই সেগুলোও খালি হয়ে " +
+                            "যাবে। এটি আর ফেরানো যাবে না।",
                     ),
                 )
             },

@@ -210,22 +210,9 @@ fun FamilyRadar(
 
             // Everyone we have a real fix for. Drawn worst-first so an SOS is never hidden
             // under a volunteer marker sitting at the same bearing.
-            //
-            // Fanned out before drawing: several reports from the same spot - which is the
-            // normal case for practice data, and for one incident that several people call in -
-            // otherwise resolve to identical coordinates and stack into one unreadable clot of
-            // overlapping circles and labels at the centre.
-            val others = fanOut(
-                volunteerBlips.filter { it.hasFix }.map { it to SafeGreen } +
-                    sosBlips.filter { it.hasFix }.map { it to ErrorRed },
-            )
-            others.filter { it.colour == SafeGreen }.forEach {
-                OtherBlip(it.blip, radius, it.colour, it.bearingDeg, showLabel = others.size <= 6)
-            }
+            volunteerBlips.filter { it.hasFix }.forEach { OtherBlip(it, radius, SafeGreen) }
             placed.forEach { seen -> MemberBlip(seen, radius, bangla, onSelect) }
-            others.filter { it.colour == ErrorRed }.forEach {
-                OtherBlip(it.blip, radius, it.colour, it.bearingDeg, showLabel = others.size <= 6)
-            }
+            sosBlips.filter { it.hasFix }.forEach { OtherBlip(it, radius, ErrorRed) }
 
             if (members.isEmpty()) {
                 // Sits just under the centre dot rather than at the bottom edge, where it
@@ -398,50 +385,6 @@ private fun RingKey(label: String) {
     }
 }
 
-/** One blip with the bearing it should actually be drawn at, after de-overlapping. */
-private data class FannedBlip(val blip: RadarBlip, val colour: Color, val bearingDeg: Float)
-
-/**
- * Separate blips that would land on the same pixel.
- *
- * Reports of one incident share a position, and seeded practice data shares it exactly, so
- * without this they stack into a single clot with every label printed over every other. Blips
- * are bucketed by roughly-equal distance and direction, then the members of each bucket are
- * fanned symmetrically around their shared bearing.
- *
- * The fan widens as the ring gets tighter: near the centre a degree of arc is worth almost no
- * pixels, so a fixed angular spread would leave the innermost blips still touching.
- */
-private fun fanOut(input: List<Pair<RadarBlip, Color>>): List<FannedBlip> {
-    if (input.size <= 1) {
-        return input.map { (b, c) -> FannedBlip(b, c, b.bearingDeg ?: 0f) }
-    }
-    val buckets = LinkedHashMap<Pair<Int, Int>, MutableList<Pair<RadarBlip, Color>>>()
-    input.forEach { entry ->
-        val (blip, _) = entry
-        val r = radiusFraction(blip.distanceM ?: 0)
-        val bearing = blip.bearingDeg ?: 0f
-        val key = (r * 50).toInt() to (bearing / 12f).toInt()
-        buckets.getOrPut(key) { mutableListOf() }.add(entry)
-    }
-    return buckets.values.flatMap { group ->
-        if (group.size == 1) {
-            group.map { (b, c) -> FannedBlip(b, c, b.bearingDeg ?: 0f) }
-        } else {
-            group.mapIndexed { i, (b, c) ->
-                val base = b.bearingDeg ?: 0f
-                val r = radiusFraction(b.distanceM ?: 0).coerceAtLeast(0.12f)
-                val spread = (FAN_ARC_DEG / r).coerceAtMost(48f)
-                val offset = (i - (group.size - 1) / 2f) * spread
-                FannedBlip(b, c, base + offset)
-            }
-        }
-    }
-}
-
-/** Arc between two stacked blips at full radius; scaled up as the ring tightens. */
-private const val FAN_ARC_DEG = 7f
-
 /**
  * A blip that is not family: someone calling for help, or someone offering it.
  *
@@ -449,15 +392,9 @@ private const val FAN_ARC_DEG = 7f
  * colour - red means somebody there needs help, green means help is standing there.
  */
 @Composable
-private fun BoxScope.OtherBlip(
-    blip: RadarBlip,
-    radius: Dp,
-    colour: Color,
-    bearingOverride: Float,
-    showLabel: Boolean,
-) {
+private fun BoxScope.OtherBlip(blip: RadarBlip, radius: Dp, colour: Color) {
     val distance = blip.distanceM ?: return
-    val bearing = bearingOverride
+    val bearing = blip.bearingDeg ?: return
     val r = radiusFraction(distance)
     val rad = Math.toRadians(bearing.toDouble())
     val fx = (sin(rad) * r).toFloat()
@@ -475,15 +412,13 @@ private fun BoxScope.OtherBlip(
                     .background(colour)
                     .border(2.dp, Color.White.copy(alpha = 0.85f), CircleShape),
             )
-            if (showLabel) {
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    blip.name.take(8),
-                    color = Color.White.copy(alpha = 0.85f),
-                    fontSize = 8.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
+            Spacer(Modifier.height(2.dp))
+            Text(
+                blip.name.take(8),
+                color = Color.White.copy(alpha = 0.85f),
+                fontSize = 8.sp,
+                fontWeight = FontWeight.SemiBold,
+            )
         }
     }
 }

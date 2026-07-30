@@ -103,15 +103,15 @@ class FamilyViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     /**
-     * Wipe what is plotted, without wiping what matters.
+     * Wipe everything the radar plots.
      *
-     * Clears the family encounters this phone has logged and any leftover drill cases, which is
-     * what actually clutters the radar. Real SOS reports stay: they feed the triage queue and
-     * the briefing, and a tidy-up button is not a place to lose them.
+     * Family sightings and every SOS this phone holds, practice or real. Clearing the SOS store
+     * also empties the triage queue and the coordinator briefing, because those are counted from
+     * the same entries - the confirmation dialog says so, since this is not recoverable.
      */
     fun clearRadar() {
         app.familyRepository.clear()
-        app.sosRepository.clearDrills()
+        app.sosRepository.clear()
         refreshOthers()
     }
 

@@ -102,18 +102,6 @@ class SosRepository(private val persistFile: File? = null) {
         persist()
     }
 
-    /**
-     * Drop practice data only.
-     *
-     * Real reports are what the triage queue and the coordinator briefing are counted from, so
-     * "tidy up the radar" must never be a way to quietly delete somebody's call for help.
-     */
-    fun clearDrills() {
-        val before = _entries.value.size
-        _entries.value = _entries.value.filterNot { it.source == "drill" }
-        if (_entries.value.size != before) persist()
-    }
-
     fun clear() {
         _entries.value = emptyList()
         _quarantine.value = emptyList()
