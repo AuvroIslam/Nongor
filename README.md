@@ -10,7 +10,7 @@
 [![Platform](https://img.shields.io/badge/Android-8.0%2B-0B6E5F?style=flat-square&logo=android&logoColor=white)](#build-and-run)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0-0B6E5F?style=flat-square&logo=kotlin&logoColor=white)](#tech-stack)
 [![Gemma 4](https://img.shields.io/badge/Gemma%204-on--device-C46A00?style=flat-square)](#how-gemma-4-is-used)
-[![Tests](https://img.shields.io/badge/unit%20tests-145%20passing-1B8F62?style=flat-square)](#tests)
+[![Tests](https://img.shields.io/badge/unit%20tests-166%20passing-1B8F62?style=flat-square)](#tests)
 
 *Nongor (নোঙর) means **anchor** — what holds when everything else is moving.*
 
@@ -120,6 +120,18 @@ When someone actually opens your SOS, you find out — a signed read receipt tra
 same mesh. The screen is careful about what that means: *your message got through*, not *help is
 coming*.
 
+**And when it is over, you can say so.** "I am safe now" stops the alarm and pushes a signed
+stand-down along the same relay, so every phone that heard the call learns it has ended. In a
+flood the scarce resource is boats and people; a rescuer steering toward an SOS that was resolved
+an hour ago is capacity taken from someone still waiting. Cancelling has to travel as far as the
+call did.
+
+Two details that matter. The stand-down is its own green button rather than a second meaning for
+the red circle — someone shaking on a roof should not have to work out that "STOP" is the thing
+that tells their family they are alright. And the call **stays on the log**, marked resolved,
+rather than vanishing: a responder already moving needs to see it was stood down, because "it
+disappeared" and "they are safe" are very different things.
+
 ### The map reads the board
 
 <img src="GithubSlides/7.png" alt="Dijkstra flood-avoiding routing over OpenStreetMap graphs, 9,525 shelters across all 64 districts." width="100%">
@@ -130,6 +142,18 @@ real OpenStreetMap road graphs) in the detailed packs.
 The part that makes it more than a map: a neighbour posts *"this road is blocked"* to the community
 board over the mesh, and the map assistant **takes that into account** when you ask for a safe
 route. Local knowledge, minutes old, with no internet in the loop.
+
+**And the neighbourhood can correct itself.** Every report carries **"I see it too"** and
+**"Not what I see"**. Votes are signed and spread over the same mesh, and the counts reach Gemma
+with the report — so the assistant can say *"four people nearby confirm this"*, or flag that a
+claim is disputed more than it is confirmed and refuse to route you on it alone. One eyewitness
+is a claim; five who walked past the same road is close to a fact, and five who say the road is
+fine is a reason to doubt it.
+
+Deliberately **not** a like button. A thumbs-up says how you feel; nobody's feelings should move
+a rescue route. And votes are stored as sets of signed voter identities, not counters, so a vote
+relayed over two hops cannot count twice and a single handset cannot manufacture a consensus to
+bury a true report.
 
 ### Built for responders too
 
@@ -225,7 +249,7 @@ It is the reasoning layer behind six features:
 | Feature | What Gemma 4 does | Grounded on |
 | --- | --- | --- |
 | **First Aid** | Turns "deep cut on the leg, bleeding a lot" into ordered, individually cited steps — and can read an attached photo of the injury | Retrieved WHO / IFRC / Red Cross passages |
-| **Map assistant** | Answers "which way to the nearest shelter?" in natural language, **including neighbours' mesh reports** about blocked roads | Shelter list, route result, community board |
+| **Map assistant** | Answers "which way to the nearest shelter?" in natural language, **including neighbours' mesh reports** about blocked roads, weighted by how many people confirm or dispute each one | Shelter list, route result, community board + votes |
 | **Triage** | Ranks a queue of SOS calls by urgency and states the risk signals behind each ranking | The report text and optional photo |
 | **Situation briefing** | Writes a coordinator briefing from a hundred reports | Counts computed in code, never by the model |
 | **Offline chat** | Free-form questions about the flood, safety, what to do next | Open, with safety framing |
@@ -248,6 +272,8 @@ compression rate during a flood is worse than no LLM.
   instructions, before reaching a prompt.
 - **Neighbours' reports are attributed, not absorbed.** When the map assistant uses a community
   report it must say who reported it and how long ago, and may never restate it as confirmed fact.
+- **Disagreement is surfaced, never hidden.** Where a report is disputed more than confirmed, the
+  model is required to say so rather than quietly drop it or quietly repeat it.
 - **The phrasebook is never AI-written**, as described above.
 
 ### What is lost without the model
@@ -275,7 +301,7 @@ they cost us the most time.
 
 ### 1. Two phones on the same table would not pair
 
-The worst bug of the sprint, because it silently disabled *three* features at once — mesh SOS,
+The worst bug we hit, because it silently disabled *three* features at once — mesh SOS,
 community reports and family radar all ride the same transport.
 
 Both phones advertised and discovered correctly. Neither ever connected. Nearby Connections has
@@ -385,6 +411,8 @@ conversation without any words at all, which is a better answer than a confident
 | No shared language | Pictogram + tap-reply |
 | No GPS fix | Tap the map to place yourself; district centre labelled honestly |
 | No AI model | Deterministic rule engine |
+| A call for help that is over | "I am safe now" — a signed stand-down along the same relay |
+| A report nobody else can see | Disputed on the board; the assistant stops routing on it |
 | No internet, ever | The default assumption |
 
 ---
@@ -447,10 +475,10 @@ No API keys, no `local.properties` secrets, no backend to stand up. Gradle resol
 
 ### AI assistance disclosure
 
-Per the hackathon rules: **Claude (Anthropic) was used as a coding assistant** during the sprint
-for implementation, refactoring and test writing. Architecture and product decisions were made by
-the team, and changes were reviewed before commit. The *application's own* intelligence is Gemma 4
-exclusively — no other model runs inside the app or generated any of its shipped content.
+**Claude (Anthropic) was used as a coding assistant** for implementation, refactoring and test
+writing. Architecture and product decisions were made by the team, and changes were reviewed
+before commit. The *application's own* intelligence is Gemma 4 exclusively — no other model runs
+inside the app or generated any of its shipped content.
 
 ---
 
@@ -481,10 +509,11 @@ anything, anywhere.
 ./gradlew testDebugUnitTest
 ```
 
-**145 unit tests**, concentrated where being wrong is expensive: Ed25519 envelope verification and
+**166 unit tests**, concentrated where being wrong is expensive: Ed25519 envelope verification and
 forgery rejection, mesh dedup and multi-hop relay, the family-presence crypto handshake, SOS read
-receipts and their persistence across a restart, triage rules, flood-avoiding routing, SMS
-encode/decode round-trips, and phrasebook asset integrity.
+receipts and stand-downs surviving a restart, report votes refusing to double-count a relayed
+duplicate, triage rules, flood-avoiding routing, what the briefing is allowed to claim about
+roads, SMS encode/decode round-trips, and phrasebook asset integrity.
 
 The core logic is deliberately pure Kotlin with no Android dependencies, so it runs on the JVM
 without a device.
@@ -512,10 +541,6 @@ docs/PHRASEBOOK.md       how each translation line was sourced
 <div align="center">
 
 <img src="GithubSlides/10.png" alt="Thank you" width="100%">
-
-**Built during the 72-hour sprint, 28–30 July 2026.**
-
-July Hackathon 2026 — Crisis Tech (Track A) · Build with Gemma 4 Hackathon
 
 Licensed under the [MIT License](LICENSE).
 
