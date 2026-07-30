@@ -31,9 +31,11 @@
 
 **[youtu.be/9GsZ_ATN0ZQ](https://youtu.be/9GsZ_ATN0ZQ)** · 3 minutes · recorded in aeroplane mode
 
+**[Read the slide deck](https://drive.google.com/file/d/12RqTqRyUWP6mUbbsfdw6vtgqWOYw2hBl/view?usp=sharing)** (PDF)
+
 ### ⬇ Install it
 
-**[Download the APK](https://drive.google.com/file/d/1cA6WW_H4o2aPEyy_hucZZAHBhUw0P1G7/view?usp=sharing)** · 32 MB · Android 12+
+**[Download the APK](https://drive.google.com/file/d/1af8fL-YRcx70QRs9BCzoBBnNbIbghsjY/view?usp=drive_link)** · 32 MB · Android 12+
 
 No sign-in and no first-run download — everything except the optional AI works the moment it opens.
 
@@ -440,7 +442,7 @@ cd Nongor/nongor-android
 The APK lands in `app/build/outputs/apk/debug/app-debug.apk`.
 
 Prefer not to build? A signed release APK is
-**[available here](https://drive.google.com/file/d/1cA6WW_H4o2aPEyy_hucZZAHBhUw0P1G7/view?usp=sharing)**
+**[available here](https://drive.google.com/file/d/1af8fL-YRcx70QRs9BCzoBBnNbIbghsjY/view?usp=drive_link)**
 (32 MB), and a copy is committed as [`Nongor-v1.0.0.apk`](Nongor-v1.0.0.apk).
 
 No API keys, no `local.properties` secrets, no backend to stand up. Gradle resolves everything;
