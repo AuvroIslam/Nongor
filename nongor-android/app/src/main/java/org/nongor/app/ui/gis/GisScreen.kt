@@ -467,7 +467,6 @@ private fun MapAssistantCard(ui: GisUiState, onAsk: (String) -> Unit) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                AssistExample(tr("Nearest hospital", "নিকটতম হাসপাতাল")) { q = it; onAsk(it) }
                 AssistExample(tr("Safe route to shelter", "আশ্রয়ে নিরাপদ পথ")) { q = it; onAsk(it) }
                 AssistExample(
                     tr("What are neighbours reporting?", "প্রতিবেশীরা কী জানাচ্ছেন?"),

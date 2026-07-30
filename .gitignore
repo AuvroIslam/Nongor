@@ -24,3 +24,7 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Release signing - never commit
+keystore.properties
+*.jks

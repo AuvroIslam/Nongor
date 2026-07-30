@@ -125,7 +125,7 @@ class TranslateViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun guidedPhrase(): Phrase? =
-        _state.value.guidedStep?.let { book.triagePhrases().getOrNull(it) }
+        _state.value.guidedStep?.let { book.triagePhrasesFor(_state.value.targetLang).getOrNull(it) }
 
     fun assessment(): Assessment = ConversationTriage.assess(_state.value.replies)
 

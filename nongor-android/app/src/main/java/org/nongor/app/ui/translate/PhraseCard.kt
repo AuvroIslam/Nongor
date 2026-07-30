@@ -57,6 +57,7 @@ import org.nongor.app.ui.i18n.t
 import org.nongor.app.ui.theme.NongorColors
 import org.nongor.app.ui.theme.ShapeMd
 import org.nongor.app.ui.theme.ShapePill
+import org.nongor.app.core.GlossWord
 
 /**
  * The hand-over card.
@@ -112,7 +113,12 @@ fun PhraseCard(
                 )
                 Spacer(Modifier.height(10.dp))
 
-                TheirLine(phrase = phrase, translation = translation, target = target)
+                TheirLine(
+                    phrase = phrase,
+                    translation = translation,
+                    target = target,
+                    keyWords = target?.code?.let { book.keyWords(phrase, it) }.orEmpty(),
+                )
 
                 if (options.isNotEmpty()) {
                     Spacer(Modifier.height(14.dp))
@@ -303,7 +309,12 @@ fun PhraseCard(
 
 /** What the other person reads — their language when we have it, Bangla when we do not. */
 @Composable
-private fun TheirLine(phrase: Phrase, translation: Translation?, target: LangInfo?) {
+private fun TheirLine(
+    phrase: Phrase,
+    translation: Translation?,
+    target: LangInfo?,
+    keyWords: List<GlossWord> = emptyList(),
+) {
     val line = translation?.display
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         if (line != null) {
@@ -342,12 +353,62 @@ private fun TheirLine(phrase: Phrase, translation: Translation?, target: LangInf
         )
         if (line == null && target != null && !target.isGesture) {
             Spacer(Modifier.height(8.dp))
-            Text(
-                "${target.native} — অনুবাদ নেই, ছবি দেখে বুঝুন",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
-                textAlign = TextAlign.Center,
-            )
+            if (keyWords.isEmpty()) {
+                Text(
+                    "${target.native} — অনুবাদ নেই, ছবি দেখে বুঝুন",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
+                    textAlign = TextAlign.Center,
+                )
+            } else {
+                // No corpus line for this question, but we can say its content words. Shown as
+                // separate chips, never joined into a sentence: a word list is not grammar, and
+                // presenting it as one would invite a volunteer to badly miscommunicate in a
+                // medical exchange. Paired with the pictogram above, the words carry the meaning.
+                KeyWordStrip(keyWords)
+            }
+        }
+    }
+}
+
+/**
+ * The content words of a question in the other person's language.
+ *
+ * Only reached when the phrasebook has no line at all. Labelled as words rather than a
+ * translation, because that is what it is.
+ */
+@Composable
+private fun KeyWordStrip(words: List<GlossWord>) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            "শুধু শব্দ · words only, not a sentence",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.62f),
+            fontSize = 11.sp,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(6.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            words.forEach { w ->
+                Surface(shape = ShapePill, color = NongorColors.Surf.copy(alpha = 0.20f)) {
+                    Column(
+                        Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            w.word,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        )
+                        Text(
+                            w.en,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f),
+                            fontSize = 9.sp,
+                        )
+                    }
+                }
+            }
         }
     }
 }

@@ -92,6 +92,13 @@ data class BodyPart(val id: String, val en: String, val bn: String)
  * The fix is to admit the nullability at the boundary and normalise it in one place, via
  * [tagList] and [translations], which the rest of the app uses instead.
  */
+/**
+ * One content word of a phrase, in the other person's language.
+ *
+ * [en] is the English concept, [word] the line the other person reads.
+ */
+data class GlossWord(val en: String, val word: String)
+
 data class Phrase(
     val id: String,
     val cat: String,
@@ -195,6 +202,83 @@ data class PhrasebookData(
     fun triagePhrases(): List<Phrase> = flow.mapNotNull { byId[it] }
 
     /**
+     * The single-word lexicon for a language, built from the GATITOS entries only.
+     *
+     * Deliberately excludes corpus sentences. The Chakma line attached to the word "water" is
+     * "Can I get a glass of water?" - a real sentence, but showing it as the *word* water would
+     * be a lie the volunteer cannot detect.
+     */
+    private fun lexicon(lang: String): Map<String, String> =
+        lexiconCache.getOrPut(lang) {
+            val out = HashMap<String, String>()
+            allPhrases.forEach { p ->
+                val t = p.t?.get(lang) ?: return@forEach
+                if (t.src != "GATITOS") return@forEach
+                val key = (t.srcEn ?: p.en).trim().lowercase()
+                val word = t.latn ?: t.beng
+                if (key.isNotEmpty() && !word.isNullOrBlank()) out[key] = word
+            }
+            out
+        }
+
+    private val lexiconCache = HashMap<String, Map<String, String>>()
+
+    /**
+     * The content words of [phrase] that we can actually say in [lang].
+     *
+     * This is the honest fallback for a phrase the corpus never covered. It is **not** a
+     * translation and the UI must never present it as one: a word list is not grammar, and
+     * "you injured?" is not a sentence in any of these languages. But a volunteer who can point
+     * at the pictogram *and* show the word for BLOOD has far more than one who can do neither,
+     * and for Rohingya, Kokborok and Santali - which have no corpus line for eight of the ten
+     * guided questions - this is the difference between something and nothing.
+     *
+     * Empty when we cannot say any of it, which is a fine answer: the pictogram still works.
+     */
+    fun keyWords(phrase: Phrase, lang: String): List<GlossWord> {
+        if (phrase.t?.get(lang) != null) return emptyList()   // a real line exists; use that
+        val lex = lexicon(lang)
+        if (lex.isEmpty()) return emptyList()
+        val out = LinkedHashMap<String, String>()
+        concepts(phrase).forEach { c ->
+            val w = lex[c]
+            if (w != null && out.size < MAX_GLOSS) out[c] = w
+        }
+        return out.map { (en, word) -> GlossWord(en, word) }
+    }
+
+    /** English concepts a phrase is about, expanded through a small crisis synonym table. */
+    private fun concepts(phrase: Phrase): List<String> {
+        val words = WORD_RE.findAll(phrase.en.lowercase()).map { it.value }.toMutableList()
+        phrase.tagList.forEach { tag ->
+            WORD_RE.findAll(tag.lowercase()).forEach { words.add(it.value) }
+        }
+        val out = ArrayList<String>()
+        words.forEach { w ->
+            if (w in STOPWORDS) return@forEach
+            (SYNONYMS[w] ?: listOf(w)).forEach { if (it !in out) out.add(it) }
+        }
+        return out
+    }
+
+    /**
+     * The guided flow, with the questions we can actually say in [lang] first.
+     *
+     * Not filtered. Filtering to translated-only would leave Rohingya, Kokborok and Santali with
+     * an empty flow and the rest with two questions, which would delete the feature rather than
+     * improve it - the pictogram and tap-reply complete the exchange with no line at all. So the
+     * lines we do have simply lead.
+     */
+    fun triagePhrasesFor(lang: String?): List<Phrase> {
+        val all = triagePhrases()
+        if (lang.isNullOrBlank()) return all
+        val (translated, rest) = all.partition { it.t?.get(lang) != null }
+        return translated + rest
+    }
+
+
+
+    /**
      * The handful you reach for before you have worked out what is going on.
      *
      * Not the guided flow — that is a sequence you commit to. These are the standalone
@@ -250,3 +334,52 @@ object PhraseSearch {
             .map { it.first }
     }
 }
+
+private val WORD_RE = Regex("[a-z]+")
+private const val MAX_GLOSS = 4
+
+/** Words that carry no meaning worth glossing. */
+private val STOPWORDS = setOf(
+    "do", "you", "are", "is", "the", "a", "an", "of", "to", "your", "there", "any", "i", "we",
+    "can", "it", "with", "or", "does", "me", "normally", "many", "how", "and", "in", "on", "at",
+    "for", "be", "have", "has", "this", "that", "am", "was", "will", "if", "not", "no",
+)
+
+/**
+ * Crisis concepts mapped onto words the vocabulary actually contains.
+ *
+ * "Are you injured?" has no entry for "injured", but WOUND and PAIN are both in the lexicon and
+ * both land the meaning when paired with the pictogram. Without this table the gloss found one
+ * usable word across all ten guided questions; with it, eight of the ten are covered for the
+ * three languages that have no corpus line at all.
+ */
+private val SYNONYMS: Map<String, List<String>> = mapOf(
+    "injured" to listOf("wound", "pain"),
+    "injury" to listOf("wound"),
+    "wounded" to listOf("wound"),
+    "bleeding" to listOf("blood"),
+    "bleed" to listOf("blood"),
+    "hurt" to listOf("pain"),
+    "hurts" to listOf("pain"),
+    "drinking" to listOf("drink"),
+    "children" to listOf("child"),
+    "elderly" to listOf("man", "woman"),
+    "disabled" to listOf("sick"),
+    "ill" to listOf("sick"),
+    "people" to listOf("man", "woman", "child"),
+    "person" to listOf("man", "woman"),
+    "trapped" to listOf("help"),
+    "buried" to listOf("help"),
+    "stuck" to listOf("help"),
+    "rescued" to listOf("rescue"),
+    "walking" to listOf("walk"),
+    "thirst" to listOf("thirsty"),
+    "hunger" to listOf("hungry"),
+    "boats" to listOf("boat"),
+    "roads" to listOf("road"),
+    "houses" to listOf("house"),
+    // Nothing in the vocabulary carries these, and a wrong word is worse than none.
+    "understand" to emptyList(),
+    "breathe" to emptyList(),
+    "breathing" to emptyList(),
+)
