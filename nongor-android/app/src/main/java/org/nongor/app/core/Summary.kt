@@ -56,7 +56,14 @@ object Summary {
         sb.append("3) Shortages: $sh.\n")
         val nearCap = st.shelterPressure.count { it.pressure >= 0.8 }
         sb.append("4) Shelter pressure: $nearCap of ${st.shelterPressure.size} shelters near or over capacity.\n")
-        sb.append("5) Blocked roads/areas: ${st.blockedRoads.size} segments blocked.\n")
+        // "Crosses the flood layer" is not "blocked". The engine counts graph segments that
+        // intersect an illustrative flood polygon; reporting those as blocked roads is a much
+        // bigger claim than the data supports, and a responder acting on it would route around
+        // roads that are perfectly passable.
+        sb.append(
+            "5) Roads: ${st.blockedRoads.size} road segments cross the sample flood layer " +
+                "(illustrative, not live flood data).\n",
+        )
         sb.append("6) Recommended focus: ${if (st.critical > 0) "critical cases first" else "high-priority cases"}.")
         return sb.toString()
     }
@@ -79,13 +86,16 @@ object Summary {
     // lists (it once turned "500" into "50000" and a road list into runaway garbage), so every exact
     // value is rendered by the app instead. This is the same "counts in code, Gemma phrases" rule the
     // per-report counts already follow.
-    private fun statsToJson(st: Stats): String = buildString {
+    /** Internal, but visible to tests so the field naming can be pinned. */
+    internal fun statsToJson(st: Stats): String = buildString {
         append("{\"total\":${st.totalSos},\"new\":${st.newSos},\"critical\":${st.critical},")
         append("\"high\":${st.high},\"moderate\":${st.moderate},\"low\":${st.low},")
         append("\"shortages\":{")
         append(st.shortages.entries.joinToString(",") { "\"${it.key}\":${it.value}" })
         append("},\"sheltersTracked\":${st.shelterPressure.size},")
         append("\"sheltersNearCapacity\":${st.shelterPressure.count { it.pressure >= 0.8 }},")
-        append("\"blockedRoads\":${st.blockedRoads.size}}")
+        // Named for what it is. Handing the model a field called "blockedRoads" invites it to
+        // write "blocked roads" back out, which is how the overclaim reached the screen.
+        append("\"floodCrossingRoadSegments\":${st.blockedRoads.size}}")
     }
 }
