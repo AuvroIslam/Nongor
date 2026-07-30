@@ -76,7 +76,7 @@ the design constraint, not a marketing line.
 
 ### Emergency Translation
 
-<img src="GithubSlides/5.png" alt="Emergency Translation — 127 phrases, 276 sourced lines, 6 languages." width="100%">
+<img src="GithubSlides/5.png?v=2" alt="Emergency Translation — 127 phrases, 276 sourced lines, 6 languages." width="100%">
 
 No offline translator covers these languages, so Nongor does not pretend to be one. It ships a
 fixed set of the questions that matter in a rescue — **127 phrases, 276 sourced translation lines,
@@ -410,7 +410,7 @@ conversation without any words at all, which is a better answer than a confident
 
 ## Degrade to something, never to nothing
 
-<img src="GithubSlides/9.png" alt="Degradation table: no peer → outbox, no data network → SMS, no shared language → pictogram, no GPS → district centre, no AI model → rule engine." width="100%">
+<img src="GithubSlides/9.png?v=2" alt="Degradation table: no peer → outbox, no data network → SMS, no shared language → pictogram, no GPS → district centre, no AI model → rule engine." width="100%">
 
 | Failure | Nongor's answer |
 | --- | --- |
