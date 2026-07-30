@@ -23,6 +23,18 @@
 
 ---
 
+<div align="center">
+
+### ▶ Watch the demo
+
+[<img src="https://img.youtube.com/vi/9GsZ_ATN0ZQ/maxresdefault.jpg" alt="Nongor — 3 minute demo" width="75%">](https://youtu.be/9GsZ_ATN0ZQ)
+
+**[youtu.be/9GsZ_ATN0ZQ](https://youtu.be/9GsZ_ATN0ZQ)** · 3 minutes · recorded in aeroplane mode
+
+</div>
+
+---
+
 ## Why this exists
 
 <img src="GithubSlides/2.png" alt="51 people died in Bangladesh floods this July alone. 39 injured, 1,000,000+ affected, 7 districts." width="100%">
@@ -253,6 +265,112 @@ Nongor still runs — but this is an honest account of the difference:
 The deterministic core is a **safety net for ৳8,000 phones, not an equivalent**. It keeps the
 life-critical paths — SOS, mesh, routing, phrasebook, siren — alive on hardware that cannot hold a
 2.5 GB model. Everything that requires *understanding* is Gemma.
+
+---
+
+## What broke, and how we fixed it
+
+The interesting failures were not the ones we designed for. These are the real ones, in the order
+they cost us the most time.
+
+### 1. Two phones on the same table would not pair
+
+The worst bug of the sprint, because it silently disabled *three* features at once — mesh SOS,
+community reports and family radar all ride the same transport.
+
+Both phones advertised and discovered correctly. Neither ever connected. Nearby Connections has
+both sides advertising *and* scanning, so if both call `requestConnection` on each other you get
+two sockets for one pair — double-counted peers, every payload sent twice. Our fix was a tie-break:
+only the lower advertised name dials.
+
+That made the entire pairing depend on **one specific phone's discovery working**. When the
+lower-named phone was the one whose BLE scan got throttled — routine on OEM Android — both phones
+advertised at each other forever. `logcat` proved discovery was fine: we could see our own service
+hash and the peer's endpoint name in the BLE advertisement the whole time.
+
+Removing the tie-break made it worse. Both sides then dialled in the same instant, Nearby resolved
+the collision by silently dropping one or both requests — **no failure callback fires** — and our
+in-flight guard was never cleared, so every later discovery callback returned early. A permanent
+stall.
+
+**Fix:** both sides dial, but with 150–1800 ms of random jitter so one almost always gets there
+first and the other receives an incoming connection instead; plus a 12-second watchdog that
+releases the guard if a dial never resolves, so discovery retries instead of giving up forever. A
+redundant socket is already handled — a second connection to a name we hold is dropped, and
+payloads dedupe by message id — so a duplicate is a far cheaper failure than no connection.
+
+### 2. Gemma inventing numbers
+
+Asked to summarise the situation, the model turned a shelter capacity of `500` into `50000`, and
+reported **"455 blocked roads"** when the engine had counted 455 *graph segments crossing a flood
+layer* — a far bigger claim than the data supports.
+
+**Fix:** numbers never pass through the model. Counts, distances, coordinates and capacities are
+computed in Kotlin and rendered directly; Gemma only paraphrases them into prose. The briefing
+screen keeps the two visually separate, and the exact per-case list and shelter bars are rendered
+straight from the stats.
+
+### 3. Radios that fail silently
+
+"0 phones in range" means *nobody is nearby*. It also means *your Bluetooth is off* and *you
+declined a permission*. Those lead to opposite decisions — the first says wait, the second says fix
+something — and the app showed the same sentence for all three.
+
+Worse, two screens that ride the mesh (Radar and the community board) **never requested the mesh
+permissions at all**. Open the app on either one first, on a fresh install, and it advertised into
+nothing forever without ever prompting. We only caught it by reading `dumpsys package` on a test
+device and seeing all five permissions `granted=false` with no `USER_SET` flag — never even asked.
+
+**Fix:** one shared permission list used by all three mesh screens, and a readiness check that
+reports exactly what is blocking — Bluetooth off, Wi-Fi off, location services off, permission
+missing — as a banner that opens the precise settings panel that fixes it. Where the state cannot
+be read (adapter state needs `BLUETOOTH_CONNECT` on API 31+) it reports *unknown* rather than
+guessing, because a wrong diagnosis sends someone to the wrong screen.
+
+### 4. One person shouting became five emergencies
+
+Holding the SOS button re-broadcasts every 30 seconds so a neighbour who walks past in four minutes
+still receives it. Each re-broadcast minted a **fresh message id**, so one call for help landed in
+the local store as five separate cases — and the coordinator briefing counted all five.
+
+**Fix:** one id per press, reused for every repeat. Receivers dedupe on it, so a phone that already
+holds the message ignores the repeat while a phone arriving on the fourth attempt still gets it —
+which is what store-and-forward is for.
+
+### 5. A read receipt that could get someone killed
+
+We added read receipts so a person can tell their SOS reached a human. Then we had to be careful:
+someone on a roof reading *"seen by 3"* can reasonably conclude three people are coming, stop
+shouting, and wait.
+
+**Fix:** the receipt fires when the message is actually **on screen**, not when it arrives — a
+confirmation you can earn while the phone is in a pocket tells the sender nothing. And the wording
+never oversells: *"Your message got through. That is not a promise that help is on the way — keep
+trying other ways too."* Unverified envelopes are dropped, because a forged receipt is worse than
+no receipt.
+
+### 6. Gson quietly ignores Kotlin defaults
+
+Gson populates fields reflectively without running the Kotlin constructor. A store file written by
+an earlier build leaves a newly-added non-null field holding `null`, and the app crashes on first
+read of a perfectly valid save file.
+
+**Fix:** persisted models use nullable types with accessors that supply the default, and there is a
+test that loads a store file written before the field existed.
+
+### 7. A translation feature we measured, then deleted
+
+When the phrasebook has no line for a language, the obvious idea is to compose one word-by-word
+from the vocabulary we do have. We built the lexicon and measured coverage **before** writing the
+feature.
+
+The result killed it: GATITOS covers only three of our six languages, and its 50 English keys miss
+almost every word the triage questions use. *"Where does it hurt? Point with your finger"* resolved
+to **one word out of seven**. A word-by-word gloss is also not a sentence — presenting it as one
+invites a volunteer to badly miscommunicate in a medical exchange.
+
+**Fix:** we did not ship it. The pictogram-plus-tap-reply protocol already completes the
+conversation without any words at all, which is a better answer than a confident-looking fragment.
 
 ---
 
