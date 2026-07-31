@@ -39,11 +39,33 @@
 
 No sign-in and no first-run download — everything except the optional AI works the moment it opens.
 
+**And the person on the other end never needs it.** With no peer in range an SOS collapses into
+one 160-character SMS that reads on a button phone; with no data network at all, 999 and the
+official BD short codes are bundled in the APK and dial straight from the app.
+
 </div>
 
 ---
 
 ## Why this exists
+
+### July 2024 — the assumption everything here is built on
+
+In July 2024 the state switched the country off. Mobile internet went first, then broadband, and
+Bangladesh spent days unable to reach itself. Families could not confirm who was alive. What
+survived was the oldest layer of the network — 2G voice and SMS — and whatever two phones could
+say to each other directly. **যোগাযোগ · Jogajog**, people relaying for each other with no
+infrastructure in between, is the reason this hackathon exists.
+
+The lesson of that month was not *build another chat app*. It was that **the network is a thing
+that can be taken away**, and anything that matters in a crisis has to keep working after it is
+gone. Nongor takes that literally: no server, no account, and no point at which the app asks the
+internet for permission to help you.
+
+The second half of the lesson is that a blackout does not need a government. A flood takes the
+same towers down for the same days — and it strands the people who were already hardest to reach.
+
+### July 2026 — and then the water
 
 <img src="GithubSlides/2.png" alt="51 people died in Bangladesh floods this July alone. 39 injured, 1,000,000+ affected, 7 districts." width="100%">
 
@@ -529,6 +551,36 @@ roads, SMS encode/decode round-trips, and phrasebook asset integrity.
 
 The core logic is deliberately pure Kotlin with no Android dependencies, so it runs on the JVM
 without a device.
+
+### Don't take the numbers on trust
+
+Every count this README claims is measured from the shipped assets by
+[`ReadmeClaimsTest`](nongor-android/app/src/test/java/org/nongor/app/core/ReadmeClaimsTest.kt),
+which runs in the same command above and prints what it found:
+
+```
+  Nongor — claims checked against the shipped assets
+  ----------------------------------------------------
+  shelters                 9525
+  districts covered        64
+  phrases                  127
+  Chakma                   51
+  Rohingya                 50
+  Kokborok                 50
+  Santali                  50
+  Marma                    39
+  Garo                     36
+  sourced lines, total     276
+  lines marked verified    0
+```
+
+It asserts each of those, checks that all 64 districts actually have a shelter rather than just
+counting rows, and fails the build if the README stops quoting the numbers the assets contain —
+so the prose and the data cannot drift apart. The last line is the one that matters most: it is a
+test that **no minority-language line can ever be marked verified**, because that claim is a
+promise to a volunteer holding a rescue phrasebook, not a statistic.
+
+No device, no model download, and no Android Studio needed to check any of it.
 
 ---
 
