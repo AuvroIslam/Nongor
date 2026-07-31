@@ -137,8 +137,22 @@ class ReadmeClaimsTest {
             println("  $name".padEnd(27) + (counts[code] ?: 0))
         }
         println("  sourced lines, total     ${counts.values.sum()}")
-        println("  lines marked verified    0")
+        // Measured, not asserted-then-printed. A hardcoded 0 here would print the number this
+        // test exists to guarantee even in the moment it had stopped being true.
+        println("  lines marked verified    ${countVerified(book.getAsJsonArray("phrases"))}")
         println()
+    }
+
+    /** How many minority-language lines claim `verified`. Must be zero; printed either way. */
+    private fun countVerified(phrases: JsonArray): Int {
+        var n = 0
+        for (phrase in phrases) {
+            val t = phrase.asJsonObject.getAsJsonObject("t") ?: continue
+            for ((code, _) in minorityLanguages) {
+                if (t.getAsJsonObject(code)?.get("v")?.asString == "verified") n++
+            }
+        }
+        return n
     }
 
     private fun countLines(phrases: JsonArray): Map<String, Int> {

@@ -78,6 +78,19 @@ kotlin {
     jvmToolchain(17)
 }
 
+// ReadmeClaimsTest reads the bundled assets and the README off disk rather than through the
+// classpath, and Gradle cannot infer that. Without these declarations the test task reports
+// UP-TO-DATE after someone edits the phrasebook or the README - which is precisely the change
+// it exists to catch, so the guarantee would hold only on a clean checkout.
+tasks.withType<Test>().configureEach {
+    inputs.dir(file("src/main/assets"))
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+        .withPropertyName("bundledAssets")
+    inputs.file(file("../../README.md"))
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+        .withPropertyName("readme")
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
