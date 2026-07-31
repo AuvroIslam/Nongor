@@ -66,6 +66,12 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        // ReadmeClaimsTest prints the counts it measured. Gradle swallows test stdout by
+        // default, and the whole point of that test is that someone can run one command and
+        // *read* the numbers rather than take a green tick on trust.
+        unitTests.all { it.testLogging { showStandardStreams = true } }
+    }
 }
 
 kotlin {
