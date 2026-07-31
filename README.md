@@ -49,29 +49,28 @@ official BD short codes are bundled in the APK and dial straight from the app.
 
 ## Why this exists
 
-### July 2024 — the assumption everything here is built on
+### Two Julys
 
-In July 2024 the state switched the country off. Mobile internet went first, then broadband, and
-Bangladesh spent days unable to reach itself. Families could not confirm who was alive. What
-survived was the oldest layer of the network — 2G voice and SMS — and whatever two phones could
-say to each other directly. **যোগাযোগ · Jogajog**, people relaying for each other with no
-infrastructure in between, is the reason this hackathon exists.
+In **July 2024** we lost close to 1,500 brothers and sisters. And while it was happening
+the state cut the internet, so the country could not see it, could not count it, and could not
+call for help. What survived was the oldest layer of the network — 2G voice and SMS — and
+whatever two phones could say to each other directly. **যোগাযোগ · Jogajog**, people relaying for
+each other with no infrastructure in between, is the reason this hackathon exists.
 
-The lesson of that month was not *build another chat app*. It was that **the network is a thing
-that can be taken away**, and anything that matters in a crisis has to keep working after it is
-gone. Nongor takes that literally: no server, no account, and no point at which the app asks the
-internet for permission to help you.
-
-The second half of the lesson is that a blackout does not need a government. A flood takes the
-same towers down for the same days — and it strands the people who were already hardest to reach.
-
-### July 2026 — and then the water
+**July 2026. Fifty-one more.** Not to firing this time. Not to a dictator. To water.
 
 <img src="GithubSlides/2.png" alt="51 people died in Bangladesh floods this July alone. 39 injured, 1,000,000+ affected, 7 districts." width="100%">
 
 Those are the confirmed figures from Bangladesh's Ministry of Disaster Management for **July 2026
 alone** ([BSS](https://www.bssnews.net/news/404964)). Cox's Bazar lost 28 people, Chattogram 13,
 Bandarban 6, Rangamati 3, Moulvibazar 1.
+
+Two different Julys, one thing in common: **when it mattered, the network was not there.** In 2024
+it was taken away on purpose. In 2026 the towers went under with everything else. A blackout does
+not need a government — and it does not care which one it was.
+
+So Nongor assumes it is gone. No server, no account, and no point at which the app asks the
+internet for permission to help you.
 
 Bangladesh's disaster response is not short of helicopters or volunteers. The gap is the
 **last two hundred metres** — where a rescuer physically reaches a person and still cannot help.
